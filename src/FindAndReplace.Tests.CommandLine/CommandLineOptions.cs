@@ -2,13 +2,10 @@
 using CommandLine;
 using CommandLine.Text;
 
-
 namespace FindAndReplace.Tests.CommandLine
 {
-	public class CommandLineOptions
+    public class CommandLineOptions
 	{
-		#region Standard Option Attribute
-
 		[ParserState]
 		public IParserState LastParserState { get; set; }
 
@@ -26,26 +23,23 @@ namespace FindAndReplace.Tests.CommandLine
 
 		[Option("someFlag", HelpText = "Not used. For testing.")]
 		public bool SomeFlag { get; set; }
-		
-		#endregion
-
 
 		[HelpOption("help", HelpText = "Display this help screen.")]
 		public string GetUsage()
 		{
-			var help = new HelpText("FindAndReplace.Tests.CommandLine");
-
-			help.Copyright = new CopyrightInfo("ENTech Solutions", DateTime.Now.Year);
+			var help = new HelpText("FindAndReplace.Tests.CommandLine")
+			{
+				Copyright = new CopyrightInfo("ENTech Solutions", DateTime.Now.Year)
+			};
 
 			if (this.LastParserState != null && this.LastParserState.Errors.Count > 0)
 			{
 				HandleParsingErrorsInHelp(help);
 			}
-			
+
 
 			return help;
 		}
-
 
 		private void HandleParsingErrorsInHelp(HelpText help)
 		{

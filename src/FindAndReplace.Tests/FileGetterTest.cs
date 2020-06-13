@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using FindAndReplace.EncodingTools;
 using NUnit.Framework;
 
 namespace FindAndReplace.Tests
@@ -13,7 +13,6 @@ namespace FindAndReplace.Tests
     //resource contention between opening files and iterating
     public class FileGetterTest : TestBase
     {
-
         [SetUp]
         public override void SetUp()
         {
@@ -23,13 +22,11 @@ namespace FindAndReplace.Tests
             WriteFiles(100000);
         }
 
-
         [TearDown]
         public override void TearDown()
         {
             DeleteTestDir();
         }
-
 
         private void WriteFiles(int fileSize)
         {
@@ -46,33 +43,29 @@ namespace FindAndReplace.Tests
 
         private void CreateTestFile(string fileContent, Encoding encoding)
         {
-            string filePath = _speedDir + "\\" + encoding.EncodingName + ".txt";
+            string filePath = $"{_speedDir}\\{encoding.EncodingName}.txt";
             File.WriteAllText(filePath, fileContent, encoding);
         }
 
-
         protected void CreateTestDir()
         {
-           
-            _tempDir = Path.GetTempPath() + "FindAndReplaceTests";
+            _tempDir = $"{Path.GetTempPath()}FindAndReplaceTests";
             Directory.CreateDirectory(_tempDir);
         }
 
-
         protected void DeleteTestDir()
         {
-            var tempDir = Path.GetTempPath() + "FindAndReplaceTests";
+            var tempDir = $"{Path.GetTempPath()}FindAndReplaceTests";
 
             Directory.Delete(tempDir, true);
         }
 
-
         protected void CreateSpeedDir()
         {
-            _speedDir = _tempDir + "\\Speed";
+            _speedDir = $"{_tempDir}\\Speed";
 
             if (Directory.Exists(_speedDir))
-                throw new InvalidOperationException("Dir '" + _speedDir + "' already exists.");
+                throw new InvalidOperationException($"Dir '{_speedDir}' already exists.");
 
             Directory.CreateDirectory(_speedDir);
         }  
@@ -125,11 +118,9 @@ namespace FindAndReplace.Tests
             // Consume bc
             while (true)
             {
-                string filePath;
-
                 try
                 {
-                    filePath = fileGetter.FileCollection.Take();
+                    var filePath = fileGetter.FileCollection.Take();
                     Console.WriteLine(filePath);
                 }
                 catch (InvalidOperationException)
@@ -213,7 +204,7 @@ namespace FindAndReplace.Tests
             //CompareGetFilesSpeed("*.txt");
         }
 
-        private  string _getFilesSpeedDir = Path.GetTempPath() + "\\FindAndReplaceTests";//"C:\\Temp\\FindAndReplaceTest\\Stable";
+        private  string _getFilesSpeedDir = $"{Path.GetTempPath()}\\FindAndReplaceTests";//"C:\\Temp\\FindAndReplaceTest\\Stable";
         //private const string _getFilesSpeedDir = "C:\\Code\\SpaBooker\\9_4";
 
 
@@ -228,7 +219,6 @@ namespace FindAndReplace.Tests
             TestFileGetterSpeed(fileMask, true);
         }
 
-
         public void TestDirEnumerateFilesSpeed(string fileMask)
         {
             var stopWatch = new StopWatch();
@@ -237,7 +227,7 @@ namespace FindAndReplace.Tests
             var files = Directory.EnumerateFiles(_getFilesSpeedDir, fileMask, SearchOption.AllDirectories).ToList();
             stopWatch.Stop();
 
-            Console.WriteLine("EnumerateFiles  FileMask = " + fileMask + ", Count=" + files.Count() + ", Duration=" + stopWatch.Milliseconds + "ms");
+            Console.WriteLine($"EnumerateFiles  FileMask = {fileMask}, Count={files.Count()}, Duration={stopWatch.Milliseconds}ms");
         }
 
         public void TestDirGetFilesSpeed(string fileMask)
@@ -248,7 +238,7 @@ namespace FindAndReplace.Tests
             var files = Directory.GetFiles(_getFilesSpeedDir, fileMask, SearchOption.AllDirectories).ToList();
             stopWatch.Stop();
 
-            Console.WriteLine("GetFiles FileMask = " + fileMask + ", Count=" + files.Count() + ", Duration=" + stopWatch.Milliseconds + "ms");
+            Console.WriteLine($"GetFiles FileMask = {fileMask}, Count={files.Count()}, Duration={stopWatch.Milliseconds}ms");
         }
 
         public void TestFileGetterSpeed(string fileMask, bool useBlockingCollection = true)
@@ -266,11 +256,12 @@ namespace FindAndReplace.Tests
 
             var files = fileGetter.RunSync();
             stopWatch.Stop();
-            Console.WriteLine("FileGetter.RunSync  FileMask = " + fileMask + ", UseBlockingCollection=" + useBlockingCollection +
-                                                        ", Count=" + files.Count() + ", Duration=" + stopWatch.Milliseconds + "ms");
+            Console.WriteLine("FileGetter.RunSync  FileMask = " + fileMask + 
+                              ", UseBlockingCollection=" + useBlockingCollection +
+                              ", Count=" + files.Count() + 
+                              ", Duration=" + stopWatch.Milliseconds + "ms");
 
         }
-
 
         [Test]
         public void Speed_FileGetter_RunSync_UseBlockingCollection_Check()
@@ -285,7 +276,6 @@ namespace FindAndReplace.Tests
             //StopWatch.Collection.Clear();
         }
 
-
         [Test]
         public void Speed_FileGetter_RunSync_UseConcurrentQueue_Check()
         {
@@ -298,7 +288,6 @@ namespace FindAndReplace.Tests
             //StopWatch.PrintCollection(stopWatch.Milliseconds);
             //StopWatch.Collection.Clear();
         }
-
 
         [Test]
         public void Speed_DirEnumerateFiles_Check()

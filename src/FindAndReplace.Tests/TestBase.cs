@@ -1,16 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 using System.Text;
 using NUnit.Framework;
-using System.IO;
 
 namespace FindAndReplace.Tests
 {
 	[TestFixture]
 	public abstract class TestBase
 	{
-		protected  const string Dir_StyleSalt = "D:\\Temp\\FindAndReplaceTest\\StyleSalt";
+        protected const string Dir_StyleSalt = @"D:\Temp\FindAndReplaceTest\StyleSalt";
 		protected string _tempDir;
 		protected string _speedDir;
 
@@ -35,13 +33,12 @@ them if you wish), that you receive source code or can get it if you
 want it, that you can change the software or use pieces of it in new
 free program...";
 
-
 		[SetUp] 
 		public virtual void SetUp()
 		{
 			CreateTestDir();
 
-			FileStream fs = new FileStream(_tempDir + "\\test1.txt", FileMode.Create);
+			FileStream fs = new FileStream($"{_tempDir}\\test1.txt", FileMode.Create);
 			StreamWriter sr = new StreamWriter(fs);
 
 			sr.Write("The licenses for most software and other practical");
@@ -56,7 +53,7 @@ free program...";
 			sr.Close();
 			fs.Close();
 
-			fs = new FileStream(_tempDir + "\\test2.txt", FileMode.Create);
+			fs = new FileStream($"{_tempDir}\\test2.txt", FileMode.Create);
 			sr = new StreamWriter(fs);
 
 			sr.WriteLine("1234567890");
@@ -67,7 +64,7 @@ free program...";
 			sr.Close();
 			fs.Close();
 
-			fs = new FileStream(_tempDir + "\\test3.txt", FileMode.Create);
+			fs = new FileStream($"{_tempDir}\\test3.txt", FileMode.Create);
 			sr = new StreamWriter(fs);
 
 			sr.WriteLine("This is a readonly file");
@@ -75,13 +72,12 @@ free program...";
 			sr.Close();
 			fs.Close();
 
-			File.SetAttributes(_tempDir + "\\test3.txt", FileAttributes.ReadOnly);
+			File.SetAttributes($"{_tempDir}\\test3.txt", FileAttributes.ReadOnly);
 
-			fs = new FileStream(_tempDir + "\\test4.txt", FileMode.Create);
+			fs = new FileStream($"{_tempDir}\\test4.txt", FileMode.Create);
 			sr = new StreamWriter(fs);
 
-			sr.WriteLine(
-				"2012-12-17T00:05:28+00:00 info: Thank you for contacting Norton One Member Support, your support agent will be with you within the next 2 minutes.  </b><br><br>    If you need help to download and install a Norton product, we have an online tutorial with step by step instructions available from <a href=\" http://one.norton.com/support\" target=\"_blank\"> one.norton.com/support </a></b><br> Please feel free to check it out at your convenience.");
+			sr.WriteLine("2012-12-17T00:05:28+00:00 info: Thank you for contacting Norton One Member Support, your support agent will be with you within the next 2 minutes.  </b><br><br>    If you need help to download and install a Norton product, we have an online tutorial with step by step instructions available from <a href=\" http://one.norton.com/support\" target=\"_blank\"> one.norton.com/support </a></b><br> Please feel free to check it out at your convenience.");
 			sr.WriteLine("2012-12-17T00:05:32+00:00 info: You are now chatting with Jayakaran Y E.");
 			sr.WriteLine("2012-12-17T00:05:46+00:00 Jayakaran Y E: <span dir=\"ltr\">Hi Mary, Welcome to Norton One Support, My name is Jayakaran, How can I help you today ? </span>");
 			sr.WriteLine("2012-12-17T00:05:59+00:00 Mary Starnes: Hello, I spoke with you yesterday about this computer, Jayakaran... and");
@@ -110,10 +106,9 @@ free program...";
 			sr.Close();
 			fs.Close();
 
-
 			//And one binary file
 			
-			fs = new FileStream(_tempDir + "\\test5.dll", FileMode.Create);
+			fs = new FileStream($"{_tempDir}\\test5.dll", FileMode.Create);
 			sr = new StreamWriter(fs);
 
 			sr.WriteLine("This file is binary because it has char: \0\0\0\0");
@@ -121,7 +116,7 @@ free program...";
 			sr.Close();
 			fs.Close();
 
-			fs = new FileStream(_tempDir + "\\test6.txt", FileMode.Create);
+			fs = new FileStream($"{_tempDir}\\test6.txt", FileMode.Create);
 			sr = new StreamWriter(fs);
 
 			sr.WriteLine("This file has special chars");
@@ -130,41 +125,37 @@ free program...";
 			sr.Close();
 			fs.Close();
 			
-
-			Directory.CreateDirectory(_tempDir + "\\subDir");
-			File.Copy(_tempDir + "\\test1.txt", _tempDir + "\\subDir\\test1.txt", true);
-			File.Copy(_tempDir + "\\test2.txt", _tempDir + "\\subDir\\test2.txt", true);
-
+			Directory.CreateDirectory($"{_tempDir}\\subDir");
+			File.Copy($"{_tempDir}\\test1.txt", _tempDir + "\\subDir\\test1.txt", true);
+			File.Copy($"{_tempDir}\\test2.txt", _tempDir + "\\subDir\\test2.txt", true);
 		}
 
 		protected void CreateTestDir()
 		{
-			_tempDir = Path.GetTempPath() + "\\FindAndReplaceTests";
+			_tempDir = $"{Path.GetTempPath()}\\FindAndReplaceTests";
 			Directory.CreateDirectory(_tempDir);
 		}
 
-
 		protected void DeleteTestDir()
 		{
-			var tempDir = Path.GetTempPath() + "\\FindAndReplaceTests";
+			var tempDir = $"{Path.GetTempPath()}\\FindAndReplaceTests";
 			
 			Directory.Delete(tempDir, true);
 		}
 
-
 		protected void CreateSpeedDir()
 		{
-			_speedDir = _tempDir + "\\Speed";
+			_speedDir = $"{_tempDir}\\Speed";
 
 			if (Directory.Exists(_speedDir))
-				throw new InvalidOperationException("Dir '" + _speedDir + "' already exists.");
+				throw new InvalidOperationException($"Dir '{_speedDir}' already exists.");
 
 			Directory.CreateDirectory(_speedDir);
 		}
 
 		protected void DeleteSpeedDir()
 		{
-			_speedDir = _tempDir + "\\Speed";
+			_speedDir = $"{_tempDir}\\Speed";
 
 			if (Directory.Exists(_speedDir))
 				Directory.Delete(_speedDir, true);
@@ -174,18 +165,17 @@ free program...";
 		protected string GetFileContent(int fileSize)
 		{
 			var sbFileContent = new StringBuilder();
-			for (int i = 0; i < System.Math.Ceiling((decimal)fileSize / 1000); i++)
+			for (int i = 0; i < Math.Ceiling((decimal)fileSize / 1000); i++)
 				sbFileContent.Append(Chars1000);
 
 			return sbFileContent.ToString();
 		}
 
-
 		[TearDown]
 		public virtual void TearDown()
 		{
-			var tempDir = Path.GetTempPath() + "\\FindAndReplaceTests";
-			File.SetAttributes(tempDir + "\\test3.txt", FileAttributes.Normal);
+			var tempDir = $"{Path.GetTempPath()}\\FindAndReplaceTests";
+			File.SetAttributes($"{tempDir}\\test3.txt", FileAttributes.Normal);
 
 			DeleteTestDir();
 		}

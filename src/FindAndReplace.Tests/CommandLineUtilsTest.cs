@@ -1,12 +1,11 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using System.Threading;
 using NUnit.Framework;
 
 namespace FindAndReplace.Tests
 {
-	[TestFixture]
+    [TestFixture]
 	public class CommandLineUtilsTest
 	{
 		private string _applicationExePath = @"FindAndReplace.Tests.CommandLine.exe";
@@ -36,13 +35,11 @@ namespace FindAndReplace.Tests
 			TestEncodeDecode("<TargetFrameworkVersion>v[24].0</TargetFrameworkVersion>", true);
 		}
 
-
 		[Test]
 		public void Encode_Decode_FromWorkItem35_ReturnsSameValue()
 		{
 			TestEncodeDecode("\\n line1\r\n    line2");
 		}
-
 
 		[Test]
 		public void Encode_Decode_When_backslash_followed_by_quote_Then_returns_same()
@@ -50,7 +47,6 @@ namespace FindAndReplace.Tests
 			TestEncodeDecode("\\\"");
 
 		}
-
 
 		[Test]
 		public void Encode_Decode_When_two_backslashes_followed_by_quote_Then_returns_same()
@@ -63,7 +59,6 @@ namespace FindAndReplace.Tests
 		{
 			TestEncodeDecode(@"\"" hello \\""  ""\");
 		}
-
 
 		[Test]
 		public void Encode_Decode_When_one_backslash_Then_returns_same()
@@ -82,7 +77,6 @@ namespace FindAndReplace.Tests
 		{
 			TestEncodeDecode(@"\\", false, true);
 		}
-
 
 		private string GetValueFromOutput()
 		{

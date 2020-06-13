@@ -3,7 +3,7 @@ using NUnit.Framework;
 
 namespace FindAndReplace.Tests
 {
-	[TestFixture]
+    [TestFixture]
 	public class RegexLearningTest
 	{
 
@@ -20,8 +20,6 @@ namespace FindAndReplace.Tests
 
 			Assert.AreEqual("A x@x.com letter -B- alphabetical ---- missing ---- lack release penchant slack acryllic laundry A x@x.com hh -B- cease", result);
 		}
-
-
 
 		[Test]
 		public void Replace_WhenReplacingDynamicPartOfPattern_ReplacesText()

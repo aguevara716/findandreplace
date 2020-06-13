@@ -3,19 +3,20 @@ using NUnit.Framework;
 
 namespace FindAndReplace.Tests
 {
-	[TestFixture]
+    [TestFixture]
 	public class FinderTest : TestBase
 	{
 		[Test]
 		public void Find_WhenSearchTextIsLicense_FindsTextInOne()
 		{
-			Finder finder = new Finder();
+            Finder finder = new Finder
+            {
+                Dir = _tempDir,
+                FileMask = "*.*",
+                FindText = "license"
+            };
 
-			finder.Dir = _tempDir;
-			finder.FileMask = "*.*";
-			finder.FindText = "license";
-
-			var resultItems = finder.Find().ItemsWithMatches;
+            var resultItems = finder.Find().ItemsWithMatches;
 
 			if (resultItems == null || resultItems.Count == 0)
 				Assert.Fail("Cant find test files");
@@ -28,13 +29,14 @@ namespace FindAndReplace.Tests
 		[Test]
 		public void Find_WhenSearchTextIsEENoRegExpr_FindsTextInBoth()
 		{
-			Finder finder = new Finder();
+            Finder finder = new Finder
+            {
+                Dir = _tempDir,
+                FileMask = "*.*",
+                FindText = "ee"
+            };
 
-			finder.Dir = _tempDir;
-			finder.FileMask = "*.*";
-			finder.FindText = "ee";
-
-			var resultItems = finder.Find().Items;
+            var resultItems = finder.Find().Items;
 
 			if (resultItems == null || resultItems.Count == 0)
 				Assert.Fail("Cant find test files");
@@ -57,26 +59,28 @@ namespace FindAndReplace.Tests
 		[Test]
 		public void Find_WhenSearchTextIsNewYorkNoRegExpr_FindsNoMatches()
 		{
-			Finder finder = new Finder();
+            Finder finder = new Finder
+            {
+                Dir = _tempDir,
+                FileMask = "*.*",
+                FindText = "New York"
+            };
 
-			finder.Dir = _tempDir;
-			finder.FileMask = "*.*";
-			finder.FindText = "New York";
-
-			var resultItems = finder.Find().ItemsWithMatches.ToList();
+            var resultItems = finder.Find().ItemsWithMatches.ToList();
 			Assert.AreEqual(0, resultItems.Count);
 		}
 
 		[Test]
 		public void Find_WhenSearchMaskIsTxt1_NoFindsText()
 		{
-			Finder finder = new Finder();
+            Finder finder = new Finder
+            {
+                Dir = _tempDir,
+                FileMask = "*.txt1",
+                FindText = "a"
+            };
 
-			finder.Dir = _tempDir;
-			finder.FileMask = "*.txt1";
-			finder.FindText = "a";
-
-			var resultItems = finder.Find().Items;
+            var resultItems = finder.Find().Items;
 
 			Assert.AreEqual(0, resultItems.Count);
 		}
@@ -84,13 +88,14 @@ namespace FindAndReplace.Tests
 		[Test]
 		public void Find_WhenSearchMaskIsTest1NoRegExpr_FindsTextInOne()
 		{
-			Finder finder = new Finder();
+            Finder finder = new Finder
+            {
+                Dir = _tempDir,
+                FileMask = "test1.*",
+                FindText = "ee"
+            };
 
-			finder.Dir = _tempDir;
-			finder.FileMask = "test1.*";
-			finder.FindText = "ee";
-
-			var resultItems = finder.Find().Items;
+            var resultItems = finder.Find().Items;
 
 			if (resultItems == null || resultItems.Count == 0)
 				Assert.Fail("Cant find test files");
@@ -107,14 +112,15 @@ namespace FindAndReplace.Tests
 		[Test]
 		public void Find_WhenSearchTextIsSoAndCaseSensitiveNoRegExpr_FindsTextInOne()
 		{
-			Finder finder = new Finder();
+            Finder finder = new Finder
+            {
+                Dir = _tempDir,
+                FileMask = "*.*",
+                FindText = "So",
+                IsCaseSensitive = true
+            };
 
-			finder.Dir = _tempDir;
-			finder.FileMask = "*.*";
-			finder.FindText = "So";
-			finder.IsCaseSensitive = true;
-
-			var resultItems = finder.Find().ItemsWithMatches;
+            var resultItems = finder.Find().ItemsWithMatches;
 
 			if (resultItems == null || resultItems.Count == 0)
 				Assert.Fail("Cant find test files");
@@ -127,14 +133,15 @@ namespace FindAndReplace.Tests
 		[Test]
 		public void Find_WhenSearchTextIsEEAndUseSubDirNoRegExpr_FindsTextInFourFiles()
 		{
-			Finder finder = new Finder();
+            Finder finder = new Finder
+            {
+                Dir = _tempDir,
+                FileMask = "*.*",
+                FindText = "ee",
+                IncludeSubDirectories = true
+            };
 
-			finder.Dir = _tempDir;
-			finder.FileMask = "*.*";
-			finder.FindText = "ee";
-			finder.IncludeSubDirectories = true;
-
-			var resultItems = finder.Find().ItemsWithMatches;
+            var resultItems = finder.Find().ItemsWithMatches;
 
 			if (resultItems == null || resultItems.Count == 0)
 				Assert.Fail("Cant find test files");
@@ -158,14 +165,15 @@ namespace FindAndReplace.Tests
 		[Test]
 		public void Find_WhenSearchTextIsEmailPatternRegularExpression_FindsTextInOne()
 		{
-			Finder finder = new Finder();
+            Finder finder = new Finder
+            {
+                Dir = _tempDir,
+                FileMask = "*.*",
+                FindText = @"\b[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b", //email pattern
+                FindTextHasRegEx = true
+            };
 
-			finder.Dir = _tempDir;
-			finder.FileMask = "*.*";
-			finder.FindText = @"\b[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b"; //email pattern
-			finder.FindTextHasRegEx = true;
-
-			var resultItems = finder.Find().ItemsWithMatches;
+            var resultItems = finder.Find().ItemsWithMatches;
 
 			if (resultItems == null || resultItems.Count == 0)
 				Assert.Fail("Cant find test files");
@@ -178,15 +186,16 @@ namespace FindAndReplace.Tests
 		[Test]
 		public void Find_WhenSearchStartManyTimes_FindsTextInFourFiles()
 		{
-			Finder finder = new Finder();
+            Finder finder = new Finder
+            {
+                Dir = _tempDir,
+                FileMask = "*.*",
+                FindText = "a+",
+                IncludeSubDirectories = true,
+                FindTextHasRegEx = true
+            };
 
-			finder.Dir = _tempDir;
-			finder.FileMask = "*.*";
-			finder.FindText = "a+";
-			finder.IncludeSubDirectories = true;
-			finder.FindTextHasRegEx = true;
-
-			Finder.FindResult result = null;
+            Finder.FindResult result = null;
 			
 			for(int i = 0; i<10; i++)
 			{
@@ -199,13 +208,14 @@ namespace FindAndReplace.Tests
 		[Test]
 		public void Find_WhenFindTextIsBinaryNull_FindsNoMatches()
 		{
-			Finder finder = new Finder();
+            Finder finder = new Finder
+            {
+                Dir = _tempDir,
+                FileMask = "*.*",
+                FindText = "\0\0\0\0"
+            };
 
-			finder.Dir = _tempDir;
-			finder.FileMask = "*.*";
-			finder.FindText = "\0\0\0\0";
-
-			Finder.FindResult result = finder.Find();
+            Finder.FindResult result = finder.Find();
 
 			Assert.AreEqual(1, result.Stats.Files.Binary);
 			Assert.AreEqual(0, result.ItemsWithMatches.Count);
@@ -214,15 +224,16 @@ namespace FindAndReplace.Tests
 		[Test]
 		public void Find_WhenFindTextIsBinaryNull_And_SkipBinaryFileDetection_FindsMatch()
 		{
-			Finder finder = new Finder();
+            Finder finder = new Finder
+            {
+                Dir = _tempDir,
+                FileMask = "*.*",
+                FindText = "\0\0\0\0",
+                SkipBinaryFileDetection = true
+            };
 
-			finder.Dir = _tempDir;
-			finder.FileMask = "*.*";
-			finder.FindText = "\0\0\0\0";
-			finder.SkipBinaryFileDetection = true;
 
-
-			Finder.FindResult result = finder.Find();
+            Finder.FindResult result = finder.Find();
 
 			Assert.AreEqual(0, result.Stats.Files.Binary);
 			Assert.AreEqual(1, result.ItemsWithMatches.Count);
@@ -231,13 +242,14 @@ namespace FindAndReplace.Tests
 		[Test]
 		public void Find_WhenSearchTextIsLicense12345_ReturnsNoResults()
 		{
-			Finder finder = new Finder();
+            Finder finder = new Finder
+            {
+                Dir = _tempDir,
+                FileMask = "*.*",
+                FindText = "license12345"
+            };
 
-			finder.Dir = _tempDir;
-			finder.FileMask = "*.*";
-			finder.FindText = "license12345";
-
-			var resultItems = finder.Find().Items;
+            var resultItems = finder.Find().Items;
 
 			Assert.AreEqual(0, resultItems.Count);
 		}
@@ -245,14 +257,15 @@ namespace FindAndReplace.Tests
 		[Test]
 		public void Find_WhenSearchTextIsLicense12345_And_IncludeFilesWithoutMatches_Returns4Results()
 		{
-			Finder finder = new Finder();
+            Finder finder = new Finder
+            {
+                Dir = _tempDir,
+                FileMask = "*.*",
+                FindText = "license12345",
+                IncludeFilesWithoutMatches = true
+            };
 
-			finder.Dir = _tempDir;
-			finder.FileMask = "*.*";
-			finder.FindText = "license12345";
-			finder.IncludeFilesWithoutMatches = true;
-
-			var resultItems = finder.Find().Items;
+            var resultItems = finder.Find().Items;
 
 			Assert.AreEqual(5, resultItems.Count);
 		}
@@ -260,14 +273,15 @@ namespace FindAndReplace.Tests
 		[Test]
 		public void Find_WheUseEscapeChars_ReturnsResults()
 		{
-			Finder finder = new Finder();
+            Finder finder = new Finder
+            {
+                Dir = _tempDir,
+                FileMask = "test2.txt",
+                FindText = @"\r\n",
+                UseEscapeChars = true
+            };
 
-			finder.Dir = _tempDir;
-			finder.FileMask = "test2.txt";
-			finder.FindText = @"\r\n";
-			finder.UseEscapeChars = true;
-
-			var resultItems = finder.Find().Items;
+            var resultItems = finder.Find().Items;
 
 			Assert.AreEqual(1, resultItems.Count);
 			Assert.AreEqual(4, resultItems[0].Matches.Count);
@@ -285,14 +299,15 @@ namespace FindAndReplace.Tests
 		[Test]
 		public void Find_WheNotUseEscapeChars_ReturnsEmptyResult()
 		{
-			Finder finder = new Finder();
+            Finder finder = new Finder
+            {
+                Dir = _tempDir,
+                FileMask = "test2.txt",
+                FindText = @"\r\n",
+                UseEscapeChars = false
+            };
 
-			finder.Dir = _tempDir;
-			finder.FileMask = "test2.txt";
-			finder.FindText = @"\r\n";
-			finder.UseEscapeChars = false;
-
-			var resultItems = finder.Find().Items;
+            var resultItems = finder.Find().Items;
 
 			Assert.AreEqual(0, resultItems.Count);
 		}

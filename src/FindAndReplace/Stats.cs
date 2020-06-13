@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace FindAndReplace
 {
-	public enum Status
+    public enum Status
 	{
 		Processing,
 		Completed,
@@ -75,5 +72,6 @@ namespace FindAndReplace
 
 			Time.Remaining = TimeSpan.FromSeconds(remainingSeconds);
 		}
+
 	}
 }

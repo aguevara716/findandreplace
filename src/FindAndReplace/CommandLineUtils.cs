@@ -46,7 +46,7 @@ namespace FindAndReplace
 				{
 					string matchText = match.ToString();
 					string justSlashes = matchText.Remove(matchText.Length - 1);
-					return justSlashes + justSlashes + "\"";  //double up the slashes
+					return $"{justSlashes}{justSlashes}\"";  //double up the slashes
 				});
 				
 			return result;
@@ -66,7 +66,7 @@ namespace FindAndReplace
 				delegate(Match match)
 				{
 					string matchText = match.ToString();
-					return matchText + matchText;  //double up the slashes
+					return $"{matchText}{matchText}";  //double up the slashes
 				});
 
 			return result;
@@ -141,19 +141,15 @@ namespace FindAndReplace
 		//if arg ends with odd count of '\' we add one more to the end
 		public static bool IsValidCommandLineArg(string text)
 		{
-			
-
 			return true;
 		}
 
 		public static string EscapeBackSlashes(string text)
 		{
 			var regexPattern = "\\\\";
-
 			var result = text;
 
 			var regex = new Regex(regexPattern);
-
 			var matches = regex.Matches(text);
 
 			for (int i = matches.Count - 1; i>= 0; i--)

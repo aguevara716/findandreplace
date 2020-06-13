@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace FindAndReplace
 {
-	public class ReplacerEventArgs : EventArgs
+    public class ReplacerEventArgs : EventArgs
 	{
 		public Replacer.ReplaceResultItem ResultItem { get; set; }
 		public Stats Stats { get; set; }

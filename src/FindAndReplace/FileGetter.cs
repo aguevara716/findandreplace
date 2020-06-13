@@ -3,10 +3,10 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using FindAndReplace.EncodingTools;
 
 namespace FindAndReplace
 {
@@ -28,12 +28,7 @@ namespace FindAndReplace
         public BlockingCollection<string> FileCollection = new BlockingCollection<string>();
         public ConcurrentQueue<string> FileQueue = new ConcurrentQueue<string>();
 
-        private int _fileCount;
-
-        public int FileCount
-        {
-            get { return _fileCount; }
-        }
+        public int FileCount { get; private set; }
 
         public bool IsFileCountFinal { get; set; }
 
@@ -50,7 +45,7 @@ namespace FindAndReplace
         private void Run()
         {
             IsCancelled = false;
-            _fileCount = 0;
+            FileCount = 0;
 
             StopWatch.Start("FileGetter.Run");
                    
@@ -71,7 +66,7 @@ namespace FindAndReplace
            
                     if (!isMatchWithExcludeFileMasks)
                     {
-	                    _fileCount++;
+	                    FileCount++;
                        
                         if (UseBlockingCollection)
                         {
@@ -110,7 +105,6 @@ namespace FindAndReplace
 
             StopWatch.PrintCollection(StopWatch.Collection["FileGetter.Run"].Milliseconds);
        }
-
 
         public List<string> RunSync()
         {
@@ -184,7 +178,6 @@ namespace FindAndReplace
             return filePathes;
         }
 
-
         public List<string> RunSync2()
         {
             RunAsync();
@@ -202,7 +195,6 @@ namespace FindAndReplace
 
             return filePathes;
         }
-
 
         private bool IsMatchWithExcludeFileMasks(string filePath)
         {
@@ -222,10 +214,10 @@ namespace FindAndReplace
             return false;
         }
 
-
         public void Cancel()
         {
             IsCancelRequested = true;
         }
+
     }
 }

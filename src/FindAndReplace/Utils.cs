@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.InteropServices;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Linq;
-using href.Utils;
 
 namespace FindAndReplace
 {
-	public static class Utils
+    public static class Utils
 	{
 		public static RegexOptions GetRegExOptions(bool isCaseSensitive)
 		{
@@ -44,20 +42,14 @@ namespace FindAndReplace
                     {
                         if (path.LastIndexOf('\\') != -1)
                         {
-                             
-
                             if (path.Substring(dir.Length - 1,( path.LastIndexOf('\\') +1)  - (dir.Length)).Contains(exclude.Trim()))
-                            {
                                 filesInDirectory.Remove(path);
-                            }
                         }
                         else
                         { 
 
                             if (path.Substring(dir.Length - 1, path.Length - (dir.Length)).Contains(exclude.Trim()))
-                            {
                                 filesInDirectory.Remove(path);
-                            }
                         }
                     }
                 }
@@ -110,17 +102,16 @@ namespace FindAndReplace
 			}
 
 			var fileGetter = new FileGetter
-				{
-					DirPath = dir,
-					FileMasks = fileMasks,
-					ExcludeFileMasks = excludeFileMasks,
-					SearchOption = searchOption,
-					UseBlockingCollection = false
-				};
+			{
+				DirPath = dir,
+				FileMasks = fileMasks,
+				ExcludeFileMasks = excludeFileMasks,
+				SearchOption = searchOption,
+				UseBlockingCollection = false
+			};
 
 			return fileGetter;
 		}
-
 
 		public static bool IsBinaryFile(string fileContent)
 		{
@@ -131,13 +122,11 @@ namespace FindAndReplace
 			return false;
 		}
 
-
 		public static bool IsBinaryFile(byte[] bytes)
 		{
-			string text = System.Text.Encoding.Default.GetString(bytes);
+			string text = Encoding.Default.GetString(bytes);
 			return IsBinaryFile(text);
 		}
-
 
 		public static List<MatchPreviewLineNumber> GetLineNumbersForMatchesPreview(string fileContent, List<LiteMatch> matches,
 		                                                                           int replaceStrLength = 0,
@@ -162,10 +151,12 @@ namespace FindAndReplace
 				{
 					if (i >= 0 && i < lines.Count())
 					{
-						var lineNumber = new MatchPreviewLineNumber();
-						lineNumber.LineNumber = i;
-						lineNumber.HasMatch = (i >= lineIndexStart && i <= lineIndexEnd) ? true : false;
-						temp.Add(lineNumber);
+                        var lineNumber = new MatchPreviewLineNumber
+                        {
+                            LineNumber = i,
+                            HasMatch = (i >= lineIndexStart && i <= lineIndexEnd) ? true : false
+                        };
+                        temp.Add(lineNumber);
 					}
 				}
 			}
@@ -176,39 +167,35 @@ namespace FindAndReplace
 		public static string FormatTimeSpan(TimeSpan timeSpan)
 		{
 			string result = String.Empty;
+			int hours = timeSpan.Hours;
+			int minutes = timeSpan.Minutes;
+			int seconds = timeSpan.Seconds;
 
-			int h = timeSpan.Hours;
-			int m = timeSpan.Minutes;
-			int s = timeSpan.Seconds;
-
-			if (h > 0)
+			if (hours > 0)
 			{
-				result += String.Format("{0}h ", h);
-
-				if (m > 0)
+				result += $"{hours}h ";
+				if (minutes > 0)
 				{
-					result += String.Format("{0}m ", m);
-
-					if (s > 0) result += String.Format("{0}s ", s);
+					result += $"{minutes}m ";
+					if (seconds > 0) 
+						result += $"{seconds}s ";
 				}
 				else
 				{
-					if (s > 0)
+					if (seconds > 0)
 					{
-						result += String.Format("{0}m ", m);
-
-						result += String.Format("{0}s ", s);
+						result += $"{minutes}m ";
+						result += $"{seconds}s ";
 					}
 				}
-
 			}
 			else
 			{
-				if (m > 0) result += String.Format("{0}m ", m);
-
-				if (s > 0) result += String.Format("{0}s ", s);
+				if (minutes > 0) 
+					result += $"{minutes}m ";
+				if (seconds > 0) 
+					result += $"{seconds}s ";
 			}
-
 			return result;
 		}
 
@@ -230,7 +217,7 @@ namespace FindAndReplace
 		//from http://www.roelvanlisdonk.nl/?p=259
 		internal static string WildcardToRegex(string pattern)
 		{
-			return string.Format("^{0}$", Regex.Escape(pattern).Replace("\\*", ".*").Replace("\\?", "."));
+			return $"^{Regex.Escape(pattern).Replace("\\*", ".*").Replace("\\?", ".")}$";
 		}
 
 		public static byte[] ReadFileContentSample(string filePath, int maxSize = 10240)
@@ -260,7 +247,10 @@ namespace FindAndReplace
 		}
 
 
-		public static List<LiteMatch> FindMatches(string fileContent, string findText, bool findTextHasRegEx, bool useEscapeChars,
+		public static List<LiteMatch> FindMatches(string fileContent, 
+											      string findText, 
+												  bool findTextHasRegEx, 
+												  bool useEscapeChars,
 		                                          RegexOptions regexOptions)
 		{
 			MatchCollection matches;
@@ -283,8 +273,8 @@ namespace FindAndReplace
 		{
 			if (String.IsNullOrEmpty(encodingName))
 				return null;
-
 			return Encoding.GetEncoding(encodingName);
 		}
+
 	}
 }

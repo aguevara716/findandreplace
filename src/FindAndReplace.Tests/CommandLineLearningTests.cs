@@ -111,24 +111,19 @@ namespace FindAndReplace.Tests
 
 		private string GenCommandLine(string value)
 		{
-			return String.Format("--skipDecoding --testVal \"{0}\" --someFlag", value);
+			return $"--skipDecoding --testVal \"{value}\" --someFlag";
 		}
 
 		private string GetValueFromOutput()
-		{
-			string result = String.Empty;
+        {
+            var filename = "output.log";
+			if (!File.Exists(filename))
+				//return String.Empty;
+				throw new FileNotFoundException("File not found", filename);
 
-			var filename = "output.log";
-
-			if (File.Exists(filename))
-			{
-				using (var outfile = new StreamReader(filename))
-				{
-					result = outfile.ReadLine();
-				}
-			}
-
-			return result;
-		}
-	}
+			using var outfile = new StreamReader(filename);
+            var result = outfile.ReadLine();
+            return result;
+        }
+    }
 }

@@ -8,13 +8,13 @@ namespace FindAndReplace.Tests
     [TestFixture]
 	public class CommandLineUtilsTest
 	{
-		private string _applicationExePath = @"FindAndReplace.Tests.CommandLine.exe";
+		private string _applicationExePath = "FindAndReplace.Tests.CommandLine.exe";
 
 		//From https://findandreplace.codeplex.com/workitem/17
 		[Test]
 		public void Encode_Decode_FromWorkItem17_ReturnsSameValue()
 		{
-			TestEncodeDecode("\\r(?!\\n)", true);
+			TestEncodeDecode(@"\r(?!\n)", true);
 		}
 
 		public void TestEncodeDecode(string text, bool hasRegEx = false, bool useEscapeChars = false)
@@ -80,18 +80,12 @@ namespace FindAndReplace.Tests
 
 		private string GetValueFromOutput()
 		{
-			string result = String.Empty;
-
 			var filename = "output.log";
+			if (!File.Exists(filename))
+				throw new FileNotFoundException("File not found", filename);
 
-			if (File.Exists(filename))
-			{
-				using (var outfile = new StreamReader(filename))
-				{
-					result = outfile.ReadToEnd();
-				}
-			}
-
+			using var outfile = new StreamReader(filename);
+			var result = outfile.ReadToEnd();
 			return result;
 		}
 
@@ -99,11 +93,10 @@ namespace FindAndReplace.Tests
 		{
 			value = CommandLineUtils.EncodeText(value, hasRegEx, useEscapeChars);
 
-			return String.Format(" {0}{1}--testVal \"{2}\" --someFlag",
-								 hasRegEx ? "--hasRegEx " : "",
-								 useEscapeChars ? "--useEscapeChars " : "",
-								 value
-				);
+			var hasRegExFlag = hasRegEx ? "--hasRegEx " : String.Empty;
+			var useEscapeCharsFlag = useEscapeChars ? "--useEscapeChars " : String.Empty;
+
+			return $" {hasRegExFlag}{useEscapeCharsFlag}--testVal \"{value}\" --someFlag";
 		}
 
 	}

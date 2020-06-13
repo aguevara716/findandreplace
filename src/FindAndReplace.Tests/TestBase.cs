@@ -126,13 +126,13 @@ free program...";
 			fs.Close();
 			
 			Directory.CreateDirectory($"{_tempDir}\\subDir");
-			File.Copy($"{_tempDir}\\test1.txt", _tempDir + "\\subDir\\test1.txt", true);
-			File.Copy($"{_tempDir}\\test2.txt", _tempDir + "\\subDir\\test2.txt", true);
+			File.Copy($@"{_tempDir}\test1.txt", $@"{_tempDir}\subDir\test1.txt", true);
+			File.Copy($@"{_tempDir}\test2.txt", $@"{_tempDir}\subDir\test2.txt", true);
 		}
 
 		protected void CreateTestDir()
 		{
-			_tempDir = $"{Path.GetTempPath()}\\FindAndReplaceTests";
+			_tempDir = $@"{Path.GetTempPath()}\FindAndReplaceTests";
 			Directory.CreateDirectory(_tempDir);
 		}
 

@@ -256,10 +256,10 @@ namespace FindAndReplace.Tests
 
             var files = fileGetter.RunSync();
             stopWatch.Stop();
-            Console.WriteLine("FileGetter.RunSync  FileMask = " + fileMask + 
-                              ", UseBlockingCollection=" + useBlockingCollection +
-                              ", Count=" + files.Count() + 
-                              ", Duration=" + stopWatch.Milliseconds + "ms");
+            Console.WriteLine($"FileGetter.RunSync  FileMask = {fileMask}" + 
+                              $", UseBlockingCollection={useBlockingCollection}" +
+                              $", Count={files.Count()}" + 
+                              $", Duration={stopWatch.Milliseconds}ms");
 
         }
 

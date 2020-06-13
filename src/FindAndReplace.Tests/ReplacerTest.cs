@@ -237,26 +237,27 @@ namespace FindAndReplace.Tests
 		[Test]
 		public void Replace_WhenSpanish_KeepsEncoding()
 		{
-			string filePath = _tempDir + "\\test_spanish.txt";
-			string fileContent = @"Line1
+			var filePath = $@"{_tempDir}\test_spanish.txt";
+			var fileContent = @"Line1
 								Line2
 								Hammam Cinili,Hydrotherapy,Baths,sauna, hidro, esfoliação211112, hidratação (1 1/2 créditos)";
 			WriteFile(filePath, fileContent);
 
-			Replacer replacer = new Replacer();
+            var replacer = new Replacer
+            {
+                Dir = _tempDir,
+                FileMask = "test_spanish.txt",
+                FindText = "Hammam Cinili",
+                ReplaceText = "Hammam Cinili1"
+            };
 
-			replacer.Dir = _tempDir;
-			replacer.FileMask = "test_spanish.txt";
-			replacer.FindText = "Hammam Cinili";
-			replacer.ReplaceText = "Hammam Cinili1";
-
-			var resultItems = replacer.Replace().ResultItems.Where(r => r.IsSuccess).ToList();
+            var resultItems = replacer.Replace().ResultItems.Where(r => r.IsSuccess).ToList();
 			Assert.AreEqual(1, resultItems.Count);
 
-			string expectedFileContent = @"Line1
+			var expectedFileContent = @"Line1
 								Line2
 								Hammam Cinili1,Hydrotherapy,Baths,sauna, hidro, esfoliação211112, hidratação (1 1/2 créditos)";
-			string actualFileContent = ReadFile(filePath);
+			var actualFileContent = ReadFile(filePath);
 			
 			Assert.AreEqual(expectedFileContent, actualFileContent);
 		}
@@ -264,26 +265,27 @@ namespace FindAndReplace.Tests
 		[Test]
 		public void Replace_WhenNonAsciiSymbols_KeepsEncoding()
 		{
-			string filePath = _tempDir + "\\test_symbols.txt";
-			string fileContent = @"Line1
+			var filePath = $@"{_tempDir}\test_symbols.txt";
+			var fileContent = @"Line1
 								Line2
 								©[assembly: AssemblyCopyright(Copyright © 2009-2011 My Company)]";
 			WriteFile(filePath, fileContent);
 
-			Replacer replacer = new Replacer();
+            var replacer = new Replacer
+            {
+                Dir = _tempDir,
+                FileMask = "test_symbols.txt",
+                FindText = "©[assembly:",
+                ReplaceText = "©[assembly:123"
+            };
 
-			replacer.Dir = _tempDir;
-			replacer.FileMask = "test_symbols.txt";
-			replacer.FindText = "©[assembly:";
-			replacer.ReplaceText = "©[assembly:123";
-
-			var resultItems = replacer.Replace().ResultItems.Where(r => r.IsSuccess).ToList();
+            var resultItems = replacer.Replace().ResultItems.Where(r => r.IsSuccess).ToList();
 			Assert.AreEqual(1, resultItems.Count);
 
-			string expectedFileContent = @"Line1
+			var expectedFileContent = @"Line1
 								Line2
 								©[assembly:123 AssemblyCopyright(Copyright © 2009-2011 My Company)]";
-			string actualFileContent = ReadFile(filePath, Encoding.Default);
+			var actualFileContent = ReadFile(filePath, Encoding.Default);
 
 			Assert.AreEqual(expectedFileContent, actualFileContent);
 		}

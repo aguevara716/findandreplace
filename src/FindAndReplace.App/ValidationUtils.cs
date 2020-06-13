@@ -64,10 +64,10 @@ namespace FindAndReplace.App
 		{
 			var result = new ValidationResult() {IsSuccess = true, FieldName = itemName};
 
-			if (text.Trim() == "")
+			if (text.Trim() == String.Empty)
 			{
 				result.IsSuccess = false;
-				result.ErrorMessage = String.Format("{0} is required", itemName);
+				result.ErrorMessage = $"{itemName} is required";
 				return result;
 			}
 

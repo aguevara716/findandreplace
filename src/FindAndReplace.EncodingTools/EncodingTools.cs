@@ -397,7 +397,7 @@ namespace FindAndReplace.EncodingTools
 		public static Encoding[] DetectInputCodepages(byte[] input, int maxEncodings)
 		{
 
-			StopWatch.Start("DetectInputCodepages_" + Thread.CurrentThread.ManagedThreadId);
+			StopWatch.Start($"DetectInputCodepages_{Thread.CurrentThread.ManagedThreadId}");
 
 			if (maxEncodings < 1)
 				throw new ArgumentOutOfRangeException("at least one encoding must be returend", "maxEncodings");
@@ -443,13 +443,17 @@ namespace FindAndReplace.EncodingTools
 				MultiLanguage.MLDETECTCP options = MultiLanguage.MLDETECTCP.MLDETECTCP_NONE;
 
 
-				StopWatch.Start("multilang2.DetectInputCodepage_" + Thread.CurrentThread.ManagedThreadId);
+				StopWatch.Start($"multilang2.DetectInputCodepage_{Thread.CurrentThread.ManagedThreadId}");
 
 				// finally... call to DetectInputCodepage
-				multilang2.DetectInputCodepage(options, 0,
-											   ref input[0], ref srcLen, ref detectedEncdings[0], ref scores);
+				multilang2.DetectInputCodepage(options, 
+											   0, 
+											   ref input[0], 
+											   ref srcLen, 
+											   ref detectedEncdings[0], 
+											   ref scores);
 
-				StopWatch.Stop("multilang2.DetectInputCodepage_" + Thread.CurrentThread.ManagedThreadId);
+				StopWatch.Stop($"multilang2.DetectInputCodepage_{Thread.CurrentThread.ManagedThreadId}");
 
 				// get result
 				if (scores > 0)
@@ -466,7 +470,7 @@ namespace FindAndReplace.EncodingTools
 				Marshal.FinalReleaseComObject(multilang2);
 			}
 
-			StopWatch.Stop("DetectInputCodepages_" + Thread.CurrentThread.ManagedThreadId);
+			StopWatch.Stop($"DetectInputCodepages_{Thread.CurrentThread.ManagedThreadId}");
 
 			// nothing found
 			return result.ToArray();

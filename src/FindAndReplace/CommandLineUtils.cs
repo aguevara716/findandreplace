@@ -118,10 +118,10 @@ namespace FindAndReplace
 					fileMask,
 					String.IsNullOrEmpty(excludeFileMask)
 						? ""
-						: String.Format(" --excludeFileMask \"{0}\"", CommandLineUtils.EncodeText(excludeFileMask)),
+						: $" --excludeFileMask \"{CommandLineUtils.EncodeText(excludeFileMask)}\"",
                     String.IsNullOrEmpty(excludeDir)
 					    ? ""
-					    : String.Format(" --ExcludeDir \"{0}\"", CommandLineUtils.EncodeText(excludeDir)),
+					    : $" --ExcludeDir \"{CommandLineUtils.EncodeText(excludeDir)}\"",
                     includeSubDirectories ? " --includeSubDirectories" : "",
 					isCaseSensitive ? " --caseSensitive" : "",
 					isRegEx ? " --useRegEx" : "",
@@ -130,9 +130,9 @@ namespace FindAndReplace
 					showEncoding ? " --showEncoding" : "",
 					includeFilesWithoutMatches ? " --includeFilesWithoutMatches" : "",
 					useEscapeChars ? " --useEscapeChars" : "",
-					(encoding != null) ? String.Format(" --alwaysUseEncoding \"{0}\"", encoding.HeaderName) : "",
+					(encoding != null) ? $" --alwaysUseEncoding \"{encoding.HeaderName}\"" : "",
 					CommandLineUtils.EncodeText(find, isRegEx, useEscapeChars),
-					(replace != null) ? String.Format("--replace \"{0}\"", CommandLineUtils.EncodeText(replace, false, useEscapeChars)) : ""
+					(replace != null) ? $"--replace \"{CommandLineUtils.EncodeText(replace, false, useEscapeChars)}\"" : ""
 				);
 		}
 

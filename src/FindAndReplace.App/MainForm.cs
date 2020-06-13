@@ -32,7 +32,7 @@ namespace FindAndReplace.App
 		public MainForm()
 		{
 			InitializeComponent();
-		    this.Text = this.Text + " (v" + Application.ProductVersion + ")";
+		    this.Text = $"{this.Text} (v{Application.ProductVersion})";
 		}
 
 
@@ -213,8 +213,7 @@ namespace FindAndReplace.App
 				progressBar.Maximum = stats.Files.Total;
 				progressBar.Value = stats.Files.Processed;
 
-				lblStatus.Text = "Processing " + stats.Files.Processed + " of " + stats.Files.Total + " files.  Last file: " +
-				                 findResultItem.FileRelativePath;
+				lblStatus.Text = $"Processing {stats.Files.Processed} of {stats.Files.Total} files.  Last file: {findResultItem.FileRelativePath}";
 
 				ShowStats(stats);
 			}
@@ -233,7 +232,7 @@ namespace FindAndReplace.App
 			if (status == Status.Completed || status == Status.Cancelled)
 			{
 				if (status == Status.Completed)
-					lblStatus.Text = "Processed " + stats.Files.Processed + " files.";
+					lblStatus.Text = $"Processed {stats.Files.Processed} files.";
 
 				if (status == Status.Cancelled)
 					lblStatus.Text = "Operation was cancelled.";
@@ -547,8 +546,7 @@ namespace FindAndReplace.App
 				progressBar.Maximum = stats.Files.Total;
 				progressBar.Value = stats.Files.Processed;
 
-				lblStatus.Text = "Processing " + stats.Files.Processed + " of " + stats.Files.Total + " files.  Last file: " +
-				                 replaceResultItem.FileRelativePath;
+				lblStatus.Text = $"Processing {stats.Files.Processed} of {stats.Files.Total} files.  Last file: {replaceResultItem.FileRelativePath}";
 			 
 
 				ShowStats(stats, true);
@@ -567,7 +565,7 @@ namespace FindAndReplace.App
 			if (status == Status.Completed || status == Status.Cancelled)
 			{
 				if (status == Status.Completed)
-					lblStatus.Text = "Processed " + stats.Files.Processed + " files.";
+					lblStatus.Text = $"Processed {stats.Files.Processed} files.";
 
 				if (status == Status.Cancelled)
 					lblStatus.Text = "Operation was cancelled.";
@@ -601,12 +599,7 @@ namespace FindAndReplace.App
 
 			var replacer = GetReplacer();
 
-			string s =
-				String.Format(
-					"\"{0}\" {1}",
-					Application.ExecutablePath,
-					replacer.GenCommandLine(chkShowEncoding.Checked)
-				);
+			string s = $"\"{Application.ExecutablePath}\" {replacer.GenCommandLine(chkShowEncoding.Checked)}";
 
 			txtCommandLine.Text = s;
 		}
@@ -832,7 +825,7 @@ namespace FindAndReplace.App
 		{
 			var filePath = gvResults.Rows[e.cellRow].Cells[1].Value.ToString();
 
-			string argument = @"/select, " + txtDir.Text + filePath.TrimStart('.');
+			string argument = $@"/select, {txtDir.Text}{filePath.TrimStart('.')}";
 			Process.Start("explorer.exe", argument);
 		}
 
@@ -840,22 +833,22 @@ namespace FindAndReplace.App
 		{
 			var sb = new StringBuilder();
 			sb.AppendLine("Files:");
-			sb.AppendLine("- Total: " + stats.Files.Total);
-			sb.AppendLine("- Processed: " + stats.Files.Processed);
-			sb.AppendLine("- Binary: " + stats.Files.Binary + " (skipped)");
-			sb.AppendLine("- With Matches: " + stats.Files.WithMatches);
-			sb.AppendLine("- Without Matches: " + stats.Files.WithoutMatches);
-			sb.AppendLine("- Failed to Open: " + stats.Files.FailedToRead);
+			sb.AppendLine($"- Total: {stats.Files.Total}");
+			sb.AppendLine($"- Processed: {stats.Files.Processed}");
+			sb.AppendLine($"- Binary: {stats.Files.Binary} (skipped)");
+			sb.AppendLine($"- With Matches: {stats.Files.WithMatches}");
+			sb.AppendLine($"- Without Matches: {stats.Files.WithoutMatches}");
+			sb.AppendLine($"- Failed to Open: {stats.Files.FailedToRead}");
 
 			if (showReplaceStats)
-				sb.AppendLine("- Failed to Write: " + stats.Files.FailedToWrite);
+				sb.AppendLine($"- Failed to Write: {stats.Files.FailedToWrite}");
 
 			sb.AppendLine("");
 			sb.AppendLine("Matches:");
-			sb.AppendLine("- Found: " + stats.Matches.Found);
+			sb.AppendLine($"- Found: {stats.Matches.Found}");
 
 			if (showReplaceStats)
-				sb.AppendLine("- Replaced: " + stats.Matches.Replaced);
+				sb.AppendLine($"- Replaced: {stats.Matches.Replaced}");
 
 			var passedSeconds = stats.Time.Passed.TotalSeconds;
 			var remainingSeconds = stats.Time.Remaining.TotalSeconds;
@@ -864,11 +857,11 @@ namespace FindAndReplace.App
 			{
 				sb.AppendLine("");
 				sb.AppendLine("Time:");
-				sb.AppendLine("- Passed: " + Utils.FormatTimeSpan(stats.Time.Passed));
+				sb.AppendLine($"- Passed: {Utils.FormatTimeSpan(stats.Time.Passed)}");
 
 				if (passedSeconds >= 3 && (int) remainingSeconds != 0)
 				{
-					sb.AppendLine("- Remaining: " + Utils.FormatTimeSpan(stats.Time.Remaining) + " (estimated)");
+					sb.AppendLine($"- Remaining: {Utils.FormatTimeSpan(stats.Time.Remaining)} (estimated)");
 				}
 			}
 

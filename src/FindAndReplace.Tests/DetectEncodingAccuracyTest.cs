@@ -40,7 +40,7 @@ namespace FindAndReplace.Tests
 
 		private void CreateTestFile(string fileContent, Encoding encoding)
 		{
-			string filePath = _tempDir + "\\" + encoding.EncodingName + ".txt";
+			string filePath = $@"{_tempDir}\{encoding.EncodingName}.txt";
 			File.WriteAllText(filePath, fileContent, encoding);
 		}
 
@@ -71,18 +71,18 @@ namespace FindAndReplace.Tests
 				if (encoding != null)
 					numFoundEncodings++;
 				
-				WriteToConsole(Path.GetFileName(filePath) + ": " + encoding);
+				WriteToConsole($"{Path.GetFileName(filePath)}: {encoding}");
 				
 				if (totalFiles > 10)
 					break;
 			}
 
-			Console.WriteLine("Found Encoding in:" + numFoundEncodings + " out of " + totalFiles);
+			Console.WriteLine($"Found Encoding in:{numFoundEncodings} out of {totalFiles}");
 		}
 
 		private void WriteToConsole(string line)
 		{
-			Console.WriteLine(DateTime.Now.ToString("hh:mm:ssss") + " ThreadId: " + Thread.CurrentThread.ManagedThreadId + " : " + line);
+			Console.WriteLine($"{DateTime.Now:hh:mm:ssss} ThreadId: {Thread.CurrentThread.ManagedThreadId} : {line}");
 		}
 	}
 

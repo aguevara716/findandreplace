@@ -36,14 +36,14 @@ namespace FindAndReplace.Tests.DetectEncodingSpeedTest
 
 	    protected void CreateTestDir()
 	    {
-	        _tempDir = Path.GetTempPath() + "\\FindAndReplaceTests";
+	        _tempDir = $@"{Path.GetTempPath()}\FindAndReplaceTests";
 	        Directory.CreateDirectory(_tempDir);
 	    }
 
 
 	    protected void DeleteTestDir()
 	    {
-	        var tempDir = Path.GetTempPath() + "\\FindAndReplaceTests";
+	        var tempDir = $@"{Path.GetTempPath()}\FindAndReplaceTests";
 
 	        Directory.Delete(tempDir, true);
 	    }
@@ -51,25 +51,25 @@ namespace FindAndReplace.Tests.DetectEncodingSpeedTest
 
 	    protected void CreateSpeedDir()
 	    {
-	        speedDir = "D:\\Temp\\FindAndReplaceTest2" + "\\Speed";
+	        speedDir = @"D:\Temp\FindAndReplaceTest2\Speed";
 
 	        if (Directory.Exists(speedDir))
 	          
 	        {
-	            speedDir = "D:\\Temp\\FindAndReplaceTest2" + "\\Speed";
+	            speedDir = @"D:\Temp\FindAndReplaceTest2\Speed";
 
 	            if (Directory.Exists(speedDir))
 	                Directory.Delete(speedDir, true);
             }
 	        if (Directory.Exists(speedDir))
-	            throw new InvalidOperationException("Dir '" + speedDir + "' already exists.");
+	            throw new InvalidOperationException($"Dir '{speedDir}' already exists.");
 
             Directory.CreateDirectory(speedDir);
 	    }
 
 	    protected void DeleteSpeedDir()
 	    {
-	        speedDir = "D:\\Temp\\FindAndReplaceTest2" + "\\Speed";
+	        speedDir = @"D:\Temp\FindAndReplaceTest2\Speed";
 
 	        if (Directory.Exists(speedDir))
 	            Directory.Delete(speedDir, true);
@@ -90,7 +90,7 @@ namespace FindAndReplace.Tests.DetectEncodingSpeedTest
 
 		private void CreateTestFile(string fileContent, Encoding encoding)
 		{
-			string filePath = speedDir + "\\" + encoding.EncodingName + ".txt";
+            string filePath = $@"{speedDir}\{encoding.EncodingName}.txt";
 			File.WriteAllText(filePath, fileContent, encoding);
 		}
 
@@ -100,13 +100,11 @@ namespace FindAndReplace.Tests.DetectEncodingSpeedTest
 			RunTest(EncodingDetector.Options.KlerkSoftBom, speedDir);
 		}
 
-
 		[Test]
 		public void KlerkSoft_Heuristics_NewFiles()
 		{
 			RunTest(EncodingDetector.Options.KlerkSoftHeuristics, speedDir);
 		}
-
 
 		[Test]
 		public void MLang_NewFiles()
@@ -126,7 +124,6 @@ namespace FindAndReplace.Tests.DetectEncodingSpeedTest
 			RunTest(EncodingDetector.Options.KlerkSoftBom | EncodingDetector.Options.KlerkSoftHeuristics, speedDir);
 		}
 
-
 		[Test]
 		public void MLang_Real_Dir()
 		{
@@ -138,8 +135,6 @@ namespace FindAndReplace.Tests.DetectEncodingSpeedTest
 		{
 			RunTest(EncodingDetector.Options.MLang, speedDir);
 		}
-
-
 
 		[Test]
 		public void MLang_Real_Dir_MultiThreaded()
@@ -162,14 +157,11 @@ namespace FindAndReplace.Tests.DetectEncodingSpeedTest
 		    if (!Directory.Exists(filePath))
 		    {
 		        Directory.CreateDirectory(filePath);
-		        File.WriteAllText(filePath + "\\ASCII.txt", GetFileContent(1000), Encoding.ASCII);
-		        File.WriteAllText(filePath + "\\BigEndianUnicode.txt", GetFileContent(1000), Encoding.BigEndianUnicode);
+		        File.WriteAllText($@"{filePath}\ASCII.txt", GetFileContent(1000), Encoding.ASCII);
+		        File.WriteAllText($@"{filePath}\BigEndianUnicode.txt", GetFileContent(1000), Encoding.BigEndianUnicode);
             }
 
             RunTestMLangMultiThreaded(filePath, 1);
-
-	 
-
 
             //http://bytes.com/topic/net/answers/49348-multithreading-concurrency-interop
             //Interop junk

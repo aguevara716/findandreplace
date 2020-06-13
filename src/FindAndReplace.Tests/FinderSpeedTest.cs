@@ -93,7 +93,7 @@ free program...";
 		{
 			string realDir = "..//..//bin";
 			 
-			StopWatch stopWatch = new StopWatch();
+			var stopWatch = new StopWatch();
 			stopWatch.Start();
 
             Finder finder = new Finder
@@ -200,7 +200,6 @@ free program...";
 			In_Real_Directory();
 			Use_RegEx();
 		
-			
 			WriteHeadingsRow();
 			
 			WriteRow("GetFilesInDirectory");

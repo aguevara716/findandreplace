@@ -1,5 +1,4 @@
-﻿
-namespace FindAndReplace
+﻿namespace FindAndReplace
 {
     public class LiteMatch
     {

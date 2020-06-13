@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Linq;
 using System.Text;
-
-using href.Utils;
+using FindAndReplace.EncodingTools;
 
 namespace FindAndReplace
 {
-
-	public class EncodingDetector
+    public class EncodingDetector
 	{
-
 		[Flags]
 		public enum Options
 		{
@@ -66,7 +63,6 @@ namespace FindAndReplace
 			return encoding;
 		}
 
-
 		private static Encoding DetectEncodingUsingKlerksSoftHeuristics(byte[] bytes)
 		{
 			Encoding encoding = KlerksSoftEncodingDetector.DetectUnicodeInByteSampleByHeuristics(bytes);
@@ -78,7 +74,7 @@ namespace FindAndReplace
 		{
 			try
 			{
-				Encoding[] detected = EncodingTools.DetectInputCodepages(bytes, 1);
+				Encoding[] detected = EncodingTools.EncodingTools.DetectInputCodepages(bytes, 1);
 				if (detected.Length > 0)
 				{
 					return detected[0];

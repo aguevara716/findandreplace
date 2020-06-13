@@ -93,7 +93,7 @@ namespace FindAndReplace.App
 
 		private static Assembly ResolveEventHandler(Object sender, ResolveEventArgs args)
 		{
-			String dllName = new AssemblyName(args.Name).Name + ".dll";
+			String dllName = $"{new AssemblyName(args.Name).Name}.dll";
 
 			var assem = Assembly.GetExecutingAssembly();
 
@@ -175,7 +175,7 @@ namespace FindAndReplace.App
 				foreach (var validationResult in validationResultList)
 				{
 					if (!validationResult.IsSuccess)
-						Console.WriteLine(String.Format("{0}: {1}", validationResult.FieldName, validationResult.ErrorMessage));
+						Console.WriteLine($"{validationResult.FieldName}: {validationResult.ErrorMessage}");
 				}
 
 				Console.WriteLine("");
@@ -323,7 +323,7 @@ namespace FindAndReplace.App
 
 		private static void PrintNameValuePair(string name, string value)
 		{
-			string label = name + ":";
+			string label = $"{name}:";
 			label = label.PadRight(10);
 			Console.WriteLine(label + value);
 		}
@@ -336,25 +336,25 @@ namespace FindAndReplace.App
 			Console.WriteLine("Stats");
 			Console.WriteLine("");
 			Console.WriteLine("Files:");
-			Console.WriteLine("- Total: " + stats.Files.Total);
-			Console.WriteLine("- Binary: " + stats.Files.Binary + " (skipped)");
-			Console.WriteLine("- With Matches: " + stats.Files.WithMatches);
-			Console.WriteLine("- Without Matches: " + stats.Files.WithoutMatches);
-			Console.WriteLine("- Failed to Open: " + stats.Files.FailedToRead);
+			Console.WriteLine($"- Total: {stats.Files.Total}");
+			Console.WriteLine($"- Binary: {stats.Files.Binary} (skipped)");
+			Console.WriteLine($"- With Matches: {stats.Files.WithMatches}");
+			Console.WriteLine($"- Without Matches: {stats.Files.WithoutMatches}");
+			Console.WriteLine($"- Failed to Open: {stats.Files.FailedToRead}");
 
 			if (isReplacerStats)
-				Console.WriteLine("- Failed to Write: " + stats.Files.FailedToWrite);
+				Console.WriteLine($"- Failed to Write: {stats.Files.FailedToWrite}");
 
 			Console.WriteLine("");
 			Console.WriteLine("Matches:");
-			Console.WriteLine("- Found: " + stats.Matches.Found);
+			Console.WriteLine($"- Found: {stats.Matches.Found}");
 
 			if (isReplacerStats)
-				Console.WriteLine("- Replaced: " + stats.Matches.Replaced);
+				Console.WriteLine($"- Replaced: {stats.Matches.Replaced}");
 
 			Console.WriteLine("");
 			double secs = Math.Round(stats.Time.Passed.TotalSeconds, 3);
-			Console.WriteLine("Duration: " + secs.ToString() + " secs");
+			Console.WriteLine($"Duration: {secs} secs");
 
 			Console.WriteLine("====================================");
 		}

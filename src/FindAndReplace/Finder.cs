@@ -1,35 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using FindAndReplace.EncodingTools;
 
 namespace FindAndReplace
 {
+    public delegate void FileProcessedEventHandler(object sender, FinderEventArgs e);
 
-	public class FinderEventArgs : EventArgs
-	{
-		public Finder.FindResultItem ResultItem { get; set; }
-
-		public Stats Stats { get; set; }
-
-		public Status Status { get; set; }
-
-		public bool IsSilent { get; set; }
-
-		public FinderEventArgs(Finder.FindResultItem resultItem, Stats stats, Status status, bool isSilent = false)
-		{
-			ResultItem = resultItem;
-			Stats = stats;
-			Status = status;
-			IsSilent = isSilent;
-		}
-	}
-
-	public delegate void FileProcessedEventHandler(object sender, FinderEventArgs e);
-
-	public class Finder
+	public partial class Finder
 	{
 		public string Dir { get; set; }
 		public bool IncludeSubDirectories { get; set; }
@@ -52,27 +32,10 @@ namespace FindAndReplace
 
 		public bool IsCancelRequested { get; set; }
 
-		public class FindResultItem : ResultItem
-		{
-		}
-
-		public class FindResult
-		{
-			public List<FindResultItem> Items { get; set; }
-			public Stats Stats { get; set; }
-
-			public List<FindResultItem> ItemsWithMatches
-			{
-				get { return Items.Where(r => r.NumMatches > 0).ToList(); }
-			}
-
-		}
-
 
 		public Finder()
 		{
 		}
-
 
 		public FindResult Find()
 		{
@@ -168,7 +131,7 @@ namespace FindAndReplace
 
 			resultItem.FileName = Path.GetFileName(filePath);
 			resultItem.FilePath = filePath;
-			resultItem.FileRelativePath = "." + filePath.Substring(Dir.Length);
+			resultItem.FileRelativePath = $".{filePath.Substring(Dir.Length)}";
 
 			byte[] sampleBytes;
 
@@ -257,15 +220,12 @@ namespace FindAndReplace
 			IsCancelRequested = true;
 		}
 
-
-
 		public event FileProcessedEventHandler FileProcessed;
 
 		protected virtual void OnFileProcessed(FinderEventArgs e)
 		{
-			if (FileProcessed != null)
-				FileProcessed(this, e);
-		}
+            FileProcessed?.Invoke(this, e);
+        }
 
 		public string GenCommandLine(bool showEncoding)
 		{
@@ -274,5 +234,6 @@ namespace FindAndReplace
 			                                            IncludeFilesWithoutMatches, UseEscapeChars, AlwaysUseEncoding, FindText,
 			                                            null, IsKeepModifiedDate);
 		}
+
 	}
 }

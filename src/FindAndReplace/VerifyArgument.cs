@@ -12,6 +12,7 @@ namespace FindAndReplace
     {
         internal Verify()
         {
+
         }
 
 		[Serializable]
@@ -25,21 +26,21 @@ namespace FindAndReplace
             public static void IsNotEmpty(Guid argument, string argumentName)
             {
                 if (argument == Guid.Empty)
-                    throw new ArgumentException(argumentName + " cannot be empty guid.", argumentName);
+                    throw new ArgumentException($"{argumentName} cannot be empty guid.", argumentName);
             }
 
             [DebuggerStepThrough]
             public static void IsNotEmpty(string argument, string argumentName)
             {
                 if (string.IsNullOrEmpty((argument ?? string.Empty).Trim()))
-                    throw new ArgumentException(argumentName + " cannot be empty.", argumentName);
+                    throw new ArgumentException($"{argumentName} cannot be empty.", argumentName);
             }
 
             [DebuggerStepThrough]
             public static void IsWithinLength(string argument, int length, string argumentName)
             {
                 if (argument.Trim().Length > length)
-                    throw new ArgumentException(argumentName + " cannot be more than " + length + " characters", argumentName);
+                    throw new ArgumentException($"{argumentName} cannot be more than {length} characters", argumentName);
             }
 
 
@@ -47,7 +48,7 @@ namespace FindAndReplace
 			public static void IsNull(object argument, string argumentName)
 			{
 				if (argument != null)
-					throw new ArgumentException(argumentName + " must be null", argumentName);
+					throw new ArgumentException($"{argumentName} must be null", argumentName);
 			}
 
 
@@ -168,13 +169,13 @@ namespace FindAndReplace
             public static void IsInRange(int argument, int min, int max, string argumentName)
             {
                 if ((argument < min) || (argument > max))
-                    throw new ArgumentOutOfRangeException(argumentName, argumentName + "must be between " + min + "-" + max + ".");
+                    throw new ArgumentOutOfRangeException(argumentName, $"{argumentName}must be between {min}-{max}.");
             }
 
 			public static void AreEqual<T>(T expected, T actual, string argumentName) 
             {
                 if (!EqualityComparer<T>.Default.Equals(expected, actual))
-                    throw new ArgumentOutOfRangeException(argumentName, argumentName + " must be " + expected + ", but was " + actual + ".");
+                    throw new ArgumentOutOfRangeException(argumentName, $"{argumentName} must be {expected}, but was {actual}.");
             }
 
 			public static void IsTrue(bool actual, string argumentName)
@@ -190,7 +191,7 @@ namespace FindAndReplace
 			public static void AreNotEqual<T>(T expected, T actual, string argumentName)
 			{
 				if (EqualityComparer<T>.Default.Equals(expected, actual))
-					throw new ArgumentOutOfRangeException(argumentName, argumentName + " must not be equal to " + expected + ".");
+					throw new ArgumentOutOfRangeException(argumentName, $"{argumentName} must not be equal to {expected}.");
 			}
 
             /*

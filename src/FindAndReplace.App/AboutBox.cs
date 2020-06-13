@@ -1,25 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
-using System.Drawing;
-using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace FindAndReplace.App
 {
-	partial class AboutBox : Form
+    partial class AboutBox : Form
 	{
 		public AboutBox()
 		{
 			InitializeComponent();
-			this.Text = String.Format("About {0}", AssemblyTitle);
+			this.Text = $"About {AssemblyTitle}";
 			this.lblProductName.Text = AssemblyProduct;
 			this.lnkProduct.Text = "http://findandreplace.io/";
 		
-			this.lblVersion.Text = String.Format("Version {0}", AssemblyVersion);
+			this.lblVersion.Text = $"Version {AssemblyVersion}";
 			this.lblCopyright.Text = AssemblyCopyright;
 			this.lnkCompany.Text = AssemblyCompany;
 		    this.uiSupportedBy.Text = "ZZZ Projects";

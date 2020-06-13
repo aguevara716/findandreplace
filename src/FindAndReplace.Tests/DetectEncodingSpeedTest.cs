@@ -5,11 +5,12 @@ using System.IO;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using FindAndReplace.EncodingTools;
 using NUnit.Framework;
 
 namespace FindAndReplace.Tests.DetectEncodingSpeedTest
 {
-	[TestFixture]
+    [TestFixture]
 	public class DetectEncodingSpeedTest : TestBase
 	{
 	    private string speedDir = "";
@@ -35,14 +36,14 @@ namespace FindAndReplace.Tests.DetectEncodingSpeedTest
 
 	    protected void CreateTestDir()
 	    {
-	        _tempDir = Path.GetTempPath() + "\\FindAndReplaceTests";
+	        _tempDir = $@"{Path.GetTempPath()}\FindAndReplaceTests";
 	        Directory.CreateDirectory(_tempDir);
 	    }
 
 
 	    protected void DeleteTestDir()
 	    {
-	        var tempDir = Path.GetTempPath() + "\\FindAndReplaceTests";
+	        var tempDir = $@"{Path.GetTempPath()}\FindAndReplaceTests";
 
 	        Directory.Delete(tempDir, true);
 	    }
@@ -50,25 +51,25 @@ namespace FindAndReplace.Tests.DetectEncodingSpeedTest
 
 	    protected void CreateSpeedDir()
 	    {
-	        speedDir = "D:\\Temp\\FindAndReplaceTest2" + "\\Speed";
+	        speedDir = @"D:\Temp\FindAndReplaceTest2\Speed";
 
 	        if (Directory.Exists(speedDir))
 	          
 	        {
-	            speedDir = "D:\\Temp\\FindAndReplaceTest2" + "\\Speed";
+	            speedDir = @"D:\Temp\FindAndReplaceTest2\Speed";
 
 	            if (Directory.Exists(speedDir))
 	                Directory.Delete(speedDir, true);
             }
 	        if (Directory.Exists(speedDir))
-	            throw new InvalidOperationException("Dir '" + speedDir + "' already exists.");
+	            throw new InvalidOperationException($"Dir '{speedDir}' already exists.");
 
             Directory.CreateDirectory(speedDir);
 	    }
 
 	    protected void DeleteSpeedDir()
 	    {
-	        speedDir = "D:\\Temp\\FindAndReplaceTest2" + "\\Speed";
+	        speedDir = @"D:\Temp\FindAndReplaceTest2\Speed";
 
 	        if (Directory.Exists(speedDir))
 	            Directory.Delete(speedDir, true);
@@ -89,7 +90,7 @@ namespace FindAndReplace.Tests.DetectEncodingSpeedTest
 
 		private void CreateTestFile(string fileContent, Encoding encoding)
 		{
-			string filePath = speedDir + "\\" + encoding.EncodingName + ".txt";
+            string filePath = $@"{speedDir}\{encoding.EncodingName}.txt";
 			File.WriteAllText(filePath, fileContent, encoding);
 		}
 
@@ -99,13 +100,11 @@ namespace FindAndReplace.Tests.DetectEncodingSpeedTest
 			RunTest(EncodingDetector.Options.KlerkSoftBom, speedDir);
 		}
 
-
 		[Test]
 		public void KlerkSoft_Heuristics_NewFiles()
 		{
 			RunTest(EncodingDetector.Options.KlerkSoftHeuristics, speedDir);
 		}
-
 
 		[Test]
 		public void MLang_NewFiles()
@@ -125,7 +124,6 @@ namespace FindAndReplace.Tests.DetectEncodingSpeedTest
 			RunTest(EncodingDetector.Options.KlerkSoftBom | EncodingDetector.Options.KlerkSoftHeuristics, speedDir);
 		}
 
-
 		[Test]
 		public void MLang_Real_Dir()
 		{
@@ -137,8 +135,6 @@ namespace FindAndReplace.Tests.DetectEncodingSpeedTest
 		{
 			RunTest(EncodingDetector.Options.MLang, speedDir);
 		}
-
-
 
 		[Test]
 		public void MLang_Real_Dir_MultiThreaded()
@@ -161,14 +157,11 @@ namespace FindAndReplace.Tests.DetectEncodingSpeedTest
 		    if (!Directory.Exists(filePath))
 		    {
 		        Directory.CreateDirectory(filePath);
-		        File.WriteAllText(filePath + "\\ASCII.txt", GetFileContent(1000), Encoding.ASCII);
-		        File.WriteAllText(filePath + "\\BigEndianUnicode.txt", GetFileContent(1000), Encoding.BigEndianUnicode);
+		        File.WriteAllText($@"{filePath}\ASCII.txt", GetFileContent(1000), Encoding.ASCII);
+		        File.WriteAllText($@"{filePath}\BigEndianUnicode.txt", GetFileContent(1000), Encoding.BigEndianUnicode);
             }
 
             RunTestMLangMultiThreaded(filePath, 1);
-
-	 
-
 
             //http://bytes.com/topic/net/answers/49348-multithreading-concurrency-interop
             //Interop junk
@@ -203,10 +196,8 @@ namespace FindAndReplace.Tests.DetectEncodingSpeedTest
 				
 				StopWatch.Stop("IsBinaryFile");
 
-
 				StopWatch.Start(detectorName);
 
-			
 				//First try BOM detection and Unicode detection using Klerks Soft encoder
 				//stream.Seek(0, SeekOrigin.Begin);
 
@@ -218,13 +209,13 @@ namespace FindAndReplace.Tests.DetectEncodingSpeedTest
 				
 				StopWatch.Stop(detectorName);
 
-				WriteToConsole(filePath + ": " + encoding);
+				WriteToConsole($"{filePath}: {encoding}");
 				
 				if (totalFiles > 10)
 					break;
 			}
 
-			Console.WriteLine("Found Encoding in:" + numFoundEncodings + " out of " + totalFiles);
+			Console.WriteLine($"Found Encoding in: {numFoundEncodings} out of {totalFiles}");
 
 			stopWatch.Stop();
 
@@ -232,13 +223,10 @@ namespace FindAndReplace.Tests.DetectEncodingSpeedTest
 			StopWatch.Collection.Clear();
 		}
 
-
-
 		BlockingCollection<DetectEncodingFileDto> _filesToDetectEncoding;
 
 		private int _numFoundEncodings = 0;
 		private int _totalFiles = 0;
-
 
 		private void RunTestMLangMultiThreaded(string dir, int numThreads)
 		{
@@ -251,7 +239,7 @@ namespace FindAndReplace.Tests.DetectEncodingSpeedTest
 
 			Console.WriteLine("");
 			Console.WriteLine("=====================================================");
-			Console.WriteLine("Number of threads = " + numThreads);
+			Console.WriteLine($"Number of threads = {numThreads}");
 
 			//EncodingTools.PreDetectInputCodepages2();
 
@@ -293,20 +281,17 @@ namespace FindAndReplace.Tests.DetectEncodingSpeedTest
 
 			Task.WaitAll(tasks.ToArray());
 
-
 			//EncodingTools.PostDetectInputCodepages2();
 
-			Console.WriteLine("Found Encoding in:" + _numFoundEncodings + " out of " + _totalFiles);
+			Console.WriteLine($"Found Encoding in: {_numFoundEncodings} out of {_totalFiles}");
 
 			stopWatch.Stop();
-
 
             StopWatch.PrintCollection(stopWatch.Milliseconds);
 			StopWatch.Collection.Clear();
 
 			_filesToDetectEncoding.Dispose();
 		}
-
 		
 		private class DetectEncodingFileDto
 		{
@@ -316,7 +301,7 @@ namespace FindAndReplace.Tests.DetectEncodingSpeedTest
 
 		private void DetectEncodingAsyncAction(int taskIndex)
 		{
-			WriteToConsole("Started wait for DetectEncodingAsyncAction Task: " + taskIndex);
+			WriteToConsole($"Started wait for DetectEncodingAsyncAction Task: {taskIndex}");
 
 			DetectEncodingFileDto dto;
 			while (_filesToDetectEncoding.Count > 0 || !_filesToDetectEncoding.IsAddingCompleted)
@@ -325,14 +310,14 @@ namespace FindAndReplace.Tests.DetectEncodingSpeedTest
 					DetectEncodingSyncAction(dto);
 			}
 
-			WriteToConsole("Ended wait for DetectEncodingAsyncAction Task: " + taskIndex);
+			WriteToConsole($"Ended wait for DetectEncodingAsyncAction Task: {taskIndex}");
 		}
 
 		private Object lockObj = new Object();
 
 		private void DetectEncodingSyncAction(DetectEncodingFileDto dto)
 		{
-			string stopWatchKey = "DetectEncodingSyncAction_" + Thread.CurrentThread.ManagedThreadId;
+			string stopWatchKey = $"DetectEncodingSyncAction_{Thread.CurrentThread.ManagedThreadId}";
 			StopWatch.Start(stopWatchKey);
 			
 			//First try BOM detection and Unicode detection using Klerks Soft encoder
@@ -355,8 +340,6 @@ namespace FindAndReplace.Tests.DetectEncodingSpeedTest
 			//	// return default codepage on error
 			//}
 
-			
-
 			lock (lockObj)
 			{
 				_totalFiles++;
@@ -370,10 +353,9 @@ namespace FindAndReplace.Tests.DetectEncodingSpeedTest
 			StopWatch.Stop(stopWatchKey);
 		}
 
-
 		private void WriteToConsole(string line)
 		{
-			Console.WriteLine(DateTime.Now.ToString("hh:mm:ssss") + " ThreadId: " + Thread.CurrentThread.ManagedThreadId + " : " + line);
+			Console.WriteLine($"{DateTime.Now:hh:mm:ssss} ThreadId: {Thread.CurrentThread.ManagedThreadId} : {line}");
 		}
 	}
 }

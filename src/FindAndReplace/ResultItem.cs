@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 
 namespace FindAndReplace
 {
-	abstract public class ResultItem
+    abstract public class ResultItem
 	{
 		public string FileName { get; set; }
 		public string FilePath { get; set; }
@@ -40,7 +38,12 @@ namespace FindAndReplace
 
 		public bool IsReplaced
 		{
-			get { return this.IsSuccess && this.NumMatches > 0; }  //Account for case when no matches found
+			get 
+			{ 
+				return IsSuccess && 
+					   NumMatches > 0; //Account for case when no matches found
+			}
 		}
+
 	}
 }

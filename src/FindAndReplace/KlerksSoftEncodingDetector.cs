@@ -5,8 +5,8 @@ using System.Text.RegularExpressions;
 
 namespace FindAndReplace
 {
-	//From here http://www.architectshack.com/TextFileEncodingDetector.ashx
-	public class KlerksSoftEncodingDetector
+    //From here http://www.architectshack.com/TextFileEncodingDetector.ashx
+    public class KlerksSoftEncodingDetector
 	{
 
 		/*
@@ -140,12 +140,9 @@ OF SUCH DAMAGE.
 		{
 			if (TextData == null)
 				throw new ArgumentNullException("Must provide a valid text data byte array!", "TextData");
-
-			Encoding encodingFound = null;
-
-			encodingFound = DetectBOMBytes(TextData);
-
-			if (encodingFound != null)
+            
+			var encodingFound = DetectBOMBytes(TextData);
+            if (encodingFound != null)
 			{
 				return encodingFound;
 			}
@@ -159,8 +156,6 @@ OF SUCH DAMAGE.
 				else
 					return DefaultEncoding;
 			}
-
-
 		}
 
 		public static Encoding DetectBOMBytes(byte[] BOMBytes)
@@ -171,18 +166,19 @@ OF SUCH DAMAGE.
 			if (BOMBytes.Length < 2)
 				return null;
 
-			if (BOMBytes[0] == 0xff
-			    && BOMBytes[1] == 0xfe
-			    && (BOMBytes.Length < 4
-			        || BOMBytes[2] != 0
-			        || BOMBytes[3] != 0
-			       )
-				)
+
+            bool isUnicode = 
+				BOMBytes[0] == 0xff &&
+				BOMBytes[1] == 0xfe &&
+				(
+					BOMBytes.Length < 4 ||
+                    BOMBytes[2] != 0 ||
+                    BOMBytes[3] != 0
+                );
+            if (isUnicode)
 				return Encoding.Unicode;
 
-			if (BOMBytes[0] == 0xfe
-			    && BOMBytes[1] == 0xff
-				)
+			if (BOMBytes[0] == 0xfe && BOMBytes[1] == 0xff)
 				return Encoding.BigEndianUnicode;
 
 			if (BOMBytes.Length < 3)

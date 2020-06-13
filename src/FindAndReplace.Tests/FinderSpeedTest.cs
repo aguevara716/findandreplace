@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FindAndReplace.EncodingTools;
 using NUnit.Framework;
 
 namespace FindAndReplace.Tests
@@ -49,8 +50,6 @@ free program...";
 		private bool _addToAllTestResults;
 		private List<FinderTestResult> _allTestResults;
 	
-
-
 		private void WriteFiles(int numFiles, int fileSize)
 		{
 			string fileContent = GetFileContent(fileSize);
@@ -61,11 +60,9 @@ free program...";
 			}	
 		}
 
-	
-
 		private void CreateTestFile(int index, string fileContent)
 		{
-			string filePath = _speedDir + "\\" + index + ".txt";
+			string filePath = $"{_speedDir}\\{index}.txt";
 			FileStream fs = new FileStream(filePath, FileMode.Create);
 			StreamWriter sr = new StreamWriter(fs);
 
@@ -79,38 +76,36 @@ free program...";
 		[Test]
 		public void By_FileSize()
 		{
-			for (int i = 1; i < 101; i=i*10)
+			for (int i = 1; i < 101; i *= 10)
 				TestFinder("By_FileSize", 100, 1000 * i);
 		}
-
 
 		[Test]
 		public void By_NumFiles()
 		{
 			//Use same files 10K - 10, 100, 1000
-			for (int i = 10; i < 1001; i = i * 10)
+			for (int i = 10; i < 1001; i *= 10)
 				TestFinder("By_NumFiles", i, 10000);
 		}
-
-
 
 		[Test]
 		public void In_Real_Directory()
 		{
 			string realDir = "..//..//bin";
 			 
-			StopWatch stopWatch = new StopWatch();
+			var stopWatch = new StopWatch();
 			stopWatch.Start();
-			
-			Finder finder = new Finder();
 
-			finder.Dir = realDir;
-			finder.FileMask = "*.*";
-			finder.ExcludeFileMask = "*.dll, *.exe";
-			finder.FindText = "page";
-			finder.IncludeSubDirectories = true;
+            Finder finder = new Finder
+            {
+                Dir = realDir,
+                FileMask = "*.*",
+                ExcludeFileMask = "*.dll, *.exe",
+                FindText = "page",
+                IncludeSubDirectories = true
+            };
 
-			var findResult = finder.Find();
+            var findResult = finder.Find();
 
 			//Assert.AreEqual(numFiles, findResult.Stats.Files.Total);
 			
@@ -124,15 +119,12 @@ free program...";
 			StopWatch.Collection.Clear();
 		}
 
-
-
 		[Test]
 		public void Use_RegEx()
 		{
 			const string regExExpression = "\\b(F|f)ree\\b";
 			TestFinder("Use_RegEx", 100, 10000, regExExpression);
 		}
-
 
 		private void TestFinder(string testName, int numFiles, int fileSizeInChars, string regExExpression = null)
 		{
@@ -144,12 +136,13 @@ free program...";
 			StopWatch stopWatch = new StopWatch();
 			stopWatch.Start();
 
-			Finder finder = new Finder();
+            Finder finder = new Finder
+            {
+                Dir = _speedDir,
+                FileMask = "*.*"
+            };
 
-			finder.Dir = _speedDir;
-			finder.FileMask = "*.*";
-
-			if (regExExpression == null)
+            if (regExExpression == null)
 			{
 				finder.FindText = "it";
 			}
@@ -164,7 +157,6 @@ free program...";
 			Assert.AreEqual(numFiles, findResult.Stats.Files.Total);
 			//Assert.AreEqual(5000, findResult.Stats.Matches.Found);
 
-
 			stopWatch.Stop();
 
 			if (_addToAllTestResults)
@@ -174,7 +166,7 @@ free program...";
 			else
 			{
 				Console.WriteLine("=================================================");
-				Console.WriteLine("Num Files = " + numFiles + ", File Size=" + fileSizeInChars + " chars ");
+				Console.WriteLine($"Num Files = {numFiles}, File Size={fileSizeInChars} chars ");
 				Console.WriteLine("==================================================");
 
 				StopWatch.PrintCollection(stopWatch.Milliseconds);
@@ -188,7 +180,7 @@ free program...";
 
 		private void AddToAllTestResults(string testName, int numFiles, int fileSizeInChars)
 		{
-			string fullTestName = testName + " (file size: " + (fileSizeInChars == -1 ? "N/A" : fileSizeInChars.ToString()) + " chars, num files: " + numFiles + ")";
+			string fullTestName = $"{testName} (file size: {(fileSizeInChars == -1 ? "N/A" : fileSizeInChars.ToString())} chars, num files: {numFiles})";
 			var finderTestResult = new FinderTestResult
 			{
 				TestName = fullTestName,
@@ -196,8 +188,6 @@ free program...";
 			};
 			_allTestResults.Add(finderTestResult);
 		}
-
-
 
 		[Test]
 		public void Run_All_Tests()
@@ -210,7 +200,6 @@ free program...";
 			In_Real_Directory();
 			Use_RegEx();
 		
-			
 			WriteHeadingsRow();
 			
 			WriteRow("GetFilesInDirectory");
@@ -227,23 +216,19 @@ free program...";
 			_addToAllTestResults = false;
 		}
 
-		
-
-
 		private void WriteHeadingsRow()
 		{
 			for (int i = 0; i < _allTestResults.Count; i++)
 			{
-				Console.WriteLine("Test " + (i + 1) + ": " + _allTestResults[i].TestName);
+				Console.WriteLine($"Test {i + 1}: {_allTestResults[i].TestName}");
 			}
-			Console.WriteLine("");
-			Console.WriteLine("");
+			Console.WriteLine(String.Empty);
+			Console.WriteLine(String.Empty);
 
 			var rowVals = new List<string> {"Action"};
-
 			for (int i = 0; i < _allTestResults.Count; i++)
 			{
-				rowVals.Add("Test " + (i + 1));
+				rowVals.Add($"Test {i + 1}");
 			}
 
 			WriteRow(rowVals);
@@ -252,11 +237,12 @@ free program...";
 
 		private void WriteTotalsRow()
 		{
-			var rowVals = new List<string>();
-			rowVals.Add("Total Test Time:");
-			
+            var rowVals = new List<string>
+            {
+                "Total Test Time:"
+            };
 
-			for (int i = 0; i < _allTestResults.Count; i++)
+            for (int i = 0; i < _allTestResults.Count; i++)
 			{
 				int totalMilliseconds = 0;
 				foreach (StopWatch sw in _allTestResults[i].StopWatches.Values)
@@ -264,20 +250,20 @@ free program...";
 					totalMilliseconds += sw.Milliseconds;
 				}
 			
-				rowVals.Add(totalMilliseconds + "ms");
+				rowVals.Add($"{totalMilliseconds}ms");
 			}
 
 			WriteRow(rowVals);
 		}
 
-		
-
 		private void WriteRow(string actionName)
 		{
-			var rowVals = new List<string>();
-			rowVals.Add(actionName);
-			
-			foreach (var testResult in _allTestResults)
+            var rowVals = new List<string>
+            {
+                actionName
+            };
+
+            foreach (var testResult in _allTestResults)
 			{
 				//Total millisecs for single test
 				int totalMilliseconds = testResult.StopWatches.Sum(sw => sw.Value.Milliseconds);
@@ -288,13 +274,12 @@ free program...";
 				decimal percent = Math.Round((stopWatch.Milliseconds / (decimal)totalMilliseconds) * 100, 1);
 
 				//rowVals.Add(percent + "% | avg " + avgDuration + " | tl " + stopWatch.Milliseconds);
-				rowVals.Add(percent.ToString() + "%");
+				rowVals.Add($"{percent}%");
 
 			}
 
 			WriteRow(rowVals);
 		}
-
 
 		private void WriteRow(List<string> rowVals)
 		{
@@ -306,10 +291,8 @@ free program...";
 					rowVals[i] = rowVals[i].PadLeft(10);
 			
 			}
-				
 			Console.WriteLine(string.Join("  ", rowVals));
 		}
-
 	}
 
 	internal class FinderTestResult

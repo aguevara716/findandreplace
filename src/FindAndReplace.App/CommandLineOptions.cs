@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using CommandLine;
 using CommandLine.Text;
 
 namespace FindAndReplace.App
 {
-	public class CommandLineOptions
+    public class CommandLineOptions
 	{
 		#region Standard Option Attribute
 

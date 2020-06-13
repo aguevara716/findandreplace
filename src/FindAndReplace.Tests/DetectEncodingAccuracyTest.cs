@@ -1,17 +1,16 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading;
+using FindAndReplace.EncodingTools;
 using NUnit.Framework;
-using System.Linq;
-using href.Utils;
 
 namespace FindAndReplace.Tests
 {
-	[TestFixture]
+    [TestFixture]
 	public class DetectEncodingAccuracyTest : TestBase
 	{
-
 		[SetUp]
 		public override void SetUp()
 		{
@@ -20,14 +19,12 @@ namespace FindAndReplace.Tests
 			WriteFiles(100000);
 		}
 
-
 		[TearDown]
 		public override void TearDown()
 		{
 			DeleteTestDir();
 		}
-
-
+		
 		private void WriteFiles(int fileSize)
 		{
 			string fileContent = GetFileContent(fileSize);
@@ -43,11 +40,9 @@ namespace FindAndReplace.Tests
 
 		private void CreateTestFile(string fileContent, Encoding encoding)
 		{
-			string filePath = _tempDir + "\\" + encoding.EncodingName + ".txt";
+			string filePath = $@"{_tempDir}\{encoding.EncodingName}.txt";
 			File.WriteAllText(filePath, fileContent, encoding);
 		}
-
-
 
 		[Test]
 		public void MLang()
@@ -60,7 +55,6 @@ namespace FindAndReplace.Tests
 		{
 			RunTest(EncodingDetector.Options.KlerkSoftBom);
 		}
-
 
 		private void RunTest(EncodingDetector.Options encDetectorOptions)
 		{
@@ -77,28 +71,23 @@ namespace FindAndReplace.Tests
 				if (encoding != null)
 					numFoundEncodings++;
 				
-				WriteToConsole(Path.GetFileName(filePath) + ": " + encoding);
+				WriteToConsole($"{Path.GetFileName(filePath)}: {encoding}");
 				
 				if (totalFiles > 10)
 					break;
 			}
 
-			Console.WriteLine("Found Encoding in:" + numFoundEncodings + " out of " + totalFiles);
+			Console.WriteLine($"Found Encoding in:{numFoundEncodings} out of {totalFiles}");
 		}
-
-
-
 
 		private void WriteToConsole(string line)
 		{
-			Console.WriteLine(DateTime.Now.ToString("hh:mm:ssss") + " ThreadId: " + Thread.CurrentThread.ManagedThreadId + " : " + line);
+			Console.WriteLine($"{DateTime.Now:hh:mm:ssss} ThreadId: {Thread.CurrentThread.ManagedThreadId} : {line}");
 		}
 	}
 
-
 	public class UniversalEncodingDetector
 	{
-
 		[Flags]
 		public enum Options
 		{
@@ -156,7 +145,6 @@ namespace FindAndReplace.Tests
 			return encoding;
 		}
 
-
 		private static Encoding DetectEncodingUsingKlerksSoftHeuristics(byte[] bytes)
 		{
 			Encoding encoding = KlerksSoftEncodingDetector.DetectUnicodeInByteSampleByHeuristics(bytes);
@@ -168,7 +156,7 @@ namespace FindAndReplace.Tests
 		{
 			try
 			{
-				Encoding[] detected = EncodingTools.DetectInputCodepages(bytes, 1);
+				Encoding[] detected = EncodingTools.EncodingTools.DetectInputCodepages(bytes, 1);
 				if (detected.Length > 0)
 				{
 					return detected[0];

@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace FindAndReplace
 {
-	public class ReplacerEventArgs : EventArgs
+    public class ReplacerEventArgs : EventArgs
 	{
 		public Replacer.ReplaceResultItem ResultItem { get; set; }
 		public Stats Stats { get; set; }
@@ -148,7 +148,7 @@ namespace FindAndReplace
 
 			resultItem.FileName = Path.GetFileName(filePath);
 			resultItem.FilePath = filePath;
-			resultItem.FileRelativePath = "." + filePath.Substring(Dir.Length);
+			resultItem.FileRelativePath = $".{filePath.Substring(Dir.Length)}";
 
 			byte[] sampleBytes;
 

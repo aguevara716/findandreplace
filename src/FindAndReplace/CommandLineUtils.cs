@@ -46,7 +46,7 @@ namespace FindAndReplace
 				{
 					string matchText = match.ToString();
 					string justSlashes = matchText.Remove(matchText.Length - 1);
-					return justSlashes + justSlashes + "\"";  //double up the slashes
+					return $"{justSlashes}{justSlashes}\"";  //double up the slashes
 				});
 				
 			return result;
@@ -66,7 +66,7 @@ namespace FindAndReplace
 				delegate(Match match)
 				{
 					string matchText = match.ToString();
-					return matchText + matchText;  //double up the slashes
+					return $"{matchText}{matchText}";  //double up the slashes
 				});
 
 			return result;
@@ -118,10 +118,10 @@ namespace FindAndReplace
 					fileMask,
 					String.IsNullOrEmpty(excludeFileMask)
 						? ""
-						: String.Format(" --excludeFileMask \"{0}\"", CommandLineUtils.EncodeText(excludeFileMask)),
+						: $" --excludeFileMask \"{CommandLineUtils.EncodeText(excludeFileMask)}\"",
                     String.IsNullOrEmpty(excludeDir)
 					    ? ""
-					    : String.Format(" --ExcludeDir \"{0}\"", CommandLineUtils.EncodeText(excludeDir)),
+					    : $" --ExcludeDir \"{CommandLineUtils.EncodeText(excludeDir)}\"",
                     includeSubDirectories ? " --includeSubDirectories" : "",
 					isCaseSensitive ? " --caseSensitive" : "",
 					isRegEx ? " --useRegEx" : "",
@@ -130,9 +130,9 @@ namespace FindAndReplace
 					showEncoding ? " --showEncoding" : "",
 					includeFilesWithoutMatches ? " --includeFilesWithoutMatches" : "",
 					useEscapeChars ? " --useEscapeChars" : "",
-					(encoding != null) ? String.Format(" --alwaysUseEncoding \"{0}\"", encoding.HeaderName) : "",
+					(encoding != null) ? $" --alwaysUseEncoding \"{encoding.HeaderName}\"" : "",
 					CommandLineUtils.EncodeText(find, isRegEx, useEscapeChars),
-					(replace != null) ? String.Format("--replace \"{0}\"", CommandLineUtils.EncodeText(replace, false, useEscapeChars)) : ""
+					(replace != null) ? $"--replace \"{CommandLineUtils.EncodeText(replace, false, useEscapeChars)}\"" : ""
 				);
 		}
 
@@ -141,19 +141,15 @@ namespace FindAndReplace
 		//if arg ends with odd count of '\' we add one more to the end
 		public static bool IsValidCommandLineArg(string text)
 		{
-			
-
 			return true;
 		}
 
 		public static string EscapeBackSlashes(string text)
 		{
 			var regexPattern = "\\\\";
-
 			var result = text;
 
 			var regex = new Regex(regexPattern);
-
 			var matches = regex.Matches(text);
 
 			for (int i = matches.Count - 1; i>= 0; i--)

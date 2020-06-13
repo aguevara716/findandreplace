@@ -18,7 +18,7 @@ namespace FindAndReplace.App
 
             for (var index = 0; index < processesByName.Length; index++)
             {
-                processIndexdName = index == 0 ? processName : processName + "#" + index;
+                processIndexdName = index == 0 ? processName : $"{processName}#{index}";
                 var processId = new PerformanceCounter("Process", "ID Process", processIndexdName);
                 if ((int)processId.NextValue() == pid)
                 {

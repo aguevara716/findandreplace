@@ -10,7 +10,10 @@
 
         public static void ExecuteStartupSteps()
         {
-
+            IocRegistrar.RegisterDialogService();
+            IocRegistrar.RegisterNavigationServices();
+            IocRegistrar.RegisterServices();
+            IocRegistrar.RegisterViewModels();
         }
 
         public static void ExecuteUserSessionEndingSteps()

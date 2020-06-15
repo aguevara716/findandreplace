@@ -1,11 +1,9 @@
 ﻿using System.Windows.Controls;
+using FindAndReplace.Wpf.Extensions;
 using FindAndReplace.Wpf.ViewModels;
 
 namespace FindAndReplace.Wpf.Views
 {
-    /// <summary>
-    /// Interaction logic for FnrView.xaml
-    /// </summary>
     public partial class FnrView : Page
     {
         private readonly FnrViewModel viewModel;
@@ -21,12 +19,12 @@ namespace FindAndReplace.Wpf.Views
 
         private void OnLoad(object sender, System.Windows.RoutedEventArgs e)
         {
-            viewModel?.LoadedCommand?.Execute(null);
+            viewModel?.LoadedCommand?.Execute();
         }
 
         private void OnUnload(object sender, System.Windows.RoutedEventArgs e)
         {
-            viewModel?.UnloadedCommand?.Execute(null);
+            viewModel?.UnloadedCommand?.Execute();
         }
 
     }

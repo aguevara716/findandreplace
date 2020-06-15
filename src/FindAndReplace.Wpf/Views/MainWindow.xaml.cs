@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using FindAndReplace.Wpf.Extensions;
 using FindAndReplace.Wpf.ViewModels;
 
 namespace FindAndReplace.Wpf.Views
@@ -18,12 +19,12 @@ namespace FindAndReplace.Wpf.Views
 
         private void OnLoad(object sender, RoutedEventArgs e)
         {
-            viewModel?.LoadedCommand?.Execute(null);
+            viewModel?.LoadedCommand?.Execute();
         }
 
         private void OnUnloaded(object sender, RoutedEventArgs e)
         {
-            viewModel?.UnloadedCommand?.Execute(null);
+            viewModel?.UnloadedCommand?.Execute();
         }
 
     }

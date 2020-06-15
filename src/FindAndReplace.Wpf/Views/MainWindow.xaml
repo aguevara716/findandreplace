@@ -20,7 +20,6 @@
         <Menu Grid.Row="0" IsMainMenu="True">
             <MenuItem Header="Help">
                 <MenuItem Header="View Online Help"/>
-                <Separator/>
                 <MenuItem Header="About"/>
             </MenuItem>
         </Menu>

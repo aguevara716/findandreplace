@@ -23,29 +23,105 @@
             </Grid.ColumnDefinitions>
 
             <GroupBox Header="Arguments" Grid.Row="0" Grid.Column="0">
-                <WrapPanel Orientation="Horizontal">
-                    <CheckBox Content="Case sensitive"/>
-                    <CheckBox Content="Use regular expressions"/>
-                    <CheckBox Content="Skip binary file detection"/>
-                    <CheckBox Content="Keep modified date"/>
-                    <CheckBox Content="Show encoding"/>
-                    <CheckBox Content="Include files without matches"/>
-                    <CheckBox Content="Use escape chars"/>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="Encoding:"/>
-                        <ComboBox>
-                            <ComboBoxItem Content="Auto Detect" IsSelected="True"/>
-                            <ComboBoxItem Content="ISO-8859-1"/>
-                            <ComboBoxItem Content="US-ASCII"/>
-                            <ComboBoxItem Content="UTF-16"/>
-                            <ComboBoxItem Content="UTF-16BE"/>
-                            <ComboBoxItem Content="UTF-32"/>
-                            <ComboBoxItem Content="UTF-32BE"/>
-                            <ComboBoxItem Content="UTF-7"/>
-                            <ComboBoxItem Content="UTF-8"/>
-                        </ComboBox>
-                    </StackPanel>
-                </WrapPanel>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Root Directory" VerticalAlignment="Center"/>
+                        <DockPanel Grid.Row="0" Grid.Column="1" LastChildFill="True">
+                            <Button DockPanel.Dock="Right" Content="Browse"/>
+                            <TextBox DockPanel.Dock="Left"/>
+                        </DockPanel>
+
+                        <CheckBox Grid.Row="1" Grid.Column="1" Content="Include subdirectories (recursive)"/>
+
+                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Exclude Directories"/>
+                        <TextBox Grid.Row="2" Grid.Column="1" />
+
+                        <TextBlock Grid.Row="3" Grid.Column="0" Text="File Mask"/>
+                        <TextBox Grid.Row="3" Grid.Column="1"/>
+
+                        <TextBlock Grid.Row="4" Grid.Column="0" Text="Exclude Mask"/>
+                        <TextBox Grid.Row="4" Grid.Column="1"/>
+                    </Grid>
+
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Find"/>
+                        <DockPanel Grid.Row="0" Grid.Column="1" LastChildFill="True">
+                            <Button DockPanel.Dock="Right" Content="Find Only"/>
+                            <TextBox AcceptsReturn="True"/>
+                        </DockPanel>
+
+                        <WrapPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
+                            <CheckBox Content="Case sensitive"/>
+                            <CheckBox Content="Use regular expressions"/>
+                            <CheckBox Content="Skip binary file detection"/>
+                            <CheckBox Content="Keep modified date"/>
+                            <CheckBox Content="Show encoding"/>
+                            <CheckBox Content="Include files without matches"/>
+                            <CheckBox Content="Use escape chars"/>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Encoding:"/>
+                                <ComboBox>
+                                    <ComboBoxItem Content="Auto Detect" IsSelected="True"/>
+                                    <ComboBoxItem Content="ISO-8859-1"/>
+                                    <ComboBoxItem Content="US-ASCII"/>
+                                    <ComboBoxItem Content="UTF-16"/>
+                                    <ComboBoxItem Content="UTF-16BE"/>
+                                    <ComboBoxItem Content="UTF-32"/>
+                                    <ComboBoxItem Content="UTF-32BE"/>
+                                    <ComboBoxItem Content="UTF-7"/>
+                                    <ComboBoxItem Content="UTF-8"/>
+                                </ComboBox>
+                            </StackPanel>
+                        </WrapPanel>
+                    </Grid>
+
+                    <Grid Grid.Row="2">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Replace"/>
+                        <TextBox Grid.Row="0" Grid.Column="1" AcceptsReturn="True"/>
+
+                        <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right">
+                            <Button Content="Replace"/>
+                            <Button Content="Generate Command Line"/>
+                        </StackPanel>
+                    </Grid>
+
+                </Grid>
             </GroupBox>
             <GroupBox Header="Stats" Grid.Row="0" Grid.Column="1">
                 <StackPanel Orientation="Vertical">
@@ -71,7 +147,7 @@
             <GroupBox Header="Results" Grid.Row="1" Grid.ColumnSpan="2">
                 <UniformGrid Rows="2">
                     <DataGrid/>
-                    <RichTextBox/>
+                    <RichTextBox IsReadOnly="True"/>
                 </UniformGrid>
             </GroupBox>
         </Grid>

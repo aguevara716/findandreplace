@@ -13,7 +13,7 @@ namespace FindAndReplace.Wpf.Extensions
             {
                 exList.Add(currentException);
                 currentException = currentException.InnerException;
-            } while (currentException.InnerException != null);
+            } while (currentException != null);
 
             return exList;
         }

@@ -1,7 +1,12 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms.Design;
+using System.Windows.Threading;
 using FindAndReplace.Wpf.Dialogs;
 using FindAndReplace.Wpf.Models;
 using FindAndReplace.Wpf.Services;
@@ -16,6 +21,10 @@ namespace FindAndReplace.Wpf.ViewModels
         private readonly IDialogService dialogService;
         private readonly IFinderMapper finderMapper;
         private readonly IReplacerMapper replacerMapper;
+
+        // Delegates
+        private delegate void SetFindResultCallback(Finder.FindResultItem resultItem, Stats stats, Status status);
+        private delegate void SetReplaceResultCallback(Replacer.ReplaceResultItem resultItem, Stats stats, Status status);
 
         // Variables
         private bool isRunning;
@@ -48,6 +57,13 @@ namespace FindAndReplace.Wpf.ViewModels
         {
             get { return processStatus; }
             set { Set(nameof(ProcessStatus), ref processStatus, value); }
+        }
+
+        private ObservableCollection<Result> results;
+        public ObservableCollection<Result> Results
+        {
+            get { return results; }
+            set { Set(nameof(Results), ref results, value); }
         }
 
         // Commands
@@ -108,7 +124,42 @@ namespace FindAndReplace.Wpf.ViewModels
 
         private void OnFinderFileProcessed(object sender, FinderEventArgs e)
         {
-            throw new NotImplementedException();
+            SetFindResultCallback findResultCallback = ShowFindResult;
+            findResultCallback.Invoke(e.ResultItem, e.Stats, e.Status);
+        }
+
+        private void ShowFindResult(Finder.FindResultItem resultItem, Stats stats, Status status)
+        {
+            var result = new Result
+            {
+                ErrorMessage = resultItem.ErrorMessage,
+                FailedToOpen = false,
+                FileEncoding = resultItem.FileEncoding ?? Encoding.Default,
+                Filename = resultItem.FileName,
+                FilePath = resultItem.FilePath,
+                FileRelativePath = resultItem.FileRelativePath,
+                IsBinaryFile = resultItem.IsBinaryFile,
+                IsSuccess = resultItem.IsSuccess,
+                MatchCount = resultItem.NumMatches,
+                Matches = resultItem.Matches?.Select(lm => new Match
+                {
+                    Index = lm.Index,
+                    Length = lm.Length
+                }).ToList()
+            };
+            //Results.Add(result);
+
+            ProcessStatus = new ProcessStatus
+            {
+                BinaryFilesCount = stats.Files.Binary,
+                EllapsedTime = stats.Time.Passed,
+                FilesFailedToOpenCount = stats.Files.FailedToRead,
+                FilesProcessedCount = stats.Files.Processed,
+                FilesWithMatchesCount = stats.Files.WithMatches,
+                FilesWithoutMatchesCount = stats.Files.WithoutMatches,
+                MatchesCount = stats.Matches.Found,
+                TotalFilesCount = stats.Files.Total
+            };
         }
 
         private void DoFinderWork()
@@ -131,6 +182,10 @@ namespace FindAndReplace.Wpf.ViewModels
                     finder.IsSilent
                 );
                 OnFinderFileProcessed(this, finderEventArgs);
+            }
+            finally
+            {
+                UpdateIsRunning(false);
             }
         }
 
@@ -169,6 +224,8 @@ namespace FindAndReplace.Wpf.ViewModels
         private void FindExecuted()
         {
             UpdateIsRunning(true);
+            ProcessStatus = new ProcessStatus();
+            Results.Clear();
 
             finderThread = new Thread(DoFinderWork)
             {

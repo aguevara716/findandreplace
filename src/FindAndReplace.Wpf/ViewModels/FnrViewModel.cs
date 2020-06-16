@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Threading;
 using System.Threading.Tasks;
 using FindAndReplace.Wpf.Dialogs;
 using FindAndReplace.Wpf.Models;
@@ -18,6 +19,7 @@ namespace FindAndReplace.Wpf.ViewModels
 
         // Variables
         private bool isRunning;
+        private Thread finderThread;
 
         // Binding Variables
         private FolderParameters folderParameters;
@@ -103,6 +105,34 @@ namespace FindAndReplace.Wpf.ViewModels
             CancelCommand.RaiseCanExecuteChanged();
         }
 
+        private void OnFinderFileProcessed(object sender, FinderEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void DoFinderWork()
+        {
+            var finder = finderMapper.Map(FolderParameters, FindParameters);
+            try
+            {
+                finder.FileProcessed += OnFinderFileProcessed;
+                finder.Find();
+            }
+            catch (Exception ex)
+            {
+                dialogService.ShowMessage(ex.Message,
+                                          "Error");
+                var finderEventArgs = new FinderEventArgs
+                (
+                    new Finder.FindResultItem(),
+                    new Stats(),
+                    Status.Cancelled,
+                    finder.IsSilent
+                );
+                OnFinderFileProcessed(this, finderEventArgs);
+            }
+        }
+
         // Commands CanExecute
         private bool FindOrReplaceCanExecute()
         {
@@ -135,11 +165,15 @@ namespace FindAndReplace.Wpf.ViewModels
             FolderParameters.RootDirectory = selectedPath;
         }
 
-        private async void FindExecuted()
+        private void FindExecuted()
         {
             UpdateIsRunning(true);
-            await Task.Delay(5000);
-            UpdateIsRunning(false);
+
+            finderThread = new Thread(DoFinderWork)
+            {
+                IsBackground = true
+            };
+            finderThread.Start();
         }
 
         private async void ReplaceExecuted()
@@ -156,7 +190,10 @@ namespace FindAndReplace.Wpf.ViewModels
 
         private void GenerateCommandLineExecuted()
         {
-
+            var replacer = replacerMapper.Map(FolderParameters, FindParameters, ReplaceParameters);
+            var exePath = "fnr.exe";
+            var commandLineArgs = replacer.GenCommandLine(findParameters.IsShowingEncoding);
+            dialogService.ShowMessage($"{exePath} {commandLineArgs}", "Command Line");
         }
 
         private void SwapExecuted()

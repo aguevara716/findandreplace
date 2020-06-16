@@ -11,4 +11,8 @@
     <PackageReference Include="Ookii.Dialogs.Wpf.NETCore" Version="2.1.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\FindAndReplace\FindAndReplace.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -47,6 +47,8 @@ namespace FindAndReplace.Wpf.Initialization
         {
             IocWrapper.Register<IClipboardDataService, ClipboardDataService>();
             IocWrapper.Register<IExceptionFormatter, ExceptionFormatter>();
+            IocWrapper.Register<IFinderMapper, FinderMapper>();
+            IocWrapper.Register<IReplacerMapper, ReplacerMapper>();
         }
 
         public static void RegisterViewModels()

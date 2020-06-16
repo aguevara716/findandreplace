@@ -6,7 +6,7 @@ namespace FindAndReplace.Wpf.DesignViewModels
     public class DesignFnrViewModel : FnrViewModel
     {
         public DesignFnrViewModel()
-            : base(null)
+            : base(null, null)
         {
             FolderParameters = FolderParametersFactory.GetFolderParameters(100);
             FindParameters = FindParametersFactory.GetFindParameters(100);

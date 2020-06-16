@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using FindAndReplace.Wpf.Dialogs;
 using FindAndReplace.Wpf.Models;
+using FindAndReplace.Wpf.Services;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 
@@ -12,6 +13,8 @@ namespace FindAndReplace.Wpf.ViewModels
     {
         // Dependencies
         private readonly IDialogService dialogService;
+        private readonly IFinderMapper finderMapper;
+        private readonly IReplacerMapper replacerMapper;
 
         // Variables
         private bool isRunning;
@@ -57,9 +60,13 @@ namespace FindAndReplace.Wpf.ViewModels
         public RelayCommand<String> OpenFileCommand { get; private set; }
 
         // Constructors
-        public FnrViewModel(IDialogService ds)
+        public FnrViewModel(IDialogService ds,
+                            IFinderMapper fm,
+                            IReplacerMapper rm)
         {
             dialogService = ds;
+            finderMapper = fm;
+            replacerMapper = rm;
 
             InitializeVariables();
 

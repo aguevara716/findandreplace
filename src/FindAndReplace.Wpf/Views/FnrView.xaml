@@ -162,7 +162,24 @@
                         <ProgressBar DockPanel.Dock="Left" Maximum="{Binding ProcessStatus.TotalFilesCount}" Value="{Binding ProcessStatus.FilesProcessedCount}"/>
                     </DockPanel>
 
-                    <DataGrid Grid.Row="1"/>
+                    <DataGrid Grid.Row="1" 
+                              ItemsSource="{Binding Results}" 
+                              AutoGenerateColumns="False">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Filename" 
+                                                Width="Auto"
+                                                Binding="{Binding Filename}"/>
+                            <DataGridTextColumn Header="Path" 
+                                                Width="Auto"
+                                                Binding="{Binding FileRelativePath}"/>
+                            <DataGridTextColumn Header="Matches" 
+                                                Width="Auto"
+                                                Binding="{Binding MatchCount}"/>
+                            <DataGridTextColumn Header="Error" 
+                                                Width="Auto"
+                                                Binding="{Binding ErrorMessage}"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
                     <RichTextBox Grid.Row="2" IsReadOnly="True" IsReadOnlyCaretVisible="True"/>
                 </Grid>
             </GroupBox>

@@ -93,6 +93,7 @@ namespace FindAndReplace.Wpf.ViewModels
             FindParameters = new FindParameters();
             ReplaceParameters = new ReplaceParameters();
             ProcessStatus = new ProcessStatus();
+            Results = new ObservableCollection<Result>();
 
             isRunning = false;
         }

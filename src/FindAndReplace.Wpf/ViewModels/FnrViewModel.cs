@@ -25,7 +25,6 @@ namespace FindAndReplace.Wpf.ViewModels
 
         // Variables
         private bool isRunning;
-        private Thread finderThread;
 
         // Binding Variables
         private FolderParameters folderParameters;
@@ -123,22 +122,6 @@ namespace FindAndReplace.Wpf.ViewModels
             CancelCommand.RaiseCanExecuteChanged();
         }
 
-        private void OnFinderFileProcessed(object sender, FinderEventArgs e)
-        {
-            SetFindResultCallback findResultCallback = ShowFindResult;
-            findResultCallback.Invoke(e.ResultItem, e.Stats, e.Status);
-        }
-
-        private void ShowFindResult(Finder.FindResultItem resultItem, Stats stats, Status status)
-        {
-            ProcessStatus = processStatusMapper.Map(stats);
-
-            if (!resultItem.IncludeInResultsList)
-                return;
-            var result = resultMapper.Map(resultItem);
-            Results.Add(result);
-        }
-
         private void DoFinderWork()
         {
             var finder = finderMapper.Map(FolderParameters, FindParameters);
@@ -164,6 +147,64 @@ namespace FindAndReplace.Wpf.ViewModels
             {
                 UpdateIsRunning(false);
             }
+        }
+
+        private void OnFinderFileProcessed(object sender, FinderEventArgs e)
+        {
+            SetFindResultCallback findResultCallback = ShowFindResult;
+            findResultCallback.Invoke(e.ResultItem, e.Stats, e.Status);
+        }
+
+        private void ShowFindResult(Finder.FindResultItem resultItem, Stats stats, Status status)
+        {
+            ProcessStatus = processStatusMapper.Map(stats);
+
+            if (!resultItem.IncludeInResultsList)
+                return;
+            var result = resultMapper.Map(resultItem);
+            Results.Add(result);
+        }
+
+        private void DoReplaceWork()
+        {
+            var replacer = replacerMapper.Map(FolderParameters, FindParameters, ReplaceParameters);
+            try
+            {
+                replacer.FileProcessed += OnReplacerFileProcessed;
+                replacer.Replace();
+            }
+            catch (Exception ex)
+            {
+                dialogService.ShowMessage(ex.Message, "Error");
+                var replacerEventArgs = new ReplacerEventArgs
+                (
+                    new Replacer.ReplaceResultItem(),
+                    new Stats(),
+                    Status.Cancelled,
+                    replacer.IsSilent
+                );
+                OnReplacerFileProcessed(this, replacerEventArgs);
+            }
+            finally
+            {
+                UpdateIsRunning(false);
+            }
+        }
+
+        private void OnReplacerFileProcessed(object sender, ReplacerEventArgs e)
+        {
+            var replaceResultCallback = new SetReplaceResultCallback(ShowReplaceResult);
+            replaceResultCallback.Invoke(e.ResultItem, e.Stats, e.Status);
+        }
+
+        private void ShowReplaceResult(Replacer.ReplaceResultItem resultItem, Stats stats, Status status)
+        {
+            ProcessStatus = processStatusMapper.Map(stats);
+
+            if (!resultItem.IncludeInResultsList)
+                return;
+            var result = resultMapper.Map(resultItem);
+            Results.Add(result);
         }
 
         // Commands CanExecute
@@ -204,18 +245,31 @@ namespace FindAndReplace.Wpf.ViewModels
             ProcessStatus = new ProcessStatus();
             Results.Clear();
 
-            finderThread = new Thread(DoFinderWork)
+            var finderThread = new Thread(DoFinderWork)
             {
                 IsBackground = true
             };
             finderThread.Start();
         }
 
-        private async void ReplaceExecuted()
+        private void ReplaceExecuted()
         {
+            if (String.IsNullOrEmpty(ReplaceParameters.ReplaceString))
+            {
+                var response = dialogService.ShowYesNo("Are you sure you would like to replace with an empty string?", "Replace Confirmation");
+                if (!response)
+                    return;
+            }
+
             UpdateIsRunning(true);
-            await Task.Delay(5000);
-            UpdateIsRunning(false);
+            ProcessStatus = new ProcessStatus();
+            Results.Clear();
+
+            var replacerThread = new Thread(DoReplaceWork)
+            {
+                IsBackground = true
+            };
+            replacerThread.Start();
         }
 
         private void CancelExecuted()

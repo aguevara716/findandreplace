@@ -1,12 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Forms.Design;
-using System.Windows.Threading;
 using FindAndReplace.Wpf.Dialogs;
 using FindAndReplace.Wpf.Models;
 using FindAndReplace.Wpf.Services;
@@ -20,7 +15,9 @@ namespace FindAndReplace.Wpf.ViewModels
         // Dependencies
         private readonly IDialogService dialogService;
         private readonly IFinderMapper finderMapper;
+        private readonly IProcessStatusMapper processStatusMapper;
         private readonly IReplacerMapper replacerMapper;
+        private readonly IResultMapper resultMapper;
 
         // Delegates
         private delegate void SetFindResultCallback(Finder.FindResultItem resultItem, Stats stats, Status status);
@@ -80,11 +77,15 @@ namespace FindAndReplace.Wpf.ViewModels
         // Constructors
         public FnrViewModel(IDialogService ds,
                             IFinderMapper fm,
-                            IReplacerMapper rm)
+                            IProcessStatusMapper psm,
+                            IReplacerMapper rm,
+                            IResultMapper resm)
         {
             dialogService = ds;
             finderMapper = fm;
+            processStatusMapper = psm;
             replacerMapper = rm;
+            resultMapper = resm;
 
             InitializeVariables();
 
@@ -130,36 +131,12 @@ namespace FindAndReplace.Wpf.ViewModels
 
         private void ShowFindResult(Finder.FindResultItem resultItem, Stats stats, Status status)
         {
-            var result = new Result
-            {
-                ErrorMessage = resultItem.ErrorMessage,
-                FailedToOpen = false,
-                FileEncoding = resultItem.FileEncoding ?? Encoding.Default,
-                Filename = resultItem.FileName,
-                FilePath = resultItem.FilePath,
-                FileRelativePath = resultItem.FileRelativePath,
-                IsBinaryFile = resultItem.IsBinaryFile,
-                IsSuccess = resultItem.IsSuccess,
-                MatchCount = resultItem.NumMatches,
-                Matches = resultItem.Matches?.Select(lm => new Match
-                {
-                    Index = lm.Index,
-                    Length = lm.Length
-                }).ToList()
-            };
-            //Results.Add(result);
+            ProcessStatus = processStatusMapper.Map(stats);
 
-            ProcessStatus = new ProcessStatus
-            {
-                BinaryFilesCount = stats.Files.Binary,
-                EllapsedTime = stats.Time.Passed,
-                FilesFailedToOpenCount = stats.Files.FailedToRead,
-                FilesProcessedCount = stats.Files.Processed,
-                FilesWithMatchesCount = stats.Files.WithMatches,
-                FilesWithoutMatchesCount = stats.Files.WithoutMatches,
-                MatchesCount = stats.Matches.Found,
-                TotalFilesCount = stats.Files.Total
-            };
+            if (!resultItem.IncludeInResultsList)
+                return;
+            var result = resultMapper.Map(resultItem);
+            Results.Add(result);
         }
 
         private void DoFinderWork()

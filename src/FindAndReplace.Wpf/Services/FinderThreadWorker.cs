@@ -11,6 +11,7 @@ namespace FindAndReplace.Wpf.Services
         void InvokeWorker(Finder finder, Action<Finder.FindResultItem, Stats, Status> processResultAction);
         void CancelWorker();
     }
+
     public class FinderThreadWorker : IFinderThreadWorker
     {
         // Dependencies
@@ -44,11 +45,6 @@ namespace FindAndReplace.Wpf.Services
             }
         }
 
-        private void OnBackgroundWorkerProgressChanged(int percentComplete, FinderEventArgs finderEventArgs)
-        {
-
-        }
-
         private void OnBackgroundWorkerCompleted()
         {
 
@@ -58,7 +54,43 @@ namespace FindAndReplace.Wpf.Services
         {
 
         }
-        
+
+        // Private Methods
+        private BackgroundWorker BuildFinderWorker(Action<Finder.FindResultItem, Stats, Status> processResultAction)
+        {
+            var bgw = new BackgroundWorker
+            {
+                WorkerReportsProgress = true,
+                WorkerSupportsCancellation = true
+            };
+
+            bgw.DoWork += (s, e) =>
+            {
+                var finder = e.Argument as Finder;
+                OnBackgroundworkerDoWork(finder, processResultAction);
+            };
+
+            bgw.ProgressChanged += (s, e) =>
+            {
+                var finderEventArgs = e.UserState as FinderEventArgs;
+                processResultAction.Invoke(finderEventArgs.ResultItem,
+                                           finderEventArgs.Stats,
+                                           finderEventArgs.Status);
+            };
+
+            bgw.RunWorkerCompleted += (s, e) =>
+            {
+                OnBackgroundWorkerCompleted();
+            };
+
+            bgw.Disposed += (s, e) =>
+            {
+                OnBackgroundWorkerDisposed();
+            };
+
+            return bgw;
+        }
+
         // Public Methods
         public void InvokeWorker(FolderParameters folderParameters, FindParameters findParameters, Action<Finder.FindResultItem, Stats, Status> processResultAction)
         {
@@ -66,33 +98,18 @@ namespace FindAndReplace.Wpf.Services
             InvokeWorker(finder, processResultAction);
         }
 
-        public void InvokeWorker(Finder finder, Action<Finder.FindResultItem, Stats,Status> processResultAction)
+        public void InvokeWorker(Finder finder, Action<Finder.FindResultItem, Stats, Status> processResultAction)
         {
             if (finderWorker?.IsBusy ?? false)
                 return;
 
-            finder.FileProcessed += (s,e) =>
+            finder.FileProcessed += (s, e) =>
             {
                 var percentCompleted = e.Stats.Files.Processed / e.Stats.Files.Total;
                 finderWorker.ReportProgress(percentCompleted, e);
             };
 
-            finderWorker = new BackgroundWorker
-            {
-                WorkerReportsProgress = true,
-                WorkerSupportsCancellation = true
-            };
-            finderWorker.DoWork += (s, e) => OnBackgroundworkerDoWork(e.Argument as Finder, processResultAction);
-            finderWorker.ProgressChanged += (s, e) =>
-            {
-                var finderEventArgs = e.UserState as FinderEventArgs;
-                processResultAction.Invoke(finderEventArgs.ResultItem, 
-                                           finderEventArgs.Stats, 
-                                           finderEventArgs.Status);
-            };
-            finderWorker.RunWorkerCompleted += (s, e) => OnBackgroundWorkerCompleted();
-            finderWorker.Disposed += (s,e) => OnBackgroundWorkerDisposed();
-
+            finderWorker = BuildFinderWorker(processResultAction);
             finderWorker.RunWorkerAsync(finder);
         }
 

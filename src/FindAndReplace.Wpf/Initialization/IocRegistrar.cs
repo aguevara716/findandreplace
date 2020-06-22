@@ -51,6 +51,7 @@ namespace FindAndReplace.Wpf.Initialization
             IocWrapper.Register<IFinderThreadWorker, FinderThreadWorker>();
             IocWrapper.Register<IProcessStatusMapper, ProcessStatusMapper>();
             IocWrapper.Register<IReplacerMapper, ReplacerMapper>();
+            IocWrapper.Register<IReplacerThreadWorker, ReplacerThreadWorker>();
             IocWrapper.Register<IResultMapper, ResultMapper>();
         }
 

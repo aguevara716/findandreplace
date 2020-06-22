@@ -4,8 +4,6 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using FindAndReplace.Wpf.Dialogs;
 using FindAndReplace.Wpf.Models;
 using FindAndReplace.Wpf.Services;
@@ -18,10 +16,10 @@ namespace FindAndReplace.Wpf.ViewModels
     {
         // Dependencies
         private readonly IDialogService dialogService;
-        private readonly IFinderMapper finderMapper;
         private readonly IFinderThreadWorker finderThreadWorker;
         private readonly IProcessStatusMapper processStatusMapper;
         private readonly IReplacerMapper replacerMapper;
+        private readonly IReplacerThreadWorker replacerThreadWorker;
         private readonly IResultMapper resultMapper;
 
         // Delegates
@@ -87,17 +85,17 @@ namespace FindAndReplace.Wpf.ViewModels
 
         // Constructors
         public FnrViewModel(IDialogService ds,
-                            IFinderMapper fm,
                             IFinderThreadWorker ftw,
                             IProcessStatusMapper psm,
                             IReplacerMapper rm,
+                            IReplacerThreadWorker rtw,
                             IResultMapper resm)
         {
             dialogService = ds;
-            finderMapper = fm;
             finderThreadWorker = ftw;
             processStatusMapper = psm;
             replacerMapper = rm;
+            replacerThreadWorker = rtw;
             resultMapper = resm;
 
             InitializeVariables();
@@ -137,24 +135,6 @@ namespace FindAndReplace.Wpf.ViewModels
             CancelCommand.RaiseCanExecuteChanged();
         }
 
-        //private void DoFinderWork(Finder finder)
-        //{
-        //    try
-        //    {
-        //        finder.Find();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        dialogService.ShowMessage(ex.Message, "Error");
-        //        ShowFindResult(new Finder.FindResultItem(), new Stats(), Status.Cancelled);
-        //    }
-        //}
-
-        //private void OnFinderFileProcessed(object sender, FinderEventArgs e)
-        //{
-        //    ShowFindResult(e.ResultItem, e.Stats, e.Status);
-        //}
-
         private void ShowFindResult(Finder.FindResultItem resultItem, Stats stats, Status status)
         {
             ProcessStatus = processStatusMapper.Map(stats);
@@ -163,38 +143,6 @@ namespace FindAndReplace.Wpf.ViewModels
                 return;
             var result = resultMapper.Map(resultItem);
             Results.Add(result);
-        }
-
-        private void DoReplaceWork()
-        {
-            var replacer = replacerMapper.Map(FolderParameters, FindParameters, ReplaceParameters);
-            try
-            {
-                replacer.FileProcessed += OnReplacerFileProcessed;
-                replacer.Replace();
-            }
-            catch (Exception ex)
-            {
-                dialogService.ShowMessage(ex.Message, "Error");
-                var replacerEventArgs = new ReplacerEventArgs
-                (
-                    new Replacer.ReplaceResultItem(),
-                    new Stats(),
-                    Status.Cancelled,
-                    replacer.IsSilent
-                );
-                OnReplacerFileProcessed(this, replacerEventArgs);
-            }
-            finally
-            {
-                UpdateIsRunning(false);
-            }
-        }
-
-        private void OnReplacerFileProcessed(object sender, ReplacerEventArgs e)
-        {
-            var replaceResultCallback = new SetReplaceResultCallback(ShowReplaceResult);
-            replaceResultCallback.Invoke(e.ResultItem, e.Stats, e.Status);
         }
 
         private void ShowReplaceResult(Replacer.ReplaceResultItem resultItem, Stats stats, Status status)
@@ -258,9 +206,6 @@ namespace FindAndReplace.Wpf.ViewModels
             ProcessStatus = new ProcessStatus();
             Results.Clear();
 
-            //var finder = finderMapper.Map(FolderParameters, FindParameters);
-            //finder.FileProcessed += OnFinderFileProcessed;
-            //await Task.Run(() => DoFinderWork(finder));
             finderThreadWorker.InvokeWorker(FolderParameters, FindParameters, ShowFindResult);
 
             UpdateIsRunning(false);
@@ -279,11 +224,9 @@ namespace FindAndReplace.Wpf.ViewModels
             ProcessStatus = new ProcessStatus();
             Results.Clear();
 
-            var replacerThread = new Thread(DoReplaceWork)
-            {
-                IsBackground = true
-            };
-            replacerThread.Start();
+            replacerThreadWorker.InvokeWorker(FolderParameters, FindParameters, ReplaceParameters, ShowReplaceResult);
+
+            UpdateIsRunning(false);
         }
 
         private void CancelExecuted()

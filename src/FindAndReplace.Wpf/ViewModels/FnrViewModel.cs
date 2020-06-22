@@ -72,6 +72,13 @@ namespace FindAndReplace.Wpf.ViewModels
             set { Set(nameof(Encodings), ref encodings, value); }
         }
 
+        private string status;
+        public string Status
+        {
+            get { return status; }
+            set { Set(nameof(Status), ref status, value); }
+        }
+
         // Commands
         public RelayCommand LoadedCommand { get; private set; }
         public RelayCommand UnloadedCommand { get; private set; }
@@ -123,6 +130,7 @@ namespace FindAndReplace.Wpf.ViewModels
             ProcessStatus = new ProcessStatus();
             Results = new ObservableCollection<Result>();
             Encodings = new List<string>();
+            Status = String.Empty;
 
             isRunning = false;
         }

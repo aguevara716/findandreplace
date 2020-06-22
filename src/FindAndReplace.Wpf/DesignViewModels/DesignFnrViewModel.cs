@@ -15,6 +15,7 @@ namespace FindAndReplace.Wpf.DesignViewModels
             ReplaceParameters = ReplaceParametersFactory.GetReplaceParameters(100);
             ProcessStatus = ProcessStatusFactory.GetProcessStatus(123);
             Results = new ObservableCollection<Result>(ResultFactory.GetResults(5));
+            Status = "Sample status here";
         }
 
     }

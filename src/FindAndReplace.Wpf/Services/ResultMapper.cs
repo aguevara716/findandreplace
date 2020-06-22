@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using FindAndReplace.Wpf.Models;
@@ -25,7 +26,7 @@ namespace FindAndReplace.Wpf.Services
                 FileEncoding = resultItem.FileEncoding ?? Encoding.Default,
                 Filename = resultItem.FileName,
                 FilePath = resultItem.FilePath,
-                FileRelativePath = resultItem.FileRelativePath,
+                FileRelativePath = resultItem.FileRelativePath.Replace(resultItem.FileName, String.Empty),
                 IsBinaryFile = resultItem.IsBinaryFile,
                 IsSuccess = resultItem.IsSuccess,
                 MatchCount = resultItem.NumMatches,

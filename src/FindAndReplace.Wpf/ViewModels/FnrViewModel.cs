@@ -1,7 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Linq;
+using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using FindAndReplace.Wpf.Dialogs;
 using FindAndReplace.Wpf.Models;
 using FindAndReplace.Wpf.Services;
@@ -15,6 +19,7 @@ namespace FindAndReplace.Wpf.ViewModels
         // Dependencies
         private readonly IDialogService dialogService;
         private readonly IFinderMapper finderMapper;
+        private readonly IFinderThreadWorker finderThreadWorker;
         private readonly IProcessStatusMapper processStatusMapper;
         private readonly IReplacerMapper replacerMapper;
         private readonly IResultMapper resultMapper;
@@ -62,6 +67,13 @@ namespace FindAndReplace.Wpf.ViewModels
             set { Set(nameof(Results), ref results, value); }
         }
 
+        private List<String> encodings;
+        public List<String> Encodings
+        {
+            get { return encodings; }
+            set { Set(nameof(Encodings), ref encodings, value); }
+        }
+
         // Commands
         public RelayCommand LoadedCommand { get; private set; }
         public RelayCommand UnloadedCommand { get; private set; }
@@ -76,12 +88,14 @@ namespace FindAndReplace.Wpf.ViewModels
         // Constructors
         public FnrViewModel(IDialogService ds,
                             IFinderMapper fm,
+                            IFinderThreadWorker ftw,
                             IProcessStatusMapper psm,
                             IReplacerMapper rm,
                             IResultMapper resm)
         {
             dialogService = ds;
             finderMapper = fm;
+            finderThreadWorker = ftw;
             processStatusMapper = psm;
             replacerMapper = rm;
             resultMapper = resm;
@@ -110,6 +124,7 @@ namespace FindAndReplace.Wpf.ViewModels
             ReplaceParameters = new ReplaceParameters();
             ProcessStatus = new ProcessStatus();
             Results = new ObservableCollection<Result>();
+            Encodings = new List<string>();
 
             isRunning = false;
         }
@@ -122,38 +137,23 @@ namespace FindAndReplace.Wpf.ViewModels
             CancelCommand.RaiseCanExecuteChanged();
         }
 
-        private void DoFinderWork()
-        {
-            var finder = finderMapper.Map(FolderParameters, FindParameters);
-            try
-            {
-                finder.FileProcessed += OnFinderFileProcessed;
-                finder.Find();
-            }
-            catch (Exception ex)
-            {
-                dialogService.ShowMessage(ex.Message,
-                                          "Error");
-                var finderEventArgs = new FinderEventArgs
-                (
-                    new Finder.FindResultItem(),
-                    new Stats(),
-                    Status.Cancelled,
-                    finder.IsSilent
-                );
-                OnFinderFileProcessed(this, finderEventArgs);
-            }
-            finally
-            {
-                UpdateIsRunning(false);
-            }
-        }
+        //private void DoFinderWork(Finder finder)
+        //{
+        //    try
+        //    {
+        //        finder.Find();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        dialogService.ShowMessage(ex.Message, "Error");
+        //        ShowFindResult(new Finder.FindResultItem(), new Stats(), Status.Cancelled);
+        //    }
+        //}
 
-        private void OnFinderFileProcessed(object sender, FinderEventArgs e)
-        {
-            SetFindResultCallback findResultCallback = ShowFindResult;
-            findResultCallback.Invoke(e.ResultItem, e.Stats, e.Status);
-        }
+        //private void OnFinderFileProcessed(object sender, FinderEventArgs e)
+        //{
+        //    ShowFindResult(e.ResultItem, e.Stats, e.Status);
+        //}
 
         private void ShowFindResult(Finder.FindResultItem resultItem, Stats stats, Status status)
         {
@@ -222,7 +222,20 @@ namespace FindAndReplace.Wpf.ViewModels
         // Commands Executed
         private void LoadedExecuted()
         {
+            var localEncodings = new List<String>
+            {
+                "Auto Detect"
+            };
+            localEncodings.AddRange(Encoding.GetEncodings().Select(ei => ei.Name.ToUpper()).OrderBy(e => e));
 
+            Encodings = new List<string>(localEncodings);
+            FindParameters.Encoding = Encodings.First();
+
+            // Debugging
+            FolderParameters.RootDirectory = @"D:\G\D1\Mobile2\devops";
+            FolderParameters.FileMask = "*.ps1";
+            FolderParameters.IsRecursive = true;
+            FindParameters.FindString = "git";
         }
 
         private void UnloadedExecuted()
@@ -245,11 +258,12 @@ namespace FindAndReplace.Wpf.ViewModels
             ProcessStatus = new ProcessStatus();
             Results.Clear();
 
-            var finderThread = new Thread(DoFinderWork)
-            {
-                IsBackground = true
-            };
-            finderThread.Start();
+            //var finder = finderMapper.Map(FolderParameters, FindParameters);
+            //finder.FileProcessed += OnFinderFileProcessed;
+            //await Task.Run(() => DoFinderWork(finder));
+            finderThreadWorker.InvokeWorker(FolderParameters, FindParameters, ShowFindResult);
+
+            UpdateIsRunning(false);
         }
 
         private void ReplaceExecuted()

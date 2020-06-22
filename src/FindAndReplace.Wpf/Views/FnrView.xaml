@@ -87,17 +87,8 @@
                             <CheckBox Content="Use escape chars" IsChecked="{Binding FindParameters.IsUsingEscapeCharacters}"/>
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="Encoding:"/>
-                                <ComboBox>
-                                    <ComboBoxItem Content="Auto Detect" IsSelected="True"/>
-                                    <ComboBoxItem Content="ISO-8859-1"/>
-                                    <ComboBoxItem Content="US-ASCII"/>
-                                    <ComboBoxItem Content="UTF-16"/>
-                                    <ComboBoxItem Content="UTF-16BE"/>
-                                    <ComboBoxItem Content="UTF-32"/>
-                                    <ComboBoxItem Content="UTF-32BE"/>
-                                    <ComboBoxItem Content="UTF-7"/>
-                                    <ComboBoxItem Content="UTF-8"/>
-                                </ComboBox>
+                                <ComboBox ItemsSource="{Binding Encodings}" 
+                                          SelectedValue="{Binding FindParameters.Encoding}"/>
                             </StackPanel>
                         </WrapPanel>
                     </Grid>

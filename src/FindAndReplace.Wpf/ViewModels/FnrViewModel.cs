@@ -22,10 +22,6 @@ namespace FindAndReplace.Wpf.ViewModels
         private readonly IReplacerThreadWorker replacerThreadWorker;
         private readonly IResultMapper resultMapper;
 
-        // Delegates
-        private delegate void SetFindResultCallback(Finder.FindResultItem resultItem, Stats stats, Status status);
-        private delegate void SetReplaceResultCallback(Replacer.ReplaceResultItem resultItem, Stats stats, Status status);
-
         // Variables
         private bool isRunning;
 

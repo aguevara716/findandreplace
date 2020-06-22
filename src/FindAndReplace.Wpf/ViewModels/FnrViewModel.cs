@@ -235,6 +235,10 @@ namespace FindAndReplace.Wpf.ViewModels
 
         private void CancelExecuted()
         {
+            // TODO specify which process is executing
+            finderThreadWorker.CancelWorker();
+            replacerThreadWorker.CancelWorker();
+
             UpdateIsRunning(false);
         }
 

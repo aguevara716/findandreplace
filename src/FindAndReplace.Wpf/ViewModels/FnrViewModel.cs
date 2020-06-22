@@ -185,6 +185,8 @@ namespace FindAndReplace.Wpf.ViewModels
 
             // Debugging
             FolderParameters.RootDirectory = @"D:\G\D1\Mobile2\devops";
+            FolderParameters.ExcludeDirectories = "node_modules, bin, obj, packages, TestResults, .git, .svn, .vs";
+            FolderParameters.ExcludeMask = "*.bcmap, *.dat, *.datasource, *.dll, *.exe, *.gif, *iTunesArtwork*, *.keystore, *.lic, *.mp3, *.nupkg, *.pdf, *.PDF, *.pfx, *.png, *.PNG, *.sn, *.snk, *.swf, *.vox, *.VOX, *.wav, *.xap, *.ZIP, *.zip";
             FolderParameters.FileMask = "*.ps1";
             FolderParameters.IsRecursive = true;
             FindParameters.FindString = "git";

@@ -17,8 +17,16 @@ namespace FindAndReplace.Wpf.Services
 
     public class ResultMapper : IResultMapper
     {
+        private readonly IMatchPreviewGenerator matchPreviewGenerator;
+
+        public ResultMapper(IMatchPreviewGenerator mpg)
+        {
+            matchPreviewGenerator = mpg;
+        }
+
         private Result MapInternal(ResultItem resultItem)
         {
+            var previewText = matchPreviewGenerator.GetMatchPreview(resultItem);
             var result = new Result
             {
                 ErrorMessage = resultItem.ErrorMessage,
@@ -34,7 +42,8 @@ namespace FindAndReplace.Wpf.Services
                 {
                     Index = lm.Index,
                     Length = lm.Length
-                }).ToList()
+                }).ToList(),
+                PreviewText = previewText
             };
             return result;
         }

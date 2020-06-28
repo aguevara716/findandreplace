@@ -166,7 +166,9 @@
                             CanUserAddRows="False"
                             CanUserDeleteRows="False"
                             EnableRowVirtualization="True"
-                            FrozenColumnCount="1">
+                            FrozenColumnCount="1"
+                            SelectionMode="Single"
+                            SelectionUnit="FullRow">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Filename" 
                                             Width="Auto"

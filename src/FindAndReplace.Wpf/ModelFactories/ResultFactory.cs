@@ -23,7 +23,7 @@ namespace FindAndReplace.Wpf.ModelFactories
                 IsSuccess = seed % 2 == 0,
                 MatchCount = generator.Next(seed),
                 Matches = MatchFactory.GetMatches(seed % 4).ToList(),
-                PreviewText = "HAHA PREVIEW GO BRRRR"
+                PreviewText = $"({seed}) HAHA PREVIEW GO BRRRR"
             };
             return r;
         }

@@ -154,6 +154,7 @@
                 </DockPanel>
 
                 <DataGrid Grid.Row="1" 
+                          Name="resultsDataGrid"
                             ItemsSource="{Binding Results}" 
                             AutoGenerateColumns="False"
                             VerticalScrollBarVisibility="Auto"
@@ -179,7 +180,14 @@
                                             Binding="{Binding ErrorMessage}"/>
                     </DataGrid.Columns>
                 </DataGrid>
-                <RichTextBox Grid.Row="2" IsReadOnly="True" IsReadOnlyCaretVisible="True"/>
+                <TextBox Grid.Row="2"
+                         HorizontalScrollBarVisibility="Auto"
+                         VerticalScrollBarVisibility="Auto"
+                         IsReadOnly="True"
+                         IsReadOnlyCaretVisible="True"
+                         AcceptsReturn="True"
+                         FontFamily="Consolas"
+                         Text="{Binding ElementName=resultsDataGrid, Path=SelectedItem.PreviewText}"/>
             </Grid>
         </GroupBox>
     </Grid>

@@ -75,5 +75,13 @@ namespace FindAndReplace.Wpf.Models
             get { return errorMessage; }
             set { Set(nameof(ErrorMessage), ref errorMessage, value); }
         }
+
+        private string previewText;
+        public string PreviewText
+        {
+            get { return previewText; }
+            set { Set(nameof(PreviewText), ref previewText, value); }
+        }
+
     }
 }

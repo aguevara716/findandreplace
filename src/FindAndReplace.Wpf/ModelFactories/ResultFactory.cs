@@ -22,7 +22,8 @@ namespace FindAndReplace.Wpf.ModelFactories
                 IsBinaryFile = seed % 4 == 0,
                 IsSuccess = seed % 2 == 0,
                 MatchCount = generator.Next(seed),
-                Matches = MatchFactory.GetMatches(seed % 4).ToList()
+                Matches = MatchFactory.GetMatches(seed % 4).ToList(),
+                PreviewText = "HAHA PREVIEW GO BRRRR"
             };
             return r;
         }

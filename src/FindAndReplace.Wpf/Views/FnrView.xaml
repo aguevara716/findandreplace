@@ -45,13 +45,13 @@
                     <CheckBox Grid.Row="1" Grid.Column="1" Content="Include subdirectories (recursive)" IsChecked="{Binding FolderParameters.IsRecursive}"/>
 
                     <TextBlock Grid.Row="2" Grid.Column="0" Text="Exclude Directories"/>
-                    <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding FolderParameters.ExcludeDirectories}" />
+                    <TextBox Grid.Row="2" Grid.Column="1" FontFamily="Consolas" Text="{Binding FolderParameters.ExcludeDirectories}" />
 
                     <TextBlock Grid.Row="3" Grid.Column="0" Text="File Mask"/>
-                    <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding FolderParameters.FileMask}"/>
+                    <TextBox Grid.Row="3" Grid.Column="1" FontFamily="Consolas" Text="{Binding FolderParameters.FileMask}"/>
 
                     <TextBlock Grid.Row="4" Grid.Column="0" Text="Exclude Mask"/>
-                    <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding FolderParameters.ExcludeMask}"/>
+                    <TextBox Grid.Row="4" Grid.Column="1" FontFamily="Consolas" Text="{Binding FolderParameters.ExcludeMask}"/>
                 </Grid>
 
                 <Grid Name="FindParametersGrid">
@@ -72,8 +72,9 @@
                                 HorizontalAlignment="Center" 
                                 Command="{Binding FindCommand}"/>
                         <TextBox AcceptsReturn="True" 
-                                    TextWrapping="Wrap" 
-                                    Text="{Binding FindParameters.FindString}"/>
+                                 FontFamily="Consolas"
+                                 TextWrapping="Wrap" 
+                                 Text="{Binding FindParameters.FindString}"/>
                     </DockPanel>
 
                     <WrapPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
@@ -104,10 +105,11 @@
 
                     <TextBlock Grid.Row="0" Grid.Column="0" Text="Replace"/>
                     <TextBox Grid.Row="0" 
-                                Grid.Column="1"
-                                AcceptsReturn="True" 
-                                TextWrapping="Wrap" 
-                                Text="{Binding ReplaceParameters.ReplaceString}"/>
+                             Grid.Column="1"
+                             AcceptsReturn="True" 
+                             TextWrapping="Wrap" 
+                             FontFamily="Consolas"
+                             Text="{Binding ReplaceParameters.ReplaceString}"/>
 
                     <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right">
                         <Button Content="Replace" Command="{Binding ReplaceCommand}"/>

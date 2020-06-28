@@ -133,6 +133,9 @@ namespace FindAndReplace.Wpf.ViewModels
 
         private void UpdateIsRunning(bool isRunning)
         {
+            if (isRunning)
+                Status = "Getting file list...";
+
             this.isRunning = isRunning;
             FindCommand.RaiseCanExecuteChanged();
             ReplaceCommand.RaiseCanExecuteChanged();
@@ -147,6 +150,8 @@ namespace FindAndReplace.Wpf.ViewModels
                 return;
             var result = resultMapper.Map(resultItem);
             Results.Add(result);
+
+            UpdateStatus(stats.Files.Processed, stats.Files.Total, resultItem.FileRelativePath, status);
         }
 
         private void ShowReplaceResult(Replacer.ReplaceResultItem resultItem, Stats stats, Status status)
@@ -157,6 +162,24 @@ namespace FindAndReplace.Wpf.ViewModels
                 return;
             var result = resultMapper.Map(resultItem);
             Results.Add(result);
+
+            UpdateStatus(stats.Files.Processed, stats.Files.Total, resultItem.FileRelativePath, status);
+        }
+
+        private void UpdateStatus(int processed, int total, string lastFile, Status status)
+        {
+            switch (status)
+            {
+                case FindAndReplace.Status.Processing:
+                    Status = $"Processing {processed} of {total} files. Last file: {lastFile}";
+                    break;
+                case FindAndReplace.Status.Completed:
+                    Status = $"Processed {total} files.";
+                    break;
+                case FindAndReplace.Status.Cancelled:
+                    Status = "Operation was cancelled";
+                    break;
+            }
         }
 
         // Commands CanExecute

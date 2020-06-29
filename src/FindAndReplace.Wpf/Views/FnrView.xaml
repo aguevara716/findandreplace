@@ -189,13 +189,13 @@
                                             Width="Auto"
                                             Binding="{Binding Filename}"/>
                         <DataGridTextColumn Header="Path" 
-                                            Width="Auto"
+                                            Width="*"
                                             Binding="{Binding FileRelativePath}"/>
                         <DataGridTextColumn Header="Matches" 
                                             Width="Auto"
                                             Binding="{Binding MatchCount}"/>
                         <DataGridTextColumn Header="Error" 
-                                            Width="Auto"
+                                            Width="*"
                                             Binding="{Binding ErrorMessage}"/>
                     </DataGrid.Columns>
                 </DataGrid>

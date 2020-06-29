@@ -169,6 +169,21 @@
                             FrozenColumnCount="1"
                             SelectionMode="Single"
                             SelectionUnit="FullRow">
+                    <DataGrid.InputBindings>
+                        <MouseBinding Gesture="LeftDoubleClick"
+                                      Command="{Binding OpenFileCommand}"
+                                      CommandParameter="{Binding ElementName=resultsDataGrid, Path=SelectedItem}"/>
+                    </DataGrid.InputBindings>
+                    <DataGrid.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Open" 
+                                      Command="{Binding OpenFileCommand}"
+                                      CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"/>
+                            <MenuItem Header="Open Folder"
+                                      Command="{Binding OpenFolderCommand}"
+                                      CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"/>
+                        </ContextMenu>
+                    </DataGrid.ContextMenu>
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Filename" 
                                             Width="Auto"

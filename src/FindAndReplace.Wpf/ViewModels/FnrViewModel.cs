@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using FindAndReplace.Wpf.Dialogs;
@@ -85,7 +86,8 @@ namespace FindAndReplace.Wpf.ViewModels
         public RelayCommand CancelCommand { get; private set; }
         public RelayCommand GenerateCommandLineCommand { get; private set; }
         public RelayCommand SwapCommand { get; private set; }
-        public RelayCommand<String> OpenFileCommand { get; private set; }
+        public RelayCommand<Result> OpenFileCommand { get; private set; }
+        public RelayCommand<Result> OpenFolderCommand { get; private set; }
 
         // Constructors
         public FnrViewModel(IDialogService ds,
@@ -117,7 +119,8 @@ namespace FindAndReplace.Wpf.ViewModels
             CancelCommand = new RelayCommand(CancelExecuted, CancelCanExecute);
             GenerateCommandLineCommand = new RelayCommand(GenerateCommandLineExecuted);
             SwapCommand = new RelayCommand(SwapExecuted);
-            OpenFileCommand = new RelayCommand<String>(OpenFileExecuted);
+            OpenFileCommand = new RelayCommand<Result>(OpenFileExecuted);
+            OpenFolderCommand = new RelayCommand<Result>(OpenFolderExecuted);
         }
 
         // Private Methods
@@ -292,9 +295,25 @@ namespace FindAndReplace.Wpf.ViewModels
             ReplaceParameters.ReplaceString = originalFindString;
         }
 
-        private void OpenFileExecuted(string filePath)
+        private void OpenFileExecuted(Result resultItem)
         {
-            Process.Start(filePath);
+            var startInfo = new ProcessStartInfo
+            {
+                FileName = resultItem.FilePath,
+                UseShellExecute = true
+            };
+            Process.Start(startInfo);
+        }
+
+        private void OpenFolderExecuted(Result resultItem)
+        {
+            var folder = Path.GetDirectoryName(resultItem.FilePath);
+            var startInfo = new ProcessStartInfo
+            {
+                FileName = folder,
+                UseShellExecute = true
+            };
+            Process.Start(startInfo);
         }
 
     }

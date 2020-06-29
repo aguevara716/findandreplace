@@ -54,6 +54,7 @@ namespace FindAndReplace.Wpf.Initialization
             IocWrapper.Register<IReplacerMapper, ReplacerMapper>();
             IocWrapper.Register<IReplacerThreadWorker, ReplacerThreadWorker>();
             IocWrapper.Register<IResultMapper, ResultMapper>();
+            IocWrapper.Register<ISettingsService, SettingsService>();
         }
 
         public static void RegisterViewModels()

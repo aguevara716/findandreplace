@@ -21,6 +21,7 @@ namespace FindAndReplace.Wpf.ViewModels
         private readonly IReplacerMapper replacerMapper;
         private readonly IReplacerThreadWorker replacerThreadWorker;
         private readonly IResultMapper resultMapper;
+        private readonly ISettingsService settingsService;
 
         // Variables
         private bool isRunning;
@@ -92,7 +93,8 @@ namespace FindAndReplace.Wpf.ViewModels
                             IProcessStatusMapper psm,
                             IReplacerMapper rm,
                             IReplacerThreadWorker rtw,
-                            IResultMapper resm)
+                            IResultMapper resm,
+                            ISettingsService ss)
         {
             dialogService = ds;
             finderThreadWorker = ftw;
@@ -100,6 +102,7 @@ namespace FindAndReplace.Wpf.ViewModels
             replacerMapper = rm;
             replacerThreadWorker = rtw;
             resultMapper = resm;
+            settingsService = ss;
 
             InitializeVariables();
 
@@ -182,6 +185,11 @@ namespace FindAndReplace.Wpf.ViewModels
             }
         }
 
+        private void UpdateSettings()
+        {
+            settingsService.SaveSettings(FolderParameters, FindParameters, ReplaceParameters);
+        }
+
         // Commands CanExecute
         private bool FindOrReplaceCanExecute()
         {
@@ -206,13 +214,12 @@ namespace FindAndReplace.Wpf.ViewModels
             Encodings = new List<string>(localEncodings);
             FindParameters.Encoding = Encodings.First();
 
-            // Debugging
-            FolderParameters.RootDirectory = @"D:\G\D1\Mobile2\devops";
-            FolderParameters.ExcludeDirectories = "node_modules, bin, obj, packages, TestResults, .git, .svn, .vs";
-            FolderParameters.ExcludeMask = "*.bcmap, *.dat, *.datasource, *.dll, *.exe, *.gif, *iTunesArtwork*, *.keystore, *.lic, *.mp3, *.nupkg, *.pdf, *.PDF, *.pfx, *.png, *.PNG, *.sn, *.snk, *.swf, *.vox, *.VOX, *.wav, *.xap, *.ZIP, *.zip";
-            FolderParameters.FileMask = "*.ps1";
-            FolderParameters.IsRecursive = true;
-            FindParameters.FindString = "git";
+            var settingsTuple = settingsService.LoadSettings();
+            if (settingsTuple == null)
+                return;
+            FolderParameters = settingsTuple.FolderParameters;
+            FindParameters = settingsTuple.FindParameters;
+            ReplaceParameters = settingsTuple.ReplaceParameters;
         }
 
         private void UnloadedExecuted()
@@ -232,6 +239,7 @@ namespace FindAndReplace.Wpf.ViewModels
         private void FindExecuted()
         {
             UpdateIsRunning(true);
+            UpdateSettings();
             ProcessStatus = new ProcessStatus();
             Results.Clear();
 
@@ -250,6 +258,7 @@ namespace FindAndReplace.Wpf.ViewModels
             }
 
             UpdateIsRunning(true);
+            UpdateSettings();
             ProcessStatus = new ProcessStatus();
             Results.Clear();
 

@@ -15,7 +15,7 @@ namespace FindAndReplace.Wpf.Models
 
         public string ExcludeDirectoriesString
         {
-            get { return String.Join(", ", ExcludeDirectories); }
+            get { return String.Join(",", ExcludeDirectories); }
         }
 
         private ObservableCollection<String> excludeFiles;
@@ -27,7 +27,7 @@ namespace FindAndReplace.Wpf.Models
 
         public string ExcludeFilesString
         {
-            get { return String.Join(", ", ExcludeFiles); }
+            get { return String.Join(",", ExcludeFiles); }
         }
 
         private ObservableCollection<String> includeFiles;
@@ -39,7 +39,7 @@ namespace FindAndReplace.Wpf.Models
 
         public string IncludeFilesString
         {
-            get { return String.Join(", ", IncludeFiles); }
+            get { return String.Join(",", IncludeFiles); }
         }
 
         private bool isRecursive;

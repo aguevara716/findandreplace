@@ -35,7 +35,7 @@ namespace FindAndReplace.Wpf.Services
             };
 
             if (!String.IsNullOrEmpty(findParameters.Encoding) && 
-                !findParameters.Encoding.StartsWith("Always", StringComparison.OrdinalIgnoreCase))
+                !findParameters.Encoding.StartsWith("Auto Detect", StringComparison.OrdinalIgnoreCase))
                 replacer.AlwaysUseEncoding = Utils.GetEncodingByName(findParameters.Encoding);
 
             return replacer;

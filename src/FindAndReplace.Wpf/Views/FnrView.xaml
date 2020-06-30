@@ -79,8 +79,16 @@
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
                                                 <DockPanel LastChildFill="True">
-                                                    <Button DockPanel.Dock="Right" IsTabStop="False" Content="Delete"/>
-                                                    <Button DockPanel.Dock="Right" IsTabStop="False" Content="Edit"/>
+                                                    <Button DockPanel.Dock="Right" 
+                                                            IsTabStop="False" 
+                                                            Content="Remove"
+                                                            Command="{Binding RelativeSource={RelativeSource AncestorType=Page}, Path=DataContext.RemoveExcludeDirectoryCommand}"
+                                                            CommandParameter="{Binding}"/>
+                                                    <Button DockPanel.Dock="Right" 
+                                                            IsTabStop="False" 
+                                                            Content="Edit" 
+                                                            Command="{Binding RelativeSource={RelativeSource AncestorType=Page}, Path=DataContext.EditExcludeDirectoryCommand}"
+                                                            CommandParameter="{Binding}"/>
                                                     <TextBlock DockPanel.Dock="Left" Text="{Binding}"/>
                                                 </DockPanel>
                                             </DataTemplate>
@@ -92,9 +100,10 @@
                                 <Button DockPanel.Dock="Right" 
                                         IsTabStop="True" 
                                         TabIndex="3" 
-                                        Content="Add"/>
+                                        Content="Add"
+                                        Command="{Binding AddExcludeDirectoryCommand}"/>
                                 <TextBlock DockPanel.Dock="Left" 
-                                           Text="Exclude Directories:"/>
+                                           Text="{Binding FolderParameters.ExcludeDirectories.Count, StringFormat='Exclude Directories ({0:N0}):'}"/>
                                 </DockPanel>
                             </DockPanel>
 
@@ -125,7 +134,7 @@
                                             TabIndex="4"
                                             Content="Add"/>
                                     <TextBlock DockPanel.Dock="Left" 
-                                               Text="Exclude Files:"/>
+                                               Text="{Binding FolderParameters.ExcludeFiles.Count, StringFormat='Excluded Files ({0:N0}):'}"/>
                                 </DockPanel>
                             </DockPanel>
 
@@ -156,7 +165,7 @@
                                         TabIndex="5"
                                         Content="Add"/>
                                 <TextBlock DockPanel.Dock="Left" 
-                                            Text="Include Files:"/>
+                                            Text="{Binding FolderParameters.IncludeFiles.Count, StringFormat='Include Files ({0:N0}):'}"/>
                             </DockPanel>
                         </DockPanel>
                     </Grid>

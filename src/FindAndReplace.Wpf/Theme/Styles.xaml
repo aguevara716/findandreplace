@@ -5,10 +5,33 @@
         <Setter Property="Margin" Value="5"/>
     </Style>
 
+    <Style TargetType="CheckBox">
+        <Setter Property="Margin" Value="5"/>
+    </Style>
+
+    <Style TargetType="ComboBox">
+        <Setter Property="MinWidth" Value="100"/>
+        <Setter Property="Margin" Value="5 0 0 0"/>
+    </Style>
+    
     <Style TargetType="ItemsControl" x:Key="VerticalScrollingItemsControlStyle">
         <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
         <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
         <Setter Property="Template" Value="{StaticResource ScrollableItemsControlTemplate}"/>
+    </Style>
+
+    <Style TargetType="TextBlock">
+        <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+
+    <Style TargetType="TextBox">
+        <Setter Property="FontFamily" Value="Consolas"/>
+        <Setter Property="Margin" Value="5"/>
+    </Style>
+    <Style TargetType="TextBox" x:Key="MultilineTextBoxStyle" BasedOn="{StaticResource {x:Type TextBox}}">
+        <Setter Property="AcceptsReturn" Value="True"/>
+        <Setter Property="TextWrapping" Value="Wrap"/>
+        <Setter Property="VerticalScrollBarVisibility" Value="Visible"/>
     </Style>
 
 </ResourceDictionary>

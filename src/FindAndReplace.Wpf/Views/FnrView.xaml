@@ -39,7 +39,7 @@
                     <TextBlock Grid.Row="0" Grid.Column="0" Text="Root Directory" VerticalAlignment="Center"/>
                     <DockPanel Grid.Row="0" Grid.Column="1" LastChildFill="True">
                         <Button DockPanel.Dock="Right" Content="Browse" Command="{Binding SelectRootDirectoryCommand}"/>
-                        <TextBox DockPanel.Dock="Left" VerticalAlignment="Center" Text="{Binding FolderParameters.RootDirectory}"/>
+                        <TextBox DockPanel.Dock="Left" VerticalAlignment="Center" FontFamily="Consolas" Text="{Binding FolderParameters.RootDirectory}"/>
                     </DockPanel>
 
                     <CheckBox Grid.Row="1" Grid.Column="1" Content="Include subdirectories (recursive)" IsChecked="{Binding FolderParameters.IsRecursive}"/>
@@ -71,9 +71,7 @@
                                 VerticalAlignment="Center" 
                                 HorizontalAlignment="Center" 
                                 Command="{Binding FindCommand}"/>
-                        <TextBox AcceptsReturn="True" 
-                                 FontFamily="Consolas"
-                                 TextWrapping="Wrap" 
+                        <TextBox Style="{StaticResource MultilineTextBoxStyle}"
                                  Text="{Binding FindParameters.FindString}"/>
                     </DockPanel>
 
@@ -86,9 +84,9 @@
                         <CheckBox Content="Include files without matches" IsChecked="{Binding FindParameters.IsIncludingFilesWithoutMatches}"/>
                         <CheckBox Content="Use escape chars" IsChecked="{Binding FindParameters.IsUsingEscapeCharacters}"/>
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="Encoding:"/>
+                            <TextBlock Text="Encoding:" VerticalAlignment="Center"/>
                             <ComboBox ItemsSource="{Binding Encodings}" 
-                                        SelectedValue="{Binding FindParameters.Encoding}"/>
+                                      SelectedValue="{Binding FindParameters.Encoding}"/>
                         </StackPanel>
                     </WrapPanel>
                 </Grid>
@@ -106,9 +104,7 @@
                     <TextBlock Grid.Row="0" Grid.Column="0" Text="Replace"/>
                     <TextBox Grid.Row="0" 
                              Grid.Column="1"
-                             AcceptsReturn="True" 
-                             TextWrapping="Wrap" 
-                             FontFamily="Consolas"
+                             Style="{StaticResource MultilineTextBoxStyle}"
                              Text="{Binding ReplaceParameters.ReplaceString}"/>
 
                     <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right">

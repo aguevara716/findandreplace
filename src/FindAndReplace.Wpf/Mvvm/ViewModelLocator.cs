@@ -7,9 +7,9 @@ namespace FindAndReplace.Wpf.Mvvm
 {
     public class ViewModelLocator
     {
-        public ExceptionViewModel ExceptionViewModel { get { return IocWrapper.Get<ExceptionViewModel>(); } }
-        public FnrViewModel FnrViewModel { get { return IocWrapper.Get<FnrViewModel>(); } }
-        public MainViewModel MainViewModel { get { return IocWrapper.Get<MainViewModel>(); } }
+        public ExceptionViewModel ExceptionViewModel { get { return IocWrapper.GetWithoutCaching<ExceptionViewModel>(); } }
+        public FnrViewModel FnrViewModel { get { return IocWrapper.GetWithoutCaching<FnrViewModel>(); } }
+        public MainViewModel MainViewModel { get { return IocWrapper.GetWithoutCaching<MainViewModel>(); } }
 
         public ViewModelLocator()
         {

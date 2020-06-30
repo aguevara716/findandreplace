@@ -18,6 +18,7 @@ namespace FindAndReplace.Wpf.ModelFactories
                 FilesWithMatchesCount = generator.Next(seed),
                 FilesWithoutMatchesCount = generator.Next(seed),
                 MatchesCount = generator.Next(seed),
+                RemainingTime = TimeSpan.FromSeconds(generator.Next(seed)),
                 TotalFilesCount = generator.Next(seed) 
             };
             return ps;

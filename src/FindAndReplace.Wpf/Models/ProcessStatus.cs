@@ -61,5 +61,12 @@ namespace FindAndReplace.Wpf.Models
             set { Set(nameof(EllapsedTime), ref ellapsedTime, value); }
         }
 
+        private TimeSpan remainingTime;
+        public TimeSpan RemainingTime
+        {
+            get { return remainingTime; }
+            set { Set(nameof(RemainingTime), ref remainingTime, value); }
+        }
+
     }
 }

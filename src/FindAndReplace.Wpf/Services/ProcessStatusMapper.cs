@@ -22,6 +22,7 @@ namespace FindAndReplace.Wpf.Services
                 FilesWithMatchesCount = stats.Files.WithMatches,
                 FilesWithoutMatchesCount = stats.Files.WithoutMatches,
                 MatchesCount = stats.Matches.Found,
+                RemainingTime = stats.Time.Remaining,
                 TotalFilesCount = stats.Files.Total
             };
             return processStatus;

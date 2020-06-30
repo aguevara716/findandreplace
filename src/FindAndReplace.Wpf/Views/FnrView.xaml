@@ -138,6 +138,7 @@
                 <StackPanel Orientation="Vertical">
                     <TextBlock Text="Time" FontWeight="Bold"/>
                     <TextBlock Text="{Binding ProcessStatus.EllapsedTime, StringFormat='* Passed: {0:hh\\:mm\\:ss\\.ff}'}"/>
+                    <TextBlock Text="{Binding ProcessStatus.RemainingTime, StringFormat='* Remaining: {0:hh\\:mm\\:ss\\.ff}'}"/>
                 </StackPanel>
             </StackPanel>
         </GroupBox>

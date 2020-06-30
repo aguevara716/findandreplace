@@ -1,4 +1,8 @@
-﻿using FindAndReplace.Wpf.Models;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using FindAndReplace.Wpf.Models;
 using FindAndReplace.Wpf.Properties;
 
 namespace FindAndReplace.Wpf.Services
@@ -11,16 +15,31 @@ namespace FindAndReplace.Wpf.Services
 
     public class SettingsService : ISettingsService
     {
+        private IEnumerable<String> ConvertCommaSeparatedStringToCollection(string commaSeparatedString)
+        {
+            if (String.IsNullOrEmpty(commaSeparatedString))
+                return Enumerable.Empty<String>().ToArray();
+
+            var stringCollection = commaSeparatedString.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                                                       .Select(s => s.Trim())
+                                                       .OrderBy(s => s);
+            return stringCollection;
+        }
+
         public SettingsTuple LoadSettings()
         {
             Settings.Default.Upgrade();
             Settings.Default.Save();
 
+            var excludeDirectoriesCollection = ConvertCommaSeparatedStringToCollection(Settings.Default.ExcludeDirectories);
+            var excludeFilesCollection = ConvertCommaSeparatedStringToCollection(Settings.Default.ExcludeMask);
+            var includeFilesCollection = ConvertCommaSeparatedStringToCollection(Settings.Default.FileMask);
+
             var folderParameters = new FolderParameters
             {
-                ExcludeDirectories = Settings.Default.ExcludeDirectories,
-                ExcludeMask = Settings.Default.ExcludeMask,
-                FileMask = Settings.Default.FileMask,
+                ExcludeDirectories = new ObservableCollection<String>(excludeDirectoriesCollection),
+                ExcludeFiles = new ObservableCollection<String>(excludeFilesCollection),
+                IncludeFiles = new ObservableCollection<string>(includeFilesCollection),
                 IsRecursive = Settings.Default.IsRecursive,
                 RootDirectory = Settings.Default.RootDirectory,
             };
@@ -47,9 +66,9 @@ namespace FindAndReplace.Wpf.Services
 
         public void SaveSettings(FolderParameters folderParameters, FindParameters findParameters, ReplaceParameters replaceParameters)
         {
-            Settings.Default.ExcludeDirectories = folderParameters.ExcludeDirectories;
-            Settings.Default.ExcludeMask = folderParameters.ExcludeMask;
-            Settings.Default.FileMask = folderParameters.FileMask;
+            Settings.Default.ExcludeDirectories = folderParameters.ExcludeDirectoriesString;
+            Settings.Default.ExcludeMask = folderParameters.ExcludeFilesString;
+            Settings.Default.FileMask = folderParameters.IncludeFilesString;
             Settings.Default.IsRecursive = folderParameters.IsRecursive;
             Settings.Default.RootDirectory = folderParameters.RootDirectory;
 

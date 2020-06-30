@@ -177,10 +177,10 @@ namespace FindAndReplace.Wpf.ViewModels
             switch (status)
             {
                 case FindAndReplace.Status.Processing:
-                    Status = $"Processing {processed} of {total} files. Last file: {lastFile}";
+                    Status = $"Processing {processed:N0} of {total:N0} files. Last file: {lastFile}";
                     break;
                 case FindAndReplace.Status.Completed:
-                    Status = $"Processed {total} files.";
+                    Status = $"Processed {total:N0} files.";
                     break;
                 case FindAndReplace.Status.Cancelled:
                     Status = "Operation was cancelled";

@@ -85,7 +85,8 @@
                         <CheckBox Content="Use escape chars" IsChecked="{Binding FindParameters.IsUsingEscapeCharacters}"/>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="Encoding:" VerticalAlignment="Center"/>
-                            <ComboBox ItemsSource="{Binding Encodings}" 
+                            <ComboBox SelectedIndex="0" 
+                                      ItemsSource="{Binding Encodings}" 
                                       SelectedValue="{Binding FindParameters.Encoding}"/>
                         </StackPanel>
                     </WrapPanel>

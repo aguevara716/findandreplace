@@ -19,6 +19,7 @@ namespace FindAndReplace.Wpf.Views
 
         private void OnLoad(object sender, System.Windows.RoutedEventArgs e)
         {
+            rootDirectoryTextBox.Focus();
             viewModel?.LoadedCommand?.Execute();
         }
 

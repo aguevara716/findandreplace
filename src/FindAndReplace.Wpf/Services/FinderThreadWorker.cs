@@ -105,7 +105,9 @@ namespace FindAndReplace.Wpf.Services
 
             finder.FileProcessed += (s, e) =>
             {
-                var percentCompleted = e.Stats.Files.Processed / e.Stats.Files.Total;
+                var percentCompleted = e.Stats.Files.Total == 0 
+                    ? 0 
+                    : e.Stats.Files.Processed / e.Stats.Files.Total;
                 finderWorker.ReportProgress(percentCompleted, e);
             };
 

@@ -6,31 +6,14 @@ using System.Text.RegularExpressions;
 
 namespace FindAndReplace
 {
-    public class ReplacerEventArgs : EventArgs
-	{
-		public Replacer.ReplaceResultItem ResultItem { get; set; }
-		public Stats Stats { get; set; }
-		public Status Status { get; set; }
-		public bool IsSilent { get; set; }
+    public delegate void ReplaceFileProcessedEventHandler(object sender, ReplacerEventArgs e);
 
-		public ReplacerEventArgs(Replacer.ReplaceResultItem resultItem, Stats stats, Status status, bool isSilent = false)
-		{
-			ResultItem = resultItem;
-			Stats = stats;
-			Status = status;
-			IsSilent = isSilent;
-		}
-	}
-
-	public delegate void ReplaceFileProcessedEventHandler(object sender, ReplacerEventArgs e);
-
-	public class Replacer
+	public partial class Replacer
 	{
 		public string Dir { get; set; }
 		public bool IncludeSubDirectories { get; set; }
 		public string FileMask { get; set; }
 		public string ExcludeFileMask { get; set; }
-
 	    public string ExcludeDir { get; set; }
         public string FindText { get; set; }
 		public bool IsCaseSensitive { get; set; }
@@ -38,30 +21,13 @@ namespace FindAndReplace
 	    public bool IsKeepModifiedDate { get; set; }
         public bool SkipBinaryFileDetection { get; set; }
 		public bool IncludeFilesWithoutMatches { get; set; }
-
 		public string ReplaceText { get; set; }
-
 		public bool UseEscapeChars { get; set; }
-
 		public Encoding AlwaysUseEncoding { get; set; }
 		public Encoding DefaultEncodingIfNotDetected { get; set; }
-
 		public bool IsCancelRequested { get; set; }
 		public bool IsSupressOutput { get; set; }
 		public bool IsSilent { get; set; }
-
-		
-		public class ReplaceResultItem : ResultItem
-		{
-			public bool FailedToWrite { get; set; }
-		}
-
-		public class ReplaceResult
-		{
-			public List<ReplaceResultItem> ResultItems { get; set; }
-
-			public Stats Stats { get; set; }
-		}
 
 		public ReplaceResult Replace()
 		{

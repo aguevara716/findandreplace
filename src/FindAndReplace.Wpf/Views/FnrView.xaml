@@ -1,0 +1,215 @@
+﻿<Page x:Class="FindAndReplace.Wpf.Views.FnrView"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:dvm="clr-namespace:FindAndReplace.Wpf.DesignViewModels"
+      mc:Ignorable="d"
+      DataContext="{Binding FnrViewModel, Source={StaticResource Locator}}"
+      d:DataContext="{d:DesignInstance dvm:DesignFnrViewModel, IsDesignTimeCreatable=True}"
+      d:DesignHeight="750" d:DesignWidth="1000"
+      Background="White"
+      Title="Find &amp; Replace">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+
+        <GroupBox Header="Arguments" Grid.Row="0" Grid.Column="0">
+            <StackPanel Orientation="Vertical" Grid.IsSharedSizeScope="True">
+                <Grid Name="FolderParametersGrid">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" SharedSizeGroup="LeftCol"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Root Directory" VerticalAlignment="Center"/>
+                    <DockPanel Grid.Row="0" Grid.Column="1" LastChildFill="True">
+                        <Button DockPanel.Dock="Right" Content="Browse" Command="{Binding SelectRootDirectoryCommand}"/>
+                        <TextBox DockPanel.Dock="Left" VerticalAlignment="Center" Text="{Binding FolderParameters.RootDirectory}"/>
+                    </DockPanel>
+
+                    <CheckBox Grid.Row="1" Grid.Column="1" Content="Include subdirectories (recursive)" IsChecked="{Binding FolderParameters.IsRecursive}"/>
+
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Exclude Directories"/>
+                    <TextBox Grid.Row="2" Grid.Column="1" FontFamily="Consolas" Text="{Binding FolderParameters.ExcludeDirectories}" />
+
+                    <TextBlock Grid.Row="3" Grid.Column="0" Text="File Mask"/>
+                    <TextBox Grid.Row="3" Grid.Column="1" FontFamily="Consolas" Text="{Binding FolderParameters.FileMask}"/>
+
+                    <TextBlock Grid.Row="4" Grid.Column="0" Text="Exclude Mask"/>
+                    <TextBox Grid.Row="4" Grid.Column="1" FontFamily="Consolas" Text="{Binding FolderParameters.ExcludeMask}"/>
+                </Grid>
+
+                <Grid Name="FindParametersGrid">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" SharedSizeGroup="LeftCol"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Find"/>
+                    <DockPanel Grid.Row="0" Grid.Column="1" LastChildFill="True">
+                        <Button DockPanel.Dock="Right" 
+                                Content="Find Only" 
+                                VerticalAlignment="Center" 
+                                HorizontalAlignment="Center" 
+                                Command="{Binding FindCommand}"/>
+                        <TextBox AcceptsReturn="True" 
+                                 FontFamily="Consolas"
+                                 TextWrapping="Wrap" 
+                                 Text="{Binding FindParameters.FindString}"/>
+                    </DockPanel>
+
+                    <WrapPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
+                        <CheckBox Content="Case sensitive" IsChecked="{Binding FindParameters.IsCaseSensitive}"/>
+                        <CheckBox Content="Use regular expressions" IsChecked="{Binding FindParameters.IsRegex}"/>
+                        <CheckBox Content="Skip binary file detection" IsChecked="{Binding FindParameters.IsSkippingBinaryDetection}"/>
+                        <CheckBox Content="Keep modified date" IsChecked="{Binding FindParameters.IsRetainingModifiedDate}"/>
+                        <CheckBox Content="Show encoding" IsChecked="{Binding FindParameters.IsShowingEncoding}"/>
+                        <CheckBox Content="Include files without matches" IsChecked="{Binding FindParameters.IsIncludingFilesWithoutMatches}"/>
+                        <CheckBox Content="Use escape chars" IsChecked="{Binding FindParameters.IsUsingEscapeCharacters}"/>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Encoding:"/>
+                            <ComboBox ItemsSource="{Binding Encodings}" 
+                                        SelectedValue="{Binding FindParameters.Encoding}"/>
+                        </StackPanel>
+                    </WrapPanel>
+                </Grid>
+
+                <Grid Name="ReplaceParametersGrid">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" SharedSizeGroup="LeftCol"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Replace"/>
+                    <TextBox Grid.Row="0" 
+                             Grid.Column="1"
+                             AcceptsReturn="True" 
+                             TextWrapping="Wrap" 
+                             FontFamily="Consolas"
+                             Text="{Binding ReplaceParameters.ReplaceString}"/>
+
+                    <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right">
+                        <Button Content="Replace" Command="{Binding ReplaceCommand}"/>
+                        <Button Content="Swap Find and Replace text" Command="{Binding SwapCommand}"/>
+                        <Button Content="Generate Command Line" Command="{Binding GenerateCommandLineCommand}"/>
+                    </StackPanel>
+                </Grid>
+
+            </StackPanel>
+        </GroupBox>
+        <GroupBox Header="Stats" Grid.Row="0" Grid.Column="1">
+            <StackPanel Orientation="Vertical">
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="Files" FontWeight="Bold"/>
+                    <TextBlock Text="{Binding ProcessStatus.TotalFilesCount, StringFormat='* Total: {0:N0}'}"/>
+                    <TextBlock Text="{Binding ProcessStatus.FilesProcessedCount, StringFormat='* Processed: {0:N0}'}"/>
+                    <TextBlock Text="{Binding ProcessStatus.BinaryFilesCount, StringFormat='* Binary: {0:N0} (skipped)'}"/>
+                    <TextBlock Text="{Binding ProcessStatus.FilesWithMatchesCount, StringFormat='* With Matches: {0:N0}'}"/>
+                    <TextBlock Text="{ Binding ProcessStatus.FilesWithoutMatchesCount, StringFormat='* Without Matches: {0:N0}'}"/>
+                    <TextBlock Text="{ Binding ProcessStatus.FilesFailedToOpenCount, StringFormat='* Failed to Open: {0:N0}'}"/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="Matches" FontWeight="Bold"/>
+                    <TextBlock Text="{Binding ProcessStatus.MatchesCount, StringFormat='* Found: {0:N0}'}"/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="Time" FontWeight="Bold"/>
+                    <TextBlock Text="{Binding ProcessStatus.EllapsedTime, StringFormat='* Passed: {0:hh\\:mm\\:ss\\.ff}'}"/>
+                    <TextBlock Text="{Binding ProcessStatus.RemainingTime, StringFormat='* Remaining: {0:hh\\:mm\\:ss\\.ff}'}"/>
+                </StackPanel>
+            </StackPanel>
+        </GroupBox>
+        <GroupBox Header="Results" Grid.Row="1" Grid.ColumnSpan="2">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <DockPanel LastChildFill="True" Grid.Row="0">
+                    <TextBlock DockPanel.Dock="Top" Text="{Binding Status, StringFormat='Status: {0}'}"/>
+                    <Button DockPanel.Dock="Right" Content="Cancel" Command="{Binding CancelCommand}"/>
+                    <ProgressBar DockPanel.Dock="Left" Margin="5" Maximum="{Binding ProcessStatus.TotalFilesCount}" Value="{Binding ProcessStatus.FilesProcessedCount}"/>
+                </DockPanel>
+
+                <DataGrid Grid.Row="1" 
+                          Name="resultsDataGrid"
+                            ItemsSource="{Binding Results}" 
+                            AutoGenerateColumns="False"
+                            VerticalScrollBarVisibility="Auto"
+                            HorizontalScrollBarVisibility="Auto"
+                            IsReadOnly="True"
+                            AlternatingRowBackground="#EFEFEF"
+                            CanUserAddRows="False"
+                            CanUserDeleteRows="False"
+                            EnableRowVirtualization="True"
+                            FrozenColumnCount="1"
+                            SelectionMode="Single"
+                            SelectionUnit="FullRow">
+                    <DataGrid.InputBindings>
+                        <MouseBinding Gesture="LeftDoubleClick"
+                                      Command="{Binding OpenFileCommand}"
+                                      CommandParameter="{Binding ElementName=resultsDataGrid, Path=SelectedItem}"/>
+                    </DataGrid.InputBindings>
+                    <DataGrid.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Open" 
+                                      Command="{Binding OpenFileCommand}"
+                                      CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"/>
+                            <MenuItem Header="Open Folder"
+                                      Command="{Binding OpenFolderCommand}"
+                                      CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"/>
+                        </ContextMenu>
+                    </DataGrid.ContextMenu>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Filename" 
+                                            Width="Auto"
+                                            Binding="{Binding Filename}"/>
+                        <DataGridTextColumn Header="Path" 
+                                            Width="*"
+                                            Binding="{Binding FileRelativePath}"/>
+                        <DataGridTextColumn Header="Matches" 
+                                            Width="Auto"
+                                            Binding="{Binding MatchCount}"/>
+                        <DataGridTextColumn Header="Error" 
+                                            Width="*"
+                                            Binding="{Binding ErrorMessage}"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+                <TextBox Grid.Row="2"
+                         HorizontalScrollBarVisibility="Auto"
+                         VerticalScrollBarVisibility="Auto"
+                         IsReadOnly="True"
+                         IsReadOnlyCaretVisible="True"
+                         AcceptsReturn="True"
+                         FontFamily="Consolas"
+                         Text="{Binding ElementName=resultsDataGrid, Path=SelectedItem.PreviewText}"/>
+            </Grid>
+        </GroupBox>
+    </Grid>
+
+</Page>

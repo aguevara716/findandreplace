@@ -3,15 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30204.135
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FindAndReplace.EncodingTools", "FindAndReplace.EncodingTools\FindAndReplace.EncodingTools.csproj", "{FC906A26-A660-41B8-9A43-28A6ED42B824}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FindAndReplace.EncodingTools", "FindAndReplace.EncodingTools\FindAndReplace.EncodingTools.csproj", "{FC906A26-A660-41B8-9A43-28A6ED42B824}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FindAndReplace", "FindAndReplace\FindAndReplace.csproj", "{C9C0FE60-EE4E-4659-A161-583D69E672C0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FindAndReplace", "FindAndReplace\FindAndReplace.csproj", "{C9C0FE60-EE4E-4659-A161-583D69E672C0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FindAndReplace.Tests", "FindAndReplace.Tests\FindAndReplace.Tests.csproj", "{806E3735-D003-42A2-ACC6-B2F23BEB1479}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FindAndReplace.Tests", "FindAndReplace.Tests\FindAndReplace.Tests.csproj", "{806E3735-D003-42A2-ACC6-B2F23BEB1479}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FindAndReplace.Tests.CommandLine", "FindAndReplace.Tests.CommandLine\FindAndReplace.Tests.CommandLine.csproj", "{72F6C4E2-2F35-4409-A3FD-F95D61E8B195}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FindAndReplace.Tests.CommandLine", "FindAndReplace.Tests.CommandLine\FindAndReplace.Tests.CommandLine.csproj", "{72F6C4E2-2F35-4409-A3FD-F95D61E8B195}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FindAndReplace.App", "FindAndReplace.App\FindAndReplace.App.csproj", "{7B1881E4-93B9-4FF4-A057-2162B2DB9B72}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FindAndReplace.App", "FindAndReplace.App\FindAndReplace.App.csproj", "{7B1881E4-93B9-4FF4-A057-2162B2DB9B72}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FindAndReplace.Wpf", "FindAndReplace.Wpf\FindAndReplace.Wpf.csproj", "{DF150BC3-7043-4B84-A478-D3ED8AF64CCE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -83,6 +85,18 @@ Global
 		{7B1881E4-93B9-4FF4-A057-2162B2DB9B72}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{7B1881E4-93B9-4FF4-A057-2162B2DB9B72}.Release|x86.ActiveCfg = Release|Any CPU
 		{7B1881E4-93B9-4FF4-A057-2162B2DB9B72}.Release|x86.Build.0 = Release|Any CPU
+		{DF150BC3-7043-4B84-A478-D3ED8AF64CCE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DF150BC3-7043-4B84-A478-D3ED8AF64CCE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DF150BC3-7043-4B84-A478-D3ED8AF64CCE}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{DF150BC3-7043-4B84-A478-D3ED8AF64CCE}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{DF150BC3-7043-4B84-A478-D3ED8AF64CCE}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{DF150BC3-7043-4B84-A478-D3ED8AF64CCE}.Debug|x86.Build.0 = Debug|Any CPU
+		{DF150BC3-7043-4B84-A478-D3ED8AF64CCE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DF150BC3-7043-4B84-A478-D3ED8AF64CCE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DF150BC3-7043-4B84-A478-D3ED8AF64CCE}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{DF150BC3-7043-4B84-A478-D3ED8AF64CCE}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{DF150BC3-7043-4B84-A478-D3ED8AF64CCE}.Release|x86.ActiveCfg = Release|Any CPU
+		{DF150BC3-7043-4B84-A478-D3ED8AF64CCE}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -23,215 +23,257 @@
 
         <Expander Header="Arguments" IsExpanded="True" Grid.Row="0" Grid.Column="0">
             <StackPanel Orientation="Vertical" Grid.IsSharedSizeScope="True">
-                <GroupBox Header="Folder Parameters">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" SharedSizeGroup="LeftCol"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
+                <Grid Name="FolderParametersGrid">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" SharedSizeGroup="LeftCol"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" 
+                               Grid.Column="0" 
+                               Style="{StaticResource ParameterTextBlockStyle}" 
+                               Text="Folder:"/>
+                    <Grid Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
 
-                        <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Top" Margin="0 5 0 0" Text="Folder:"/>
-                        <Grid Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
-
-                            <TextBox Name="rootDirectoryTextBox" 
-                                     Grid.Row="0" 
-                                     Grid.Column="0" 
-                                     IsTabStop="True"
-                                     TabIndex="0"
-                                     Text="{Binding FolderParameters.RootDirectory}"/>
-                            <Button Grid.Row="0" 
-                                    Grid.Column="1" 
-                                    IsTabStop="False"
-                                    TabIndex="1"
-                                    Content="Browse" 
-                                    Command="{Binding SelectRootDirectoryCommand}"/>
-                            <CheckBox Grid.Row="1" 
-                                      Grid.Column="0" 
-                                      IsTabStop="True"
-                                      TabIndex="2"
-                                      Content="Include subdirectories" 
-                                      IsChecked="{Binding FolderParameters.IsRecursive}"/>
-                        </Grid>
-                        
-                        <DockPanel Grid.Row="1" Grid.Column="1" LastChildFill="True">
-                            <Border DockPanel.Dock="Bottom" BorderBrush="Black" BorderThickness="1" Margin="5">
-                                <ScrollViewer DockPanel.Dock="Bottom" VerticalScrollBarVisibility="Auto" Height="150">
-                                    <ItemsControl ItemsSource="{Binding FolderParameters.ExcludeDirectories}">
-                                        <ItemsControl.ItemsPanel>
-                                            <ItemsPanelTemplate>
-                                                <StackPanel Orientation="Vertical"/>
-                                            </ItemsPanelTemplate>
-                                        </ItemsControl.ItemsPanel>
-                                        <ItemsControl.ItemTemplate>
-                                            <DataTemplate>
-                                                <DockPanel LastChildFill="True">
-                                                    <Button DockPanel.Dock="Right" 
-                                                            IsTabStop="False" 
-                                                            Content="Remove"
-                                                            Command="{Binding RelativeSource={RelativeSource AncestorType=Page}, Path=DataContext.RemoveExcludeDirectoryCommand}"
-                                                            CommandParameter="{Binding}"/>
-                                                    <Button DockPanel.Dock="Right" 
-                                                            IsTabStop="False" 
-                                                            Content="Edit" 
-                                                            Command="{Binding RelativeSource={RelativeSource AncestorType=Page}, Path=DataContext.EditExcludeDirectoryCommand}"
-                                                            CommandParameter="{Binding}"/>
-                                                    <TextBlock DockPanel.Dock="Left" Text="{Binding}"/>
-                                                </DockPanel>
-                                            </DataTemplate>
-                                        </ItemsControl.ItemTemplate>
-                                    </ItemsControl>
-                                </ScrollViewer>
-                            </Border>
-                            <DockPanel LastChildFill="True">
-                                <Button DockPanel.Dock="Right" 
-                                        IsTabStop="True" 
-                                        TabIndex="3" 
-                                        Content="Add"
-                                        Command="{Binding AddExcludeDirectoryCommand}"/>
-                                <TextBlock DockPanel.Dock="Left" 
-                                           Text="{Binding FolderParameters.ExcludeDirectories.Count, StringFormat='Exclude Directories ({0:N0}):'}"/>
-                                </DockPanel>
-                            </DockPanel>
-
-                            <DockPanel Grid.Row="1" Grid.Column="2" LastChildFill="True">
-                            <Border DockPanel.Dock="Bottom" BorderBrush="Black" BorderThickness="1" Margin="5">
-                                <ScrollViewer VerticalScrollBarVisibility="Auto" Height="150">
-                                    <ItemsControl ItemsSource="{Binding FolderParameters.ExcludeFiles}">
-                                        <ItemsControl.ItemsPanel>
-                                            <ItemsPanelTemplate>
-                                                <StackPanel Orientation="Vertical"/>
-                                            </ItemsPanelTemplate>
-                                        </ItemsControl.ItemsPanel>
-                                        <ItemsControl.ItemTemplate>
-                                            <DataTemplate>
-                                                <DockPanel LastChildFill="True">
-                                                    <Button DockPanel.Dock="Right" IsTabStop="False" Content="Delete"/>
-                                                    <Button DockPanel.Dock="Right" IsTabStop="False" Content="Edit"/>
-                                                    <TextBlock DockPanel.Dock="Left" Text="{Binding}"/>
-                                                </DockPanel>
-                                            </DataTemplate>
-                                        </ItemsControl.ItemTemplate>
-                                    </ItemsControl>
-                                </ScrollViewer>
-                            </Border>
-                            <DockPanel LastChildFill="True">
-                                    <Button DockPanel.Dock="Right"
-                                            IsTabStop="True"
-                                            TabIndex="4"
-                                            Content="Add"/>
-                                    <TextBlock DockPanel.Dock="Left" 
-                                               Text="{Binding FolderParameters.ExcludeFiles.Count, StringFormat='Excluded Files ({0:N0}):'}"/>
-                                </DockPanel>
-                            </DockPanel>
-
-                        <DockPanel Grid.Row="1" Grid.Column="3" LastChildFill="True">
-                            <Border DockPanel.Dock="Bottom" BorderBrush="Black" BorderThickness="1" Margin="5">
-                                <ScrollViewer DockPanel.Dock="Bottom" VerticalScrollBarVisibility="Auto" Height="150" BorderBrush="Black" BorderThickness="1">
-                                    <ItemsControl ItemsSource="{Binding FolderParameters.IncludeFiles}">
-                                        <ItemsControl.ItemsPanel>
-                                            <ItemsPanelTemplate>
-                                                <StackPanel Orientation="Vertical"/>
-                                            </ItemsPanelTemplate>
-                                        </ItemsControl.ItemsPanel>
-                                        <ItemsControl.ItemTemplate>
-                                            <DataTemplate>
-                                                <DockPanel LastChildFill="True">
-                                                    <Button DockPanel.Dock="Right" IsTabStop="False" Content="Delete"/>
-                                                    <Button DockPanel.Dock="Right" IsTabStop="False" Content="Edit"/>
-                                                    <TextBlock DockPanel.Dock="Left" Text="{Binding}"/>
-                                                </DockPanel>
-                                            </DataTemplate>
-                                        </ItemsControl.ItemTemplate>
-                                    </ItemsControl>
-                                </ScrollViewer>
-                            </Border>
-                            <DockPanel LastChildFill="True">
-                                <Button DockPanel.Dock="Right" 
-                                        IsTabStop="True"
-                                        TabIndex="5"
-                                        Content="Add"/>
-                                <TextBlock DockPanel.Dock="Left" 
-                                            Text="{Binding FolderParameters.IncludeFiles.Count, StringFormat='Include Files ({0:N0}):'}"/>
-                            </DockPanel>
-                        </DockPanel>
+                        <TextBox Name="rootDirectoryTextBox" 
+                                 Grid.Row="0" 
+                                 Grid.Column="0" 
+                                 IsTabStop="True"
+                                 TabIndex="0"
+                                 Text="{Binding FolderParameters.RootDirectory}"/>
+                        <Button Grid.Row="0" 
+                                Grid.Column="1" 
+                                IsTabStop="False"
+                                TabIndex="1"
+                                Content="Browse" 
+                                Command="{Binding SelectRootDirectoryCommand}"/>
+                        <CheckBox Grid.Row="1" 
+                                  Grid.Column="0" 
+                                  IsTabStop="True"
+                                  TabIndex="2"
+                                  Margin="5 0 0 5"
+                                  Content="Include subdirectories" 
+                                  IsChecked="{Binding FolderParameters.IsRecursive}"/>
                     </Grid>
-                </GroupBox>
-                
+
+                    <DockPanel Grid.Row="1" 
+                               Grid.Column="1" 
+                               LastChildFill="True">
+                        <Border DockPanel.Dock="Bottom" 
+                                BorderBrush="Black" 
+                                BorderThickness="1" 
+                                Margin="5">
+                            <ScrollViewer DockPanel.Dock="Bottom" 
+                                          VerticalScrollBarVisibility="Auto" 
+                                          Height="150">
+                                <ItemsControl ItemsSource="{Binding FolderParameters.ExcludeDirectories}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <DockPanel LastChildFill="True">
+                                                <Button DockPanel.Dock="Right" 
+                                                        IsTabStop="False" 
+                                                        Content="Remove"
+                                                        Command="{Binding RelativeSource={RelativeSource AncestorType=Page}, Path=DataContext.RemoveExcludeDirectoryCommand}"
+                                                        CommandParameter="{Binding}"/>
+                                                <Button DockPanel.Dock="Right" 
+                                                        IsTabStop="False" 
+                                                        Content="Edit" 
+                                                        Command="{Binding RelativeSource={RelativeSource AncestorType=Page}, Path=DataContext.EditExcludeDirectoryCommand}"
+                                                        CommandParameter="{Binding}"/>
+                                                <TextBlock DockPanel.Dock="Left" 
+                                                           Style="{StaticResource IncludeExcludeListTextBlockStyle}"
+                                                           Text="{Binding}"/>
+                                            </DockPanel>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+                        </Border>
+                        <DockPanel LastChildFill="True">
+                            <Button DockPanel.Dock="Right" 
+                                    IsTabStop="True" 
+                                    TabIndex="3" 
+                                    Content="Add"
+                                    Command="{Binding AddExcludeDirectoryCommand}"/>
+                            <TextBlock DockPanel.Dock="Left" 
+                                       Text="{Binding FolderParameters.ExcludeDirectories.Count, StringFormat='Exclude Directories ({0:N0}):'}"/>
+                        </DockPanel>
+                    </DockPanel>
+
+                    <DockPanel Grid.Row="1" 
+                               Grid.Column="2" 
+                               LastChildFill="True">
+                        <Border DockPanel.Dock="Bottom" 
+                                BorderBrush="Black" 
+                                BorderThickness="1" 
+                                Margin="5">
+                            <ScrollViewer VerticalScrollBarVisibility="Auto" 
+                                          Height="150">
+                                <ItemsControl ItemsSource="{Binding FolderParameters.ExcludeFiles}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <DockPanel LastChildFill="True">
+                                                <Button DockPanel.Dock="Right" 
+                                                        IsTabStop="False" 
+                                                        Content="Delete"/>
+                                                <Button DockPanel.Dock="Right" 
+                                                        IsTabStop="False" 
+                                                        Content="Edit"/>
+                                                <TextBlock DockPanel.Dock="Left" 
+                                                           Style="{StaticResource IncludeExcludeListTextBlockStyle}"
+                                                           Text="{Binding}"/>
+                                            </DockPanel>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+                        </Border>
+                        <DockPanel LastChildFill="True">
+                            <Button DockPanel.Dock="Right"
+                                    IsTabStop="True"
+                                    TabIndex="4"
+                                    Content="Add"/>
+                            <TextBlock DockPanel.Dock="Left" 
+                                       Text="{Binding FolderParameters.ExcludeFiles.Count, StringFormat='Excluded Files ({0:N0}):'}"/>
+                        </DockPanel>
+                    </DockPanel>
+
+                    <DockPanel Grid.Row="1" Grid.Column="3" LastChildFill="True">
+                        <Border DockPanel.Dock="Bottom" 
+                                BorderBrush="Black" 
+                                BorderThickness="1" 
+                                Margin="5">
+                            <ScrollViewer DockPanel.Dock="Bottom" 
+                                          VerticalScrollBarVisibility="Auto" 
+                                          Height="150" 
+                                          BorderBrush="Black" 
+                                          BorderThickness="1">
+                                <ItemsControl ItemsSource="{Binding FolderParameters.IncludeFiles}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <DockPanel LastChildFill="True">
+                                                <Button DockPanel.Dock="Right" 
+                                                        IsTabStop="False" 
+                                                        Content="Delete"/>
+                                                <Button DockPanel.Dock="Right" 
+                                                        IsTabStop="False" 
+                                                        Content="Edit"/>
+                                                <TextBlock DockPanel.Dock="Left" 
+                                                           Style="{StaticResource IncludeExcludeListTextBlockStyle}"
+                                                           Text="{Binding}"/>
+                                            </DockPanel>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+                        </Border>
+                        <DockPanel LastChildFill="True">
+                            <Button DockPanel.Dock="Right" 
+                                    IsTabStop="True"
+                                    TabIndex="5"
+                                    Content="Add"/>
+                            <TextBlock DockPanel.Dock="Left" 
+                                       Text="{Binding FolderParameters.IncludeFiles.Count, StringFormat='Include Files ({0:N0}):'}"/>
+                        </DockPanel>
+                    </DockPanel>
+                </Grid>
+
                 <Grid Name="FindParametersGrid">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" SharedSizeGroup="LeftCol"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
 
-                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Find"/>
-                    <DockPanel Grid.Row="0" Grid.Column="1" LastChildFill="True">
-                        <Button DockPanel.Dock="Right" 
-                                Content="Find Only" 
-                                VerticalAlignment="Center" 
-                                HorizontalAlignment="Center" 
-                                Command="{Binding FindCommand}"/>
-                        <TextBox Style="{StaticResource MultilineTextBoxStyle}"
+                    <TextBlock Grid.Column="0" 
+                               Style="{StaticResource ParameterTextBlockStyle}" 
+                               Text="Find:"/>
+                    <DockPanel Grid.Column="1" 
+                               LastChildFill="True">
+                        <Grid DockPanel.Dock="Bottom" 
+                              Margin="0 -5 0 5">
+                            <ToggleButton Name="moreOptionsButton" 
+                                          HorizontalAlignment="Left" 
+                                          Content="More Options"/>
+                            <Popup IsOpen="{Binding ElementName=moreOptionsButton, Path=IsChecked}"
+                                   StaysOpen="False"
+                                   PlacementTarget="{Binding ElementName=moreOptionsButton}"
+                                   AllowsTransparency="True"
+                                   PopupAnimation="Slide">
+                                <Border BorderThickness="1" 
+                                        BorderBrush="Black" 
+                                        Padding="5" 
+                                        Background="White">
+                                    <StackPanel Orientation="Vertical">
+                                        <CheckBox Content="Case sensitive" 
+                                                  IsChecked="{Binding FindParameters.IsCaseSensitive}"/>
+                                        <CheckBox Content="Use regular expressions" 
+                                                  IsChecked="{Binding FindParameters.IsRegex}"/>
+                                        <CheckBox Content="Skip binary file detection" 
+                                                  IsChecked="{Binding FindParameters.IsSkippingBinaryDetection}"/>
+                                        <CheckBox Content="Keep modified date" 
+                                                  IsChecked="{Binding FindParameters.IsRetainingModifiedDate}"/>
+                                        <CheckBox Content="Show encoding" 
+                                                  IsChecked="{Binding FindParameters.IsShowingEncoding}"/>
+                                        <CheckBox Content="Include files without matches" 
+                                                  IsChecked="{Binding FindParameters.IsIncludingFilesWithoutMatches}"/>
+                                        <CheckBox Content="Use escape chars" 
+                                                  IsChecked="{Binding FindParameters.IsUsingEscapeCharacters}"/>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="Encoding:" 
+                                                       VerticalAlignment="Center"/>
+                                            <ComboBox SelectedIndex="0" 
+                                                      ItemsSource="{Binding Encodings}" 
+                                                      SelectedValue="{Binding FindParameters.Encoding}"/>
+                                        </StackPanel>
+                                        <Button Content="Swap &quot;Find&quot; and &quot;Replace&quot; Text" 
+                                                Command="{Binding SwapCommand}"/>
+                                    </StackPanel>
+                                </Border>
+                            </Popup>
+                            <Button HorizontalAlignment="Right" Content="Find Only"/>
+                        </Grid>
+                        <TextBox DockPanel.Dock="Top"
+                                 Style="{StaticResource MultilineTextBoxStyle}"
                                  Text="{Binding FindParameters.FindString}"/>
                     </DockPanel>
-
-                    <WrapPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
-                        <CheckBox Content="Case sensitive" IsChecked="{Binding FindParameters.IsCaseSensitive}"/>
-                        <CheckBox Content="Use regular expressions" IsChecked="{Binding FindParameters.IsRegex}"/>
-                        <CheckBox Content="Skip binary file detection" IsChecked="{Binding FindParameters.IsSkippingBinaryDetection}"/>
-                        <CheckBox Content="Keep modified date" IsChecked="{Binding FindParameters.IsRetainingModifiedDate}"/>
-                        <CheckBox Content="Show encoding" IsChecked="{Binding FindParameters.IsShowingEncoding}"/>
-                        <CheckBox Content="Include files without matches" IsChecked="{Binding FindParameters.IsIncludingFilesWithoutMatches}"/>
-                        <CheckBox Content="Use escape chars" IsChecked="{Binding FindParameters.IsUsingEscapeCharacters}"/>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="Encoding:" VerticalAlignment="Center"/>
-                            <ComboBox SelectedIndex="0" 
-                                      ItemsSource="{Binding Encodings}" 
-                                      SelectedValue="{Binding FindParameters.Encoding}"/>
-                        </StackPanel>
-                    </WrapPanel>
                 </Grid>
 
                 <Grid Name="ReplaceParametersGrid">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" SharedSizeGroup="LeftCol"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
 
-                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Replace"/>
-                    <TextBox Grid.Row="0" 
-                             Grid.Column="1"
-                             Style="{StaticResource MultilineTextBoxStyle}"
-                             Text="{Binding ReplaceParameters.ReplaceString}"/>
+                    <TextBlock Grid.Column="0"
+                               Style="{StaticResource ParameterTextBlockStyle}"
+                               Text="Replace:"/>
 
-                    <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right">
-                        <Button Content="Replace" Command="{Binding ReplaceCommand}"/>
-                        <Button Content="Swap Find and Replace text" Command="{Binding SwapCommand}"/>
-                        <Button Content="Generate Command Line" Command="{Binding GenerateCommandLineCommand}"/>
-                    </StackPanel>
+                    <DockPanel Grid.Column="1" LastChildFill="True">
+                        <Grid DockPanel.Dock="Bottom" Margin="0 -5 0 5">
+                            <Button HorizontalAlignment="Right"
+                                    Content="Replace"
+                                    Command="{Binding ReplaceCommand}"/>
+                        </Grid>
+                        <TextBox DockPanel.Dock="Top"
+                                 Style="{StaticResource MultilineTextBoxStyle}"
+                                 Text="{Binding ReplaceParameters.ReplaceString}"/>
+                    </DockPanel>
+                    
                 </Grid>
-
             </StackPanel>
         </Expander>
         <GroupBox Header="Stats" Grid.Row="0" Grid.Column="1">
@@ -265,25 +307,31 @@
                 </Grid.RowDefinitions>
 
                 <DockPanel LastChildFill="True" Grid.Row="0">
-                    <TextBlock DockPanel.Dock="Top" Text="{Binding Status, StringFormat='Status: {0}'}"/>
-                    <Button DockPanel.Dock="Right" Content="Cancel" Command="{Binding CancelCommand}"/>
-                    <ProgressBar DockPanel.Dock="Left" Margin="5" Maximum="{Binding ProcessStatus.TotalFilesCount}" Value="{Binding ProcessStatus.FilesProcessedCount}"/>
+                    <TextBlock DockPanel.Dock="Top" 
+                               Text="{Binding Status, StringFormat='Status: {0}'}"/>
+                    <Button DockPanel.Dock="Right" 
+                            Content="Cancel" 
+                            Command="{Binding CancelCommand}"/>
+                    <ProgressBar DockPanel.Dock="Left" 
+                                 Margin="5" 
+                                 Maximum="{Binding ProcessStatus.TotalFilesCount}" 
+                                 Value="{Binding ProcessStatus.FilesProcessedCount}"/>
                 </DockPanel>
 
                 <DataGrid Grid.Row="1" 
                           Name="resultsDataGrid"
-                            ItemsSource="{Binding Results}" 
-                            AutoGenerateColumns="False"
-                            VerticalScrollBarVisibility="Auto"
-                            HorizontalScrollBarVisibility="Auto"
-                            IsReadOnly="True"
-                            AlternatingRowBackground="#EFEFEF"
-                            CanUserAddRows="False"
-                            CanUserDeleteRows="False"
-                            EnableRowVirtualization="True"
-                            FrozenColumnCount="1"
-                            SelectionMode="Single"
-                            SelectionUnit="FullRow">
+                          ItemsSource="{Binding Results}" 
+                          AutoGenerateColumns="False"
+                          VerticalScrollBarVisibility="Auto"
+                          HorizontalScrollBarVisibility="Auto"
+                          IsReadOnly="True"
+                          AlternatingRowBackground="#EFEFEF"
+                          CanUserAddRows="False"
+                          CanUserDeleteRows="False"
+                          EnableRowVirtualization="True"
+                          FrozenColumnCount="1"
+                          SelectionMode="Single"
+                          SelectionUnit="FullRow">
                     <DataGrid.InputBindings>
                         <MouseBinding Gesture="LeftDoubleClick"
                                       Command="{Binding OpenFileCommand}"
@@ -321,6 +369,7 @@
                          IsReadOnlyCaretVisible="True"
                          AcceptsReturn="True"
                          FontFamily="Consolas"
+                         Margin="0"
                          Text="{Binding ElementName=resultsDataGrid, Path=SelectedItem.PreviewText}"/>
             </Grid>
         </GroupBox>

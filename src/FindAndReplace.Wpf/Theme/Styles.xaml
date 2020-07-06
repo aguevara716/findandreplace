@@ -49,6 +49,7 @@
         <Setter Property="VerticalAlignment" Value="Top"/>
     </Style>
     <Style TargetType="TextBlock" x:Key="IncludeExcludeListTextBlockStyle">
+        <Setter Property="FontFamily" Value="Consolas"/>
         <Setter Property="Margin" Value="5 0 0 0"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
     </Style>
@@ -61,6 +62,9 @@
         <Setter Property="AcceptsReturn" Value="True"/>
         <Setter Property="TextWrapping" Value="Wrap"/>
         <Setter Property="VerticalScrollBarVisibility" Value="Visible"/>
+    </Style>
+    <Style TargetType="TextBox" x:Key="IncludeExcludeTextBoxStyle" BasedOn="{StaticResource {x:Type TextBox}}">
+        <Setter Property="Width" Value="150"/>
     </Style>
 
     <Style TargetType="ToggleButton">

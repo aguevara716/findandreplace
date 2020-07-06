@@ -83,16 +83,24 @@
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
                                             <DockPanel LastChildFill="True">
-                                                <Button DockPanel.Dock="Right" 
-                                                        IsTabStop="False" 
-                                                        Content="Remove"
-                                                        Command="{Binding RelativeSource={RelativeSource AncestorType=Page}, Path=DataContext.RemoveExcludeDirectoryCommand}"
-                                                        CommandParameter="{Binding}"/>
-                                                <Button DockPanel.Dock="Right" 
-                                                        IsTabStop="False" 
-                                                        Content="Edit" 
-                                                        Command="{Binding RelativeSource={RelativeSource AncestorType=Page}, Path=DataContext.EditExcludeDirectoryCommand}"
-                                                        CommandParameter="{Binding}"/>
+                                                <ToggleButton DockPanel.Dock="Right"
+                                                              Content="Delete"
+                                                              Name="deleteExcludeDirectoryButton"/>
+                                                <Popup IsOpen="{Binding ElementName=deleteExcludeDirectoryButton, Path=IsChecked}"
+                                                       PlacementTarget="{Binding ElementName=deleteExcludeDirectoryButton}">
+                                                    <Border Style="{StaticResource PopupBorderStyle}">
+                                                        <DockPanel LastChildFill="True">
+                                                            <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom" HorizontalAlignment="Right">
+                                                                <Button Content="Remove" 
+                                                                        Command="{Binding RelativeSource={RelativeSource AncestorType=Page}, Path=DataContext.RemoveExcludeDirectoryCommand}"
+                                                                        CommandParameter="{Binding}"/>
+                                                                <ToggleButton Content="Cancel"
+                                                                              IsChecked="{Binding ElementName=deleteExcludeDirectoryButton, Path=IsChecked, Mode=TwoWay}"/>
+                                                            </StackPanel>
+                                                            <TextBlock Text="{Binding StringFormat='Are you sure you want to remove &quot;{0}&quot;?'}"/>
+                                                        </DockPanel>
+                                                    </Border>
+                                                </Popup>
                                                 <TextBlock DockPanel.Dock="Left" 
                                                            Style="{StaticResource IncludeExcludeListTextBlockStyle}"
                                                            Text="{Binding}"/>
@@ -103,11 +111,21 @@
                             </ScrollViewer>
                         </Border>
                         <DockPanel LastChildFill="True">
-                            <Button DockPanel.Dock="Right" 
-                                    IsTabStop="True" 
-                                    TabIndex="3" 
-                                    Content="Add"
-                                    Command="{Binding AddExcludeDirectoryCommand}"/>
+                            <ToggleButton DockPanel.Dock="Right" 
+                                          Content="Add"
+                                          Name="addExcludeDirectoryButton"/>
+                            <Popup IsOpen="{Binding ElementName=addExcludeDirectoryButton, Path=IsChecked}"
+                                   PlacementTarget="{Binding ElementName=addExcludeDirectoryButton}">
+                                <Border Style="{StaticResource PopupBorderStyle}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBox Style="{StaticResource IncludeExcludeTextBoxStyle}"
+                                                 Name="addExcludeDirectoryTextBox"/>
+                                        <Button Content="Add"
+                                                Command="{Binding AddExcludeDirectoryCommand}"
+                                                CommandParameter="{Binding ElementName=addExcludeDirectoryTextBox, Path=Text}"/>
+                                    </StackPanel>
+                                </Border>
+                            </Popup>
                             <TextBlock DockPanel.Dock="Left" 
                                        Text="{Binding FolderParameters.ExcludeDirectories.Count, StringFormat='Exclude Directories ({0:N0}):'}"/>
                         </DockPanel>
@@ -126,12 +144,22 @@
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
                                             <DockPanel LastChildFill="True">
-                                                <Button DockPanel.Dock="Right" 
-                                                        IsTabStop="False" 
-                                                        Content="Delete"/>
-                                                <Button DockPanel.Dock="Right" 
-                                                        IsTabStop="False" 
-                                                        Content="Edit"/>
+                                                <ToggleButton DockPanel.Dock="Right" 
+                                                              IsTabStop="False" 
+                                                              Content="Delete"
+                                                              Name="deleteExcludeFileButton"/>
+                                                <Popup IsOpen="{Binding ElementName=deleteExcludeFileButton, Path=IsChecked}"
+                                                       PlacementTarget="{Binding ElementName=deleteExcludeFileButton}">
+                                                    <Border Style="{StaticResource PopupBorderStyle}">
+                                                        <DockPanel LastChildFill="True">
+                                                            <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal">
+                                                                <Button Content="Remove"/>
+                                                                <ToggleButton Content="Cancel" IsChecked="{Binding ElementName=deleteExcludeFileButton, Path=IsChecked}"/>
+                                                            </StackPanel>
+                                                            <TextBlock Text="{Binding StringFormat='Are you sure you want to remove &quot;{0}&quot;?'}"/>
+                                                        </DockPanel>
+                                                    </Border>
+                                                </Popup>
                                                 <TextBlock DockPanel.Dock="Left" 
                                                            Style="{StaticResource IncludeExcludeListTextBlockStyle}"
                                                            Text="{Binding}"/>
@@ -142,10 +170,18 @@
                             </ScrollViewer>
                         </Border>
                         <DockPanel LastChildFill="True">
-                            <Button DockPanel.Dock="Right"
-                                    IsTabStop="True"
-                                    TabIndex="4"
-                                    Content="Add"/>
+                            <ToggleButton DockPanel.Dock="Right"
+                                          Content="Add"
+                                          Name="addExcludeFileButton"/>
+                            <Popup IsOpen="{Binding ElementName=addExcludeFileButton, Path=IsChecked}"
+                                   PlacementTarget="{Binding ElementName=addExcludeFileButton}">
+                                <Border Style="{StaticResource PopupBorderStyle}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBox Style="{StaticResource IncludeExcludeTextBoxStyle}"/>
+                                        <Button Content="Add"/>
+                                    </StackPanel>
+                                </Border>
+                            </Popup>
                             <TextBlock DockPanel.Dock="Left" 
                                        Text="{Binding FolderParameters.ExcludeFiles.Count, StringFormat='Excluded Files ({0:N0}):'}"/>
                         </DockPanel>
@@ -162,12 +198,24 @@
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
                                             <DockPanel LastChildFill="True">
-                                                <Button DockPanel.Dock="Right" 
-                                                        IsTabStop="False" 
-                                                        Content="Delete"/>
-                                                <Button DockPanel.Dock="Right" 
-                                                        IsTabStop="False" 
-                                                        Content="Edit"/>
+                                                <ToggleButton DockPanel.Dock="Right" 
+                                                              IsTabStop="False" 
+                                                              Content="Delete"
+                                                              Name="deleteIncludeFileButton"/>
+                                                <Popup IsOpen="{Binding ElementName=deleteIncludeFileButton, Path=IsChecked}"
+                                                       PlacementTarget="{Binding ElementName=deleteIncludeFileButton}">
+                                                    <Border Style="{StaticResource PopupBorderStyle}">
+                                                        <DockPanel LastChildFill="True">
+                                                            <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom" HorizontalAlignment="Right">
+                                                                <Button Content="Remove"/>
+                                                                <ToggleButton Content="Cancel"
+                                                                              IsChecked="{Binding ElementName=deleteIncludeFileButton, Path=IsChecked, Mode=TwoWay}"/>
+                                                            </StackPanel>
+                                                            <TextBlock DockPanel.Dock="Top"
+                                                                       Text="{Binding StringFormat='Are you sure you want to remove &quot;{0}&quot;?'}"/>
+                                                        </DockPanel>
+                                                    </Border>
+                                                </Popup>
                                                 <TextBlock DockPanel.Dock="Left" 
                                                            Style="{StaticResource IncludeExcludeListTextBlockStyle}"
                                                            Text="{Binding}"/>
@@ -178,10 +226,18 @@
                             </ScrollViewer>
                         </Border>
                         <DockPanel LastChildFill="True">
-                            <Button DockPanel.Dock="Right" 
-                                    IsTabStop="True"
-                                    TabIndex="5"
-                                    Content="Add"/>
+                            <ToggleButton DockPanel.Dock="Right" 
+                                          Content="Add"
+                                          Name="addIncludeFileButton"/>
+                            <Popup IsOpen="{Binding ElementName=addIncludeFileButton, Path=IsChecked}"
+                                   PlacementTarget="{Binding ElementName=addIncludeFileButton}">
+                                <Border Style="{StaticResource PopupBorderStyle}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBox Style="{StaticResource IncludeExcludeTextBoxStyle}"/>
+                                        <Button Content="Add"/>
+                                    </StackPanel>
+                                </Border>
+                            </Popup>
                             <TextBlock DockPanel.Dock="Left" 
                                        Text="{Binding FolderParameters.IncludeFiles.Count, StringFormat='Include Files ({0:N0}):'}"/>
                         </DockPanel>

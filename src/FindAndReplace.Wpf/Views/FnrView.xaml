@@ -205,14 +205,8 @@
                                           HorizontalAlignment="Left" 
                                           Content="More Options"/>
                             <Popup IsOpen="{Binding ElementName=moreOptionsButton, Path=IsChecked}"
-                                   StaysOpen="False"
-                                   PlacementTarget="{Binding ElementName=moreOptionsButton}"
-                                   AllowsTransparency="True"
-                                   PopupAnimation="Slide">
-                                <Border BorderThickness="1" 
-                                        BorderBrush="Black" 
-                                        Padding="5" 
-                                        Background="White">
+                                   PlacementTarget="{Binding ElementName=moreOptionsButton}">
+                                <Border Style="{StaticResource PopupBorderStyle}">
                                     <StackPanel Orientation="Vertical">
                                         <CheckBox Content="Case sensitive" 
                                                   IsChecked="{Binding FindParameters.IsCaseSensitive}"/>

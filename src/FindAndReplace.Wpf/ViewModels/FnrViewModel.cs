@@ -88,8 +88,7 @@ namespace FindAndReplace.Wpf.ViewModels
         public RelayCommand SwapCommand { get; private set; }
         public RelayCommand<Result> OpenFileCommand { get; private set; }
         public RelayCommand<Result> OpenFolderCommand { get; private set; }
-        public RelayCommand AddExcludeDirectoryCommand { get; private set; }
-        public RelayCommand<String> EditExcludeDirectoryCommand { get; private set; }
+        public RelayCommand<String> AddExcludeDirectoryCommand { get; private set; }
         public RelayCommand<String> RemoveExcludeDirectoryCommand { get; private set; }
 
         // Constructors
@@ -124,8 +123,7 @@ namespace FindAndReplace.Wpf.ViewModels
             SwapCommand = new RelayCommand(SwapExecuted);
             OpenFileCommand = new RelayCommand<Result>(OpenFileExecuted);
             OpenFolderCommand = new RelayCommand<Result>(OpenFolderExecuted);
-            AddExcludeDirectoryCommand = new RelayCommand(AddExcludeDirectoryExecuted);
-            EditExcludeDirectoryCommand = new RelayCommand<string>(EditExcludeDirectoryExecuted);
+            AddExcludeDirectoryCommand = new RelayCommand<String>(AddExcludeDirectoryExecuted);
             RemoveExcludeDirectoryCommand = new RelayCommand<string>(RemoveExcludeDirectoryExecuted);
         }
 
@@ -322,26 +320,15 @@ namespace FindAndReplace.Wpf.ViewModels
             Process.Start(startInfo);
         }
 
-        private void AddExcludeDirectoryExecuted()
+        private void AddExcludeDirectoryExecuted(string newExcludeDirectory)
         {
-            var newExclusion = dialogService.ShowPrompt("Enter directory to exclude", "Exclude Directory");
-            if (String.IsNullOrEmpty(newExclusion))
+            if (String.IsNullOrEmpty(newExcludeDirectory))
+                return;
+            if (FolderParameters.ExcludeDirectories.Contains(newExcludeDirectory))
                 return;
 
-            FolderParameters.ExcludeDirectories.Add(newExclusion);
-            FolderParameters.ExcludeDirectories.OrderBy(s => s);
-        }
-
-        private void EditExcludeDirectoryExecuted(string excludedDirectory)
-        {
-            var updatedExclusion = dialogService.ShowPrompt("Enter directory to exclude", "Exclude Directory", excludedDirectory);
-            if (String.IsNullOrEmpty(updatedExclusion))
-                return;
-
-            var index = FolderParameters.ExcludeDirectories.IndexOf(excludedDirectory);
-            FolderParameters.ExcludeDirectories[index] = updatedExclusion;
-
-            FolderParameters.ExcludeDirectories.OrderBy(s => s);
+            FolderParameters.ExcludeDirectories.Add(newExcludeDirectory);
+            FolderParameters.ExcludeDirectories = new ObservableCollection<String>(FolderParameters.ExcludeDirectories.OrderBy(s => s));
         }
 
         private void RemoveExcludeDirectoryExecuted(string excludedDirectory)

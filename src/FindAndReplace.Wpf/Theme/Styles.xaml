@@ -21,6 +21,12 @@
         <Setter Property="Template" Value="{StaticResource ScrollableItemsControlTemplate}"/>
     </Style>
 
+
+    <Style TargetType="ScrollViewer" x:Key="IncludeExcludeScrollViewerStyle">
+        <Setter Property="Height" Value="150"/>
+        <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
+    </Style>
+    
     <Style TargetType="TextBlock">
         <Setter Property="VerticalAlignment" Value="Center"/>
     </Style>

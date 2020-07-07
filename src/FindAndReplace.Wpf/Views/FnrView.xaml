@@ -16,434 +16,431 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="Auto"/>
-        </Grid.ColumnDefinitions>
-
+        
         <Expander Header="Arguments" IsExpanded="True" Grid.Row="0" Grid.Column="0">
-            <StackPanel Orientation="Vertical" Grid.IsSharedSizeScope="True">
-                <Grid Name="FolderParametersGrid">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" SharedSizeGroup="LeftCol"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
+            <DockPanel LastChildFill="True">
 
-                    <TextBlock Grid.Row="0" 
-                               Grid.Column="0" 
-                               Style="{StaticResource ParameterTextBlockStyle}" 
-                               Text="Folder:"/>
-                    <Grid Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-
-                        <TextBox Name="rootDirectoryTextBox" 
-                                 Grid.Row="0" 
-                                 Grid.Column="0" 
-                                 IsTabStop="True"
-                                 TabIndex="0"
-                                 Text="{Binding FolderParameters.RootDirectory}"/>
-                        <Button Grid.Row="0" 
-                                Grid.Column="1" 
-                                IsTabStop="False"
-                                TabIndex="1"
-                                Content="Browse" 
-                                Command="{Binding SelectRootDirectoryCommand}"/>
-                        <CheckBox Grid.Row="1" 
-                                  Grid.Column="0" 
-                                  IsTabStop="True"
-                                  TabIndex="2"
-                                  Margin="5 0 0 5"
-                                  Content="Include subdirectories" 
-                                  IsChecked="{Binding FolderParameters.IsRecursive}"/>
-                    </Grid>
-
-                    <DockPanel Grid.Row="1" 
-                               Grid.Column="1" 
-                               LastChildFill="True">
-                        <Border DockPanel.Dock="Bottom" 
-                                BorderBrush="Black" 
-                                BorderThickness="1" 
-                                Margin="5">
-                            <ScrollViewer DockPanel.Dock="Bottom" 
-                                          Style="{StaticResource IncludeExcludeScrollViewerStyle}">
-                                <ItemsControl ItemsSource="{Binding FolderParameters.ExcludeDirectories}">
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <DockPanel LastChildFill="True">
-                                                <ToggleButton DockPanel.Dock="Right"
-                                                              Content="Delete"
-                                                              Name="deleteExcludeDirectoryButton"/>
-                                                <Popup IsOpen="{Binding ElementName=deleteExcludeDirectoryButton, Path=IsChecked}"
-                                                       PlacementTarget="{Binding ElementName=deleteExcludeDirectoryButton}">
-                                                    <Border Style="{StaticResource PopupBorderStyle}">
-                                                        <DockPanel LastChildFill="True">
-                                                            <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom" HorizontalAlignment="Right">
-                                                                <Button Content="Remove" 
-                                                                        Command="{Binding RelativeSource={RelativeSource AncestorType=Page}, Path=DataContext.RemoveExcludeDirectoryCommand}"
-                                                                        CommandParameter="{Binding}"/>
-                                                                <ToggleButton Content="Cancel"
-                                                                              IsChecked="{Binding ElementName=deleteExcludeDirectoryButton, Path=IsChecked, Mode=TwoWay}"/>
-                                                            </StackPanel>
-                                                            <TextBlock Text="{Binding StringFormat='Are you sure you want to remove &quot;{0}&quot;?'}"/>
-                                                        </DockPanel>
-                                                    </Border>
-                                                </Popup>
-                                                <TextBlock DockPanel.Dock="Left" 
-                                                           Style="{StaticResource IncludeExcludeListTextBlockStyle}"
-                                                           Text="{Binding}"/>
-                                            </DockPanel>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                            </ScrollViewer>
-                        </Border>
-                        <DockPanel LastChildFill="True">
-                            <ToggleButton DockPanel.Dock="Right" 
-                                          Content="+"
-                                          Name="addExcludeDirectoryButton"
-                                          Click="OnAddButtonClicked"/>
-                            <Popup IsOpen="{Binding ElementName=addExcludeDirectoryButton, Path=IsChecked}"
-                                   PlacementTarget="{Binding ElementName=addExcludeDirectoryButton}">
-                                <Border Style="{StaticResource PopupBorderStyle}">
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBox Style="{StaticResource IncludeExcludeTextBoxStyle}"
-                                                 Name="addExcludeDirectoryTextBox"
-                                                 KeyDown="OnKeyDown_AddTextBox"/>
-                                        <Button Content="Add"
-                                                Name="excludeDirectorySaveButton"
-                                                Click="OnSaveButtonClicked"
-                                                Command="{Binding AddExcludeDirectoryCommand}"
-                                                CommandParameter="{Binding ElementName=addExcludeDirectoryTextBox, Path=Text}"/>
-                                    </StackPanel>
-                                </Border>
-                            </Popup>
-                            <TextBlock DockPanel.Dock="Left" 
-                                       Text="{Binding FolderParameters.ExcludeDirectories.Count, StringFormat='Exclude Directories ({0:N0}):'}"/>
-                        </DockPanel>
-                    </DockPanel>
-
-                    <DockPanel Grid.Row="1" 
-                               Grid.Column="2" 
-                               LastChildFill="True">
-                        <Border DockPanel.Dock="Bottom" 
-                                BorderBrush="Black" 
-                                BorderThickness="1" 
-                                Margin="5">
-                            <ScrollViewer DockPanel.Dock="Bottom" 
-                                          Style="{StaticResource IncludeExcludeScrollViewerStyle}">
-                                <ItemsControl ItemsSource="{Binding FolderParameters.ExcludeFiles}">
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <DockPanel LastChildFill="True">
-                                                <ToggleButton DockPanel.Dock="Right" 
-                                                              IsTabStop="False" 
-                                                              Content="Delete"
-                                                              Name="deleteExcludeFileButton"/>
-                                                <Popup IsOpen="{Binding ElementName=deleteExcludeFileButton, Path=IsChecked}"
-                                                       PlacementTarget="{Binding ElementName=deleteExcludeFileButton}">
-                                                    <Border Style="{StaticResource PopupBorderStyle}">
-                                                        <DockPanel LastChildFill="True">
-                                                            <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal">
-                                                                <Button Content="Remove"
-                                                                        Command="{Binding RelativeSource={RelativeSource AncestorType=Page}, Path=DataContext.RemoveExcludeFileCommand}"
-                                                                        CommandParameter="{Binding}"/>
-                                                                <ToggleButton Content="Cancel" 
-                                                                              IsChecked="{Binding ElementName=deleteExcludeFileButton, Path=IsChecked}"/>
-                                                            </StackPanel>
-                                                            <TextBlock Text="{Binding StringFormat='Are you sure you want to remove &quot;{0}&quot;?'}"/>
-                                                        </DockPanel>
-                                                    </Border>
-                                                </Popup>
-                                                <TextBlock DockPanel.Dock="Left" 
-                                                           Style="{StaticResource IncludeExcludeListTextBlockStyle}"
-                                                           Text="{Binding}"/>
-                                            </DockPanel>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                            </ScrollViewer>
-                        </Border>
-                        <DockPanel LastChildFill="True">
-                            <ToggleButton DockPanel.Dock="Right"
-                                          Content="+"
-                                          Name="addExcludeFileButton"
-                                          Click="OnAddButtonClicked"/>
-                            <Popup IsOpen="{Binding ElementName=addExcludeFileButton, Path=IsChecked}"
-                                   PlacementTarget="{Binding ElementName=addExcludeFileButton}">
-                                <Border Style="{StaticResource PopupBorderStyle}">
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBox Style="{StaticResource IncludeExcludeTextBoxStyle}"
-                                                 Name="addExcludeFileTextBox"
-                                                 KeyDown="OnKeyDown_AddTextBox"/>
-                                        <Button Content="Add"
-                                                Name="excludedFileSaveButton"
-                                                Click="OnSaveButtonClicked"
-                                                Command="{Binding AddExcludeFileCommand}"
-                                                CommandParameter="{Binding ElementName=addExcludeFileTextBox, Path=Text}"/>
-                                    </StackPanel>
-                                </Border>
-                            </Popup>
-                            <TextBlock DockPanel.Dock="Left" 
-                                       Text="{Binding FolderParameters.ExcludeFiles.Count, StringFormat='Excluded Files ({0:N0}):'}"/>
-                        </DockPanel>
-                    </DockPanel>
-
-                    <DockPanel Grid.Row="1" Grid.Column="3" LastChildFill="True">
-                        <Border DockPanel.Dock="Bottom" 
-                                BorderBrush="Black" 
-                                BorderThickness="1" 
-                                Margin="5">
-                            <ScrollViewer DockPanel.Dock="Bottom" 
-                                          Style="{StaticResource IncludeExcludeScrollViewerStyle}">
-                                <ItemsControl ItemsSource="{Binding FolderParameters.IncludeFiles}">
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <DockPanel LastChildFill="True">
-                                                <ToggleButton DockPanel.Dock="Right" 
-                                                              IsTabStop="False" 
-                                                              Content="Delete"
-                                                              Name="deleteIncludeFileButton"/>
-                                                <Popup IsOpen="{Binding ElementName=deleteIncludeFileButton, Path=IsChecked}"
-                                                       PlacementTarget="{Binding ElementName=deleteIncludeFileButton}">
-                                                    <Border Style="{StaticResource PopupBorderStyle}">
-                                                        <DockPanel LastChildFill="True">
-                                                            <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom" HorizontalAlignment="Right">
-                                                                <Button Content="Remove"
-                                                                        Command="{Binding RelativeSource={RelativeSource AncestorType=Page}, Path=DataContext.RemoveIncludeFileCommand}"
-                                                                        CommandParameter="{Binding}"/>
-                                                                <ToggleButton Content="Cancel"
-                                                                              IsChecked="{Binding ElementName=deleteIncludeFileButton, Path=IsChecked, Mode=TwoWay}"/>
-                                                            </StackPanel>
-                                                            <TextBlock DockPanel.Dock="Top"
-                                                                       Text="{Binding StringFormat='Are you sure you want to remove &quot;{0}&quot;?'}"/>
-                                                        </DockPanel>
-                                                    </Border>
-                                                </Popup>
-                                                <TextBlock DockPanel.Dock="Left" 
-                                                           Style="{StaticResource IncludeExcludeListTextBlockStyle}"
-                                                           Text="{Binding}"/>
-                                            </DockPanel>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                            </ScrollViewer>
-                        </Border>
-                        <DockPanel LastChildFill="True">
-                            <ToggleButton DockPanel.Dock="Right" 
-                                          Content="+"
-                                          Name="addIncludeFileButton"
-                                          Click="OnAddButtonClicked"/>
-                            <Popup IsOpen="{Binding ElementName=addIncludeFileButton, Path=IsChecked}"
-                                   PlacementTarget="{Binding ElementName=addIncludeFileButton}">
-                                <Border Style="{StaticResource PopupBorderStyle}">
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBox Style="{StaticResource IncludeExcludeTextBoxStyle}"
-                                                 Name="addIncludeFileTextBox"
-                                                 KeyDown="OnKeyDown_AddTextBox"/>
-                                        <Button Content="Add"
-                                                Name="includeFileSaveButton"
-                                                Click="OnSaveButtonClicked"
-                                                Command="{Binding AddIncludeFileCommand}"
-                                                CommandParameter="{Binding ElementName=addIncludeFileTextBox, Path=Text}"/>
-                                    </StackPanel>
-                                </Border>
-                            </Popup>
-                            <TextBlock DockPanel.Dock="Left" 
-                                       Text="{Binding FolderParameters.IncludeFiles.Count, StringFormat='Include Files ({0:N0}):'}"/>
-                        </DockPanel>
-                    </DockPanel>
-                </Grid>
-
-                <Grid Name="FindParametersGrid">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" SharedSizeGroup="LeftCol"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-
-                    <TextBlock Grid.Column="0" 
-                               Style="{StaticResource ParameterTextBlockStyle}" 
-                               Text="Find:"/>
-                    <DockPanel Grid.Column="1" 
-                               LastChildFill="True">
-                        <Grid DockPanel.Dock="Bottom" 
-                              Margin="0 -5 0 5">
-                            <ToggleButton Name="moreOptionsButton" 
-                                          HorizontalAlignment="Left" 
-                                          Content="More Options"/>
-                            <Popup IsOpen="{Binding ElementName=moreOptionsButton, Path=IsChecked}"
-                                   PlacementTarget="{Binding ElementName=moreOptionsButton}">
-                                <Border Style="{StaticResource PopupBorderStyle}">
-                                    <StackPanel Orientation="Vertical">
-                                        <CheckBox Content="Case sensitive" 
-                                                  IsChecked="{Binding FindParameters.IsCaseSensitive}"/>
-                                        <CheckBox Content="Use regular expressions" 
-                                                  IsChecked="{Binding FindParameters.IsRegex}"/>
-                                        <CheckBox Content="Skip binary file detection" 
-                                                  IsChecked="{Binding FindParameters.IsSkippingBinaryDetection}"/>
-                                        <CheckBox Content="Keep modified date" 
-                                                  IsChecked="{Binding FindParameters.IsRetainingModifiedDate}"/>
-                                        <CheckBox Content="Show encoding" 
-                                                  IsChecked="{Binding FindParameters.IsShowingEncoding}"/>
-                                        <CheckBox Content="Include files without matches" 
-                                                  IsChecked="{Binding FindParameters.IsIncludingFilesWithoutMatches}"/>
-                                        <CheckBox Content="Use escape chars" 
-                                                  IsChecked="{Binding FindParameters.IsUsingEscapeCharacters}"/>
-                                        <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="Encoding:" 
-                                                       VerticalAlignment="Center"/>
-                                            <ComboBox SelectedIndex="0" 
-                                                      ItemsSource="{Binding Encodings}" 
-                                                      SelectedValue="{Binding FindParameters.Encoding}"/>
-                                        </StackPanel>
-                                        <Button Content="Swap &quot;Find&quot; and &quot;Replace&quot; Text" 
-                                                Command="{Binding SwapCommand}"/>
-                                    </StackPanel>
-                                </Border>
-                            </Popup>
-                            <Button HorizontalAlignment="Right" 
-                                    Content="Find Only"
-                                    Command="{Binding FindCommand}"/>
-                        </Grid>
-                        <TextBox DockPanel.Dock="Top"
-                                 Style="{StaticResource MultilineTextBoxStyle}"
-                                 Text="{Binding FindParameters.FindString}"/>
-                    </DockPanel>
-                </Grid>
-
-                <Grid Name="ReplaceParametersGrid">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" SharedSizeGroup="LeftCol"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-
-                    <TextBlock Grid.Column="0"
-                               Style="{StaticResource ParameterTextBlockStyle}"
-                               Text="Replace:"/>
-
-                    <DockPanel Grid.Column="1" LastChildFill="True">
-                        <Grid DockPanel.Dock="Bottom" Margin="0 -5 0 5">
-                            <Button HorizontalAlignment="Right"
-                                    Content="Replace"
-                                    Command="{Binding ReplaceCommand}"/>
-                        </Grid>
-                        <TextBox DockPanel.Dock="Top"
-                                 Style="{StaticResource MultilineTextBoxStyle}"
-                                 Text="{Binding ReplaceParameters.ReplaceString}"/>
-                    </DockPanel>
-                    
-                </Grid>
-            </StackPanel>
-        </Expander>
-        <GroupBox Header="Stats" Grid.Row="0" Grid.Column="1">
-            <StackPanel Orientation="Vertical">
-                <StackPanel Orientation="Vertical">
-                    <TextBlock Text="Files" FontWeight="Bold"/>
-                    <TextBlock Text="{Binding ProcessStatus.TotalFilesCount, StringFormat='* Total: {0:N0}'}"/>
-                    <TextBlock Text="{Binding ProcessStatus.FilesProcessedCount, StringFormat='* Processed: {0:N0}'}"/>
-                    <TextBlock Text="{Binding ProcessStatus.BinaryFilesCount, StringFormat='* Binary: {0:N0} (skipped)'}"/>
-                    <TextBlock Text="{Binding ProcessStatus.FilesWithMatchesCount, StringFormat='* With Matches: {0:N0}'}"/>
-                    <TextBlock Text="{ Binding ProcessStatus.FilesWithoutMatchesCount, StringFormat='* Without Matches: {0:N0}'}"/>
-                    <TextBlock Text="{ Binding ProcessStatus.FilesFailedToOpenCount, StringFormat='* Failed to Open: {0:N0}'}"/>
-                </StackPanel>
-                <StackPanel Orientation="Vertical">
-                    <TextBlock Text="Matches" FontWeight="Bold"/>
-                    <TextBlock Text="{Binding ProcessStatus.MatchesCount, StringFormat='* Found: {0:N0}'}"/>
-                </StackPanel>
-                <StackPanel Orientation="Vertical">
-                    <TextBlock Text="Time" FontWeight="Bold"/>
-                    <TextBlock Text="{Binding ProcessStatus.EllapsedTime, StringFormat='* Passed: {0:hh\\:mm\\:ss\\.ff}'}"/>
-                    <TextBlock Text="{Binding ProcessStatus.RemainingTime, StringFormat='* Remaining: {0:hh\\:mm\\:ss\\.ff}'}"/>
-                </StackPanel>
-            </StackPanel>
-        </GroupBox>
-        <GroupBox Header="Results" Grid.Row="1" Grid.ColumnSpan="2">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-
-                <DockPanel LastChildFill="True" Grid.Row="0">
+                <DockPanel LastChildFill="True" DockPanel.Dock="Bottom">
                     <TextBlock DockPanel.Dock="Top" 
-                               Text="{Binding Status, StringFormat='Status: {0}'}"/>
+                        Text="{Binding Status, StringFormat='Status: {0}'}"/>
                     <Button DockPanel.Dock="Right" 
-                            Content="Cancel" 
-                            Command="{Binding CancelCommand}"/>
+                    Content="Cancel" 
+                    Command="{Binding CancelCommand}"/>
                     <ProgressBar DockPanel.Dock="Left" 
-                                 Margin="5" 
-                                 Maximum="{Binding ProcessStatus.TotalFilesCount}" 
-                                 Value="{Binding ProcessStatus.FilesProcessedCount}"/>
+                            Margin="5" 
+                            Maximum="{Binding ProcessStatus.TotalFilesCount}" 
+                            Value="{Binding ProcessStatus.FilesProcessedCount}"/>
                 </DockPanel>
 
-                <DataGrid Grid.Row="1" 
-                          Name="resultsDataGrid"
-                          ItemsSource="{Binding Results}" 
-                          AutoGenerateColumns="False"
-                          VerticalScrollBarVisibility="Auto"
-                          HorizontalScrollBarVisibility="Auto"
-                          IsReadOnly="True"
-                          AlternatingRowBackground="#EFEFEF"
-                          CanUserAddRows="False"
-                          CanUserDeleteRows="False"
-                          EnableRowVirtualization="True"
-                          FrozenColumnCount="1"
-                          SelectionMode="Single"
-                          SelectionUnit="FullRow">
-                    <DataGrid.InputBindings>
-                        <MouseBinding Gesture="LeftDoubleClick"
-                                      Command="{Binding OpenFileCommand}"
-                                      CommandParameter="{Binding ElementName=resultsDataGrid, Path=SelectedItem}"/>
-                    </DataGrid.InputBindings>
-                    <DataGrid.ContextMenu>
-                        <ContextMenu>
-                            <MenuItem Header="Open" 
-                                      Command="{Binding OpenFileCommand}"
-                                      CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"/>
-                            <MenuItem Header="Open Folder"
-                                      Command="{Binding OpenFolderCommand}"
-                                      CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"/>
-                        </ContextMenu>
-                    </DataGrid.ContextMenu>
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="Filename" 
-                                            Width="Auto"
-                                            Binding="{Binding Filename}"/>
-                        <DataGridTextColumn Header="Path" 
-                                            Width="*"
-                                            Binding="{Binding FileRelativePath}"/>
-                        <DataGridTextColumn Header="Matches" 
-                                            Width="Auto"
-                                            Binding="{Binding MatchCount}"/>
-                        <DataGridTextColumn Header="Error" 
-                                            Width="*"
-                                            Binding="{Binding ErrorMessage}"/>
-                    </DataGrid.Columns>
-                </DataGrid>
-                <TextBox Grid.Row="2"
-                         HorizontalScrollBarVisibility="Auto"
-                         VerticalScrollBarVisibility="Auto"
-                         IsReadOnly="True"
-                         IsReadOnlyCaretVisible="True"
-                         AcceptsReturn="True"
-                         FontFamily="Consolas"
-                         Margin="0"
-                         Text="{Binding ElementName=resultsDataGrid, Path=SelectedItem.PreviewText}"/>
-            </Grid>
-        </GroupBox>
+                <GroupBox DockPanel.Dock="Right" Header="Stats">
+                    <StackPanel Orientation="Vertical">
+                        <StackPanel Orientation="Vertical">
+                            <TextBlock Text="Files" FontWeight="Bold"/>
+                            <TextBlock Text="{Binding ProcessStatus.TotalFilesCount, StringFormat='* Total: {0:N0}'}"/>
+                            <TextBlock Text="{Binding ProcessStatus.FilesProcessedCount, StringFormat='* Processed: {0:N0}'}"/>
+                            <TextBlock Text="{Binding ProcessStatus.BinaryFilesCount, StringFormat='* Binary: {0:N0} (skipped)'}"/>
+                            <TextBlock Text="{Binding ProcessStatus.FilesWithMatchesCount, StringFormat='* With Matches: {0:N0}'}"/>
+                            <TextBlock Text="{ Binding ProcessStatus.FilesWithoutMatchesCount, StringFormat='* Without Matches: {0:N0}'}"/>
+                            <TextBlock Text="{ Binding ProcessStatus.FilesFailedToOpenCount, StringFormat='* Failed to Open: {0:N0}'}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Vertical">
+                            <TextBlock Text="Matches" FontWeight="Bold"/>
+                            <TextBlock Text="{Binding ProcessStatus.MatchesCount, StringFormat='* Found: {0:N0}'}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Vertical">
+                            <TextBlock Text="Time" FontWeight="Bold"/>
+                            <TextBlock Text="{Binding ProcessStatus.EllapsedTime, StringFormat='* Passed: {0:hh\\:mm\\:ss\\.ff}'}"/>
+                            <TextBlock Text="{Binding ProcessStatus.RemainingTime, StringFormat='* Remaining: {0:hh\\:mm\\:ss\\.ff}'}"/>
+                        </StackPanel>
+                    </StackPanel>
+                </GroupBox>
+                <StackPanel DockPanel.Dock="Left" Orientation="Vertical" Grid.IsSharedSizeScope="True">
+                    <Grid Name="FolderParametersGrid">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="LeftCol"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.Row="0" 
+                                   Grid.Column="0" 
+                                   Style="{StaticResource ParameterTextBlockStyle}" 
+                                   Text="Folder:"/>
+                        <Grid Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBox Name="rootDirectoryTextBox" 
+                                     Grid.Row="0" 
+                                     Grid.Column="0" 
+                                     IsTabStop="True"
+                                     TabIndex="0"
+                                     Text="{Binding FolderParameters.RootDirectory}"/>
+                            <Button Grid.Row="0" 
+                                    Grid.Column="1" 
+                                    IsTabStop="False"
+                                    TabIndex="1"
+                                    Content="Browse" 
+                                    Command="{Binding SelectRootDirectoryCommand}"/>
+                            <CheckBox Grid.Row="1" 
+                                      Grid.Column="0" 
+                                      IsTabStop="True"
+                                      TabIndex="2"
+                                      Margin="5 0 0 5"
+                                      Content="Include subdirectories" 
+                                      IsChecked="{Binding FolderParameters.IsRecursive}"/>
+                        </Grid>
+
+                        <DockPanel Grid.Row="1" 
+                                   Grid.Column="1" 
+                                   LastChildFill="True">
+                            <Border DockPanel.Dock="Bottom" 
+                                    BorderBrush="Black" 
+                                    BorderThickness="1" 
+                                    Margin="5">
+                                <ScrollViewer DockPanel.Dock="Bottom" 
+                                              Style="{StaticResource IncludeExcludeScrollViewerStyle}">
+                                    <ItemsControl ItemsSource="{Binding FolderParameters.ExcludeDirectories}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <DockPanel LastChildFill="True">
+                                                    <ToggleButton DockPanel.Dock="Right"
+                                                                  Content="Delete"
+                                                                  Name="deleteExcludeDirectoryButton"/>
+                                                    <Popup IsOpen="{Binding ElementName=deleteExcludeDirectoryButton, Path=IsChecked}"
+                                                           PlacementTarget="{Binding ElementName=deleteExcludeDirectoryButton}">
+                                                        <Border Style="{StaticResource PopupBorderStyle}">
+                                                            <DockPanel LastChildFill="True">
+                                                                <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom" HorizontalAlignment="Right">
+                                                                    <Button Content="Remove" 
+                                                                            Command="{Binding RelativeSource={RelativeSource AncestorType=Page}, Path=DataContext.RemoveExcludeDirectoryCommand}"
+                                                                            CommandParameter="{Binding}"/>
+                                                                    <ToggleButton Content="Cancel"
+                                                                                IsChecked="{Binding ElementName=deleteExcludeDirectoryButton, Path=IsChecked, Mode=TwoWay}"/>
+                                                                </StackPanel>
+                                                                <TextBlock Text="{Binding StringFormat='Are you sure you want to remove &quot;{0}&quot;?'}"/>
+                                                            </DockPanel>
+                                                        </Border>
+                                                    </Popup>
+                                                    <TextBlock DockPanel.Dock="Left" 
+                                                               Style="{StaticResource IncludeExcludeListTextBlockStyle}"
+                                                               Text="{Binding}"/>
+                                                </DockPanel>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </ScrollViewer>
+                            </Border>
+                            <DockPanel LastChildFill="True">
+                                <ToggleButton DockPanel.Dock="Right" 
+                                              Content="+"
+                                              Name="addExcludeDirectoryButton"
+                                              Click="OnAddButtonClicked"/>
+                                <Popup IsOpen="{Binding ElementName=addExcludeDirectoryButton, Path=IsChecked}"
+                                       PlacementTarget="{Binding ElementName=addExcludeDirectoryButton}">
+                                    <Border Style="{StaticResource PopupBorderStyle}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBox Style="{StaticResource IncludeExcludeTextBoxStyle}"
+                                                     Name="addExcludeDirectoryTextBox"
+                                                     KeyDown="OnKeyDown_AddTextBox"/>
+                                            <Button Content="Add"
+                                                    Name="excludeDirectorySaveButton"
+                                                    Click="OnSaveButtonClicked"
+                                                    Command="{Binding AddExcludeDirectoryCommand}"
+                                                    CommandParameter="{Binding ElementName=addExcludeDirectoryTextBox, Path=Text}"/>
+                                        </StackPanel>
+                                    </Border>
+                                </Popup>
+                                <TextBlock DockPanel.Dock="Left" 
+                                           Text="{Binding FolderParameters.ExcludeDirectories.Count, StringFormat='Exclude Directories ({0:N0}):'}"/>
+                            </DockPanel>
+                        </DockPanel>
+                        
+                        <DockPanel Grid.Row="1" 
+                                   Grid.Column="2" 
+                                   LastChildFill="True">
+                            <Border DockPanel.Dock="Bottom" 
+                                    BorderBrush="Black" 
+                                    BorderThickness="1" 
+                                    Margin="5">
+                                <ScrollViewer DockPanel.Dock="Bottom" 
+                                              Style="{StaticResource IncludeExcludeScrollViewerStyle}">
+                                    <ItemsControl ItemsSource="{Binding FolderParameters.ExcludeFiles}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <DockPanel LastChildFill="True">
+                                                    <ToggleButton DockPanel.Dock="Right" 
+                                                                  IsTabStop="False" 
+                                                                  Content="Delete"
+                                                                  Name="deleteExcludeFileButton"/>
+                                                    <Popup IsOpen="{Binding ElementName=deleteExcludeFileButton, Path=IsChecked}"
+                                                           PlacementTarget="{Binding ElementName=deleteExcludeFileButton}">
+                                                        <Border Style="{StaticResource PopupBorderStyle}">
+                                                            <DockPanel LastChildFill="True">
+                                                                <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal">
+                                                                    <Button Content="Remove"
+                                                                            Command="{Binding RelativeSource={RelativeSource AncestorType=Page}, Path=DataContext.RemoveExcludeFileCommand}"
+                                                                            CommandParameter="{Binding}"/>
+                                                                    <ToggleButton Content="Cancel" 
+                                                                                  IsChecked="{Binding ElementName=deleteExcludeFileButton, Path=IsChecked}"/>
+                                                                </StackPanel>
+                                                                <TextBlock Text="{Binding StringFormat='Are you sure you want to remove &quot;{0}&quot;?'}"/>
+                                                            </DockPanel>
+                                                        </Border>
+                                                    </Popup>
+                                                    <TextBlock DockPanel.Dock="Left" 
+                                                               Style="{StaticResource IncludeExcludeListTextBlockStyle}"
+                                                               Text="{Binding}"/>
+                                                </DockPanel>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </ScrollViewer>
+                            </Border>
+                            <DockPanel LastChildFill="True">
+                                <ToggleButton DockPanel.Dock="Right"
+                                              Content="+"
+                                              Name="addExcludeFileButton"
+                                              Click="OnAddButtonClicked"/>
+                                <Popup IsOpen="{Binding ElementName=addExcludeFileButton, Path=IsChecked}"
+                                       PlacementTarget="{Binding ElementName=addExcludeFileButton}">
+                                    <Border Style="{StaticResource PopupBorderStyle}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBox Style="{StaticResource IncludeExcludeTextBoxStyle}"
+                                                     Name="addExcludeFileTextBox"
+                                                     KeyDown="OnKeyDown_AddTextBox"/>
+                                            <Button Content="Add"
+                                                    Name="excludedFileSaveButton"
+                                                    Click="OnSaveButtonClicked"
+                                                    Command="{Binding AddExcludeFileCommand}"
+                                                    CommandParameter="{Binding ElementName=addExcludeFileTextBox, Path=Text}"/>
+                                        </StackPanel>
+                                    </Border>
+                                </Popup>
+                                <TextBlock DockPanel.Dock="Left" 
+                                           Text="{Binding FolderParameters.ExcludeFiles.Count, StringFormat='Excluded Files ({0:N0}):'}"/>
+                            </DockPanel>
+                        </DockPanel>
+                        
+                        <DockPanel Grid.Row="1" Grid.Column="3" LastChildFill="True">
+                            <Border DockPanel.Dock="Bottom" 
+                                    BorderBrush="Black" 
+                                    BorderThickness="1" 
+                                    Margin="5">
+                                <ScrollViewer DockPanel.Dock="Bottom" 
+                                              Style="{StaticResource IncludeExcludeScrollViewerStyle}">
+                                    <ItemsControl ItemsSource="{Binding FolderParameters.IncludeFiles}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <DockPanel LastChildFill="True">
+                                                    <ToggleButton DockPanel.Dock="Right" 
+                                                                  IsTabStop="False" 
+                                                                  Content="Delete"
+                                                                  Name="deleteIncludeFileButton"/>
+                                                    <Popup IsOpen="{Binding ElementName=deleteIncludeFileButton, Path=IsChecked}"
+                                                           PlacementTarget="{Binding ElementName=deleteIncludeFileButton}">
+                                                        <Border Style="{StaticResource PopupBorderStyle}">
+                                                            <DockPanel LastChildFill="True">
+                                                                <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom" HorizontalAlignment="Right">
+                                                                    <Button Content="Remove"
+                                                                            Command="{Binding RelativeSource={RelativeSource AncestorType=Page}, Path=DataContext.RemoveIncludeFileCommand}"
+                                                                            CommandParameter="{Binding}"/>
+                                                                    <ToggleButton Content="Cancel"
+                                                                                  IsChecked="{Binding ElementName=deleteIncludeFileButton, Path=IsChecked, Mode=TwoWay}"/>
+                                                                </StackPanel>
+                                                                <TextBlock DockPanel.Dock="Top"
+                                                                           Text="{Binding StringFormat='Are you sure you want to remove &quot;{0}&quot;?'}"/>
+                                                            </DockPanel>
+                                                        </Border>
+                                                    </Popup>
+                                                    <TextBlock DockPanel.Dock="Left" 
+                                                               Style="{StaticResource IncludeExcludeListTextBlockStyle}"
+                                                               Text="{Binding}"/>
+                                                </DockPanel>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </ScrollViewer>
+                            </Border>
+                            <DockPanel LastChildFill="True">
+                                <ToggleButton DockPanel.Dock="Right" 
+                                              Content="+"
+                                              Name="addIncludeFileButton"
+                                              Click="OnAddButtonClicked"/>
+                                <Popup IsOpen="{Binding ElementName=addIncludeFileButton, Path=IsChecked}"
+                                       PlacementTarget="{Binding ElementName=addIncludeFileButton}">
+                                    <Border Style="{StaticResource PopupBorderStyle}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBox Style="{StaticResource IncludeExcludeTextBoxStyle}"
+                                                     Name="addIncludeFileTextBox"
+                                                     KeyDown="OnKeyDown_AddTextBox"/>
+                                            <Button Content="Add"
+                                                    Name="includeFileSaveButton"
+                                                    Click="OnSaveButtonClicked"
+                                                    Command="{Binding AddIncludeFileCommand}"
+                                                    CommandParameter="{Binding ElementName=addIncludeFileTextBox, Path=Text}"/>
+                                        </StackPanel>
+                                    </Border>
+                                </Popup>
+                                <TextBlock DockPanel.Dock="Left" 
+                                           Text="{Binding FolderParameters.IncludeFiles.Count, StringFormat='Include Files ({0:N0}):'}"/>
+                            </DockPanel>
+                        </DockPanel>
+                    </Grid>
+                    
+                    <Grid Name="FindParametersGrid">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="LeftCol"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Column="0" 
+                                   Style="{StaticResource ParameterTextBlockStyle}" 
+                                   Text="Find:"/>
+                        <DockPanel Grid.Column="1" 
+                                   LastChildFill="True">
+                            <Grid DockPanel.Dock="Bottom" 
+                                  Margin="0 -5 0 5">
+                                <ToggleButton Name="moreOptionsButton" 
+                                              HorizontalAlignment="Left" 
+                                              Content="More Options"/>
+                                <Popup IsOpen="{Binding ElementName=moreOptionsButton, Path=IsChecked}"
+                                       PlacementTarget="{Binding ElementName=moreOptionsButton}">
+                                    <Border Style="{StaticResource PopupBorderStyle}">
+                                        <StackPanel Orientation="Vertical">
+                                            <CheckBox Content="Case sensitive" 
+                                                      IsChecked="{Binding FindParameters.IsCaseSensitive}"/>
+                                            <CheckBox Content="Use regular expressions" 
+                                                      IsChecked="{Binding FindParameters.IsRegex}"/>
+                                            <CheckBox Content="Skip binary file detection" 
+                                                      IsChecked="{Binding FindParameters.IsSkippingBinaryDetection}"/>
+                                            <CheckBox Content="Keep modified date" 
+                                                      IsChecked="{Binding FindParameters.IsRetainingModifiedDate}"/>
+                                            <CheckBox Content="Show encoding" 
+                                                      IsChecked="{Binding FindParameters.IsShowingEncoding}"/>
+                                            <CheckBox Content="Include files without matches" 
+                                                      IsChecked="{Binding FindParameters.IsIncludingFilesWithoutMatches}"/>
+                                            <CheckBox Content="Use escape chars" 
+                                                      IsChecked="{Binding FindParameters.IsUsingEscapeCharacters}"/>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="Encoding:" 
+                                                           VerticalAlignment="Center"/>
+                                                <ComboBox SelectedIndex="0" 
+                                                          ItemsSource="{Binding Encodings}" 
+                                                          SelectedValue="{Binding FindParameters.Encoding}"/>
+                                            </StackPanel>
+                                            <Button Content="Swap &quot;Find&quot; and &quot;Replace&quot; Text" 
+                                                    Command="{Binding SwapCommand}"/>
+                                        </StackPanel>
+                                    </Border>
+                                </Popup>
+                                <Button HorizontalAlignment="Right" 
+                                        Content="Find Only"
+                                        Command="{Binding FindCommand}"/>
+                            </Grid>
+                            <TextBox DockPanel.Dock="Top"
+                                     Style="{StaticResource MultilineTextBoxStyle}"
+                                     Text="{Binding FindParameters.FindString}"/>
+                        </DockPanel>
+                    </Grid>
+
+                    <Grid Name="ReplaceParametersGrid">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="LeftCol"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Column="0"
+                                   Style="{StaticResource ParameterTextBlockStyle}"
+                                   Text="Replace:"/>
+
+                        <DockPanel Grid.Column="1" LastChildFill="True">
+                            <Grid DockPanel.Dock="Bottom" Margin="0 -5 0 5">
+                                <Button HorizontalAlignment="Right"
+                                        Content="Replace"
+                                        Command="{Binding ReplaceCommand}"/>
+                            </Grid>
+                            <TextBox DockPanel.Dock="Top"
+                                     Style="{StaticResource MultilineTextBoxStyle}"
+                                     Text="{Binding ReplaceParameters.ReplaceString}"/>
+                        </DockPanel>
+                    
+                    </Grid>
+                </StackPanel>   
+            </DockPanel>
+        </Expander>
+        
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <DataGrid Grid.Row="0" 
+                      Name="resultsDataGrid"
+                      ItemsSource="{Binding Results}" 
+                      AutoGenerateColumns="False"
+                      VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Auto"
+                      IsReadOnly="True"
+                      AlternatingRowBackground="#EFEFEF"
+                      CanUserAddRows="False"
+                      CanUserDeleteRows="False"
+                      EnableRowVirtualization="True"
+                      FrozenColumnCount="1"
+                      SelectionMode="Single"
+                      SelectionUnit="FullRow">
+                <DataGrid.InputBindings>
+                    <MouseBinding Gesture="LeftDoubleClick"
+                                  Command="{Binding OpenFileCommand}"
+                                  CommandParameter="{Binding ElementName=resultsDataGrid, Path=SelectedItem}"/>
+                </DataGrid.InputBindings>
+                <DataGrid.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Open" 
+                                  Command="{Binding OpenFileCommand}"
+                                  CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"/>
+                        <MenuItem Header="Open Folder"
+                                  Command="{Binding OpenFolderCommand}"
+                                  CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"/>
+                    </ContextMenu>
+                </DataGrid.ContextMenu>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Filename" 
+                                        Width="Auto"
+                                        Binding="{Binding Filename}"/>
+                    <DataGridTextColumn Header="Path" 
+                                        Width="*"
+                                        Binding="{Binding FileRelativePath}"/>
+                    <DataGridTextColumn Header="Matches" 
+                                        Width="Auto"
+                                        Binding="{Binding MatchCount}"/>
+                    <DataGridTextColumn Header="Error" 
+                                        Width="*"
+                                        Binding="{Binding ErrorMessage}"/>
+                </DataGrid.Columns>
+            </DataGrid>
+            <TextBox Grid.Row="1"
+                     HorizontalScrollBarVisibility="Auto"
+                     VerticalScrollBarVisibility="Auto"
+                     IsReadOnly="True"
+                     IsReadOnlyCaretVisible="True"
+                     AcceptsReturn="True"
+                     FontFamily="Consolas"
+                     Margin="0"
+                     Text="{Binding ElementName=resultsDataGrid, Path=SelectedItem.PreviewText}"/>
+        </Grid>
     </Grid>
 
 </Page>

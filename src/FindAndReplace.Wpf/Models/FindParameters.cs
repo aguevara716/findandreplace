@@ -67,5 +67,6 @@ namespace FindAndReplace.Wpf.Models
             set { Set(nameof(IsUsingEscapeCharacters), ref isUsingEscapeCharacters, value); }
         }
 
+        public bool IsSearchingFilenameOnly { get; set; }
     }
 }

@@ -15,11 +15,13 @@ namespace FindAndReplace.Wpf.Ioc
             iocContainer = SimpleIoc.Default;
         }
 
+        // Reset
         public static void ResetIocContainer()
         {
             iocContainer.Reset();
         }
 
+        // Register
         public static void Register<T>()
             where T : class
         {
@@ -39,6 +41,7 @@ namespace FindAndReplace.Wpf.Ioc
             iocContainer.Register(factory);
         }
 
+        // Get
         public static T Get<T>()
         {
             return iocContainer.GetInstance<T>();
@@ -54,6 +57,26 @@ namespace FindAndReplace.Wpf.Ioc
             where TClass : class
         {
             var svc = Get(typeof(TInterface)) as TClass;
+            if (svc == null)
+                throw new InvalidCastException($"Unable to cast {nameof(TInterface)} to {nameof(TClass)}");
+            return svc;
+        }
+
+        public static T GetWithoutCaching<T>()
+        {
+            return iocContainer.GetInstanceWithoutCaching<T>();
+        }
+
+        public static object GetWithoutCaching(Type type)
+        {
+            return iocContainer.GetInstanceWithoutCaching(type);
+        }
+
+        public static TClass GetWithoutCaching<TInterface, TClass>()
+            where TInterface : class
+            where TClass : class, TInterface
+        {
+            var svc = GetWithoutCaching(typeof(TInterface)) as TClass;
             if (svc == null)
                 throw new InvalidCastException($"Unable to cast {nameof(TInterface)} to {nameof(TClass)}");
             return svc;

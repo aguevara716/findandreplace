@@ -17,10 +17,11 @@ namespace FindAndReplace.Wpf.Services
             {
                 Dir = folderParameters.RootDirectory,
                 IncludeSubDirectories = folderParameters.IsRecursive,
-                FileMask = folderParameters.FileMask,
-                ExcludeFileMask = folderParameters.ExcludeMask,
-                ExcludeDir = folderParameters.ExcludeDirectories,
+                FileMask = folderParameters.IncludeFilesString,
+                ExcludeFileMask = folderParameters.ExcludeFilesString,
+                ExcludeDir = folderParameters.ExcludeDirectoriesString,
 
+                IsSearchingFilenameOnly = findParameters.IsSearchingFilenameOnly,
                 FindText = findParameters.FindString,
                 FindTextHasRegEx = findParameters.IsRegex,
                 IsCaseSensitive = findParameters.IsCaseSensitive,

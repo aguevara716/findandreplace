@@ -12,6 +12,10 @@ namespace FindAndReplace.Wpf.Dialogs
         void ShowMessage(string message, string title);
         bool ShowYesNo(string message, string title);
         bool? ShowYesNoCancel(string message, string title);
+
+        // Input prompt
+        string ShowPrompt(string message, string title);
+        string ShowPrompt(string message, string title, string response);
     }
 
     public class DialogService : IDialogService
@@ -58,6 +62,26 @@ namespace FindAndReplace.Wpf.Dialogs
                 default:
                     return null;
             }
+        }
+
+        // Input prompt
+        public string ShowPrompt(string message, string title)
+        {
+            return ShowPrompt(message, title, string.Empty);
+        }
+
+        public string ShowPrompt(string message, string title, string response)
+        {
+            var inputDialog = new InputDialog(title, message, response)
+            {
+                Owner = App.Current.MainWindow
+            };
+
+            var hasResponded = inputDialog.ShowDialog();
+            if (!hasResponded.HasValue || !hasResponded.Value)
+                return string.Empty;
+
+            return inputDialog.Response;
         }
 
     }

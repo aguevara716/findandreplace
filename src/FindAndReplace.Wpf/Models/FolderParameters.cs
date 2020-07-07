@@ -1,28 +1,45 @@
-﻿using GalaSoft.MvvmLight;
+﻿using System;
+using System.Collections.ObjectModel;
+using GalaSoft.MvvmLight;
 
 namespace FindAndReplace.Wpf.Models
 {
     public class FolderParameters : ObservableObject
     {
-        private string excludeDirectories;
-        public string ExcludeDirectories
+        private ObservableCollection<String> excludeDirectories;
+        public ObservableCollection<String> ExcludeDirectories
         {
             get { return excludeDirectories; }
             set { Set(nameof(ExcludeDirectories), ref excludeDirectories, value); }
         }
 
-        private string excludeMask;
-        public string ExcludeMask
+        public string ExcludeDirectoriesString
         {
-            get { return excludeMask; }
-            set { Set(nameof(ExcludeMask), ref excludeMask, value); }
+            get { return String.Join(",", ExcludeDirectories); }
         }
 
-        private string fileMask;
-        public string FileMask
+        private ObservableCollection<String> excludeFiles;
+        public ObservableCollection<String> ExcludeFiles
         {
-            get { return fileMask; }
-            set { Set(nameof(FileMask), ref fileMask, value); }
+            get { return excludeFiles; }
+            set { Set(nameof(ExcludeFiles), ref excludeFiles, value); }
+        }
+
+        public string ExcludeFilesString
+        {
+            get { return String.Join(",", ExcludeFiles); }
+        }
+
+        private ObservableCollection<String> includeFiles;
+        public ObservableCollection<String> IncludeFiles
+        {
+            get { return includeFiles; }
+            set { Set(nameof(IncludeFiles), ref includeFiles, value); }
+        }
+
+        public string IncludeFilesString
+        {
+            get { return String.Join(",", IncludeFiles); }
         }
 
         private bool isRecursive;

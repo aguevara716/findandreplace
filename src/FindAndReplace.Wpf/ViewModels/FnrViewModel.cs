@@ -90,6 +90,10 @@ namespace FindAndReplace.Wpf.ViewModels
         public RelayCommand<Result> OpenFolderCommand { get; private set; }
         public RelayCommand<String> AddExcludeDirectoryCommand { get; private set; }
         public RelayCommand<String> RemoveExcludeDirectoryCommand { get; private set; }
+        public RelayCommand<String> AddExcludeFileCommand { get; private set; }
+        public RelayCommand<String> RemoveExcludeFileCommand { get; private set; }
+        public RelayCommand<String> AddIncludeFileCommand { get; private set; }
+        public RelayCommand<String> RemoveIncludeFileCommand { get; private set; }
 
         // Constructors
         public FnrViewModel(IDialogService ds,
@@ -124,7 +128,11 @@ namespace FindAndReplace.Wpf.ViewModels
             OpenFileCommand = new RelayCommand<Result>(OpenFileExecuted);
             OpenFolderCommand = new RelayCommand<Result>(OpenFolderExecuted);
             AddExcludeDirectoryCommand = new RelayCommand<String>(AddExcludeDirectoryExecuted);
-            RemoveExcludeDirectoryCommand = new RelayCommand<string>(RemoveExcludeDirectoryExecuted);
+            RemoveExcludeDirectoryCommand = new RelayCommand<String>(RemoveExcludeDirectoryExecuted);
+            AddExcludeFileCommand = new RelayCommand<String>(AddExcludeFileExecuted);
+            RemoveExcludeFileCommand = new RelayCommand<String>(RemoveExcludeFileExecuted);
+            AddIncludeFileCommand = new RelayCommand<String>(AddIncludeFileExecuted);
+            RemoveIncludeFileCommand = new RelayCommand<String>(RemoveIncludeFileExecuted);
         }
 
         // Private Methods
@@ -334,6 +342,38 @@ namespace FindAndReplace.Wpf.ViewModels
         private void RemoveExcludeDirectoryExecuted(string excludedDirectory)
         {
             FolderParameters.ExcludeDirectories.Remove(excludedDirectory);
+        }
+
+        private void AddExcludeFileExecuted(string newExcludeFile)
+        {
+            if (String.IsNullOrEmpty(newExcludeFile))
+                return;
+            if (FolderParameters.ExcludeFiles.Contains(newExcludeFile))
+                return;
+
+            FolderParameters.ExcludeFiles.Add(newExcludeFile);
+            FolderParameters.ExcludeFiles = new ObservableCollection<String>(FolderParameters.ExcludeFiles.OrderBy(s => s));
+        }
+
+        private void RemoveExcludeFileExecuted(string excludedFile)
+        {
+            FolderParameters.ExcludeFiles.Remove(excludedFile);
+        }
+
+        private void AddIncludeFileExecuted(string newIncludeFile)
+        {
+            if (String.IsNullOrEmpty(newIncludeFile))
+                return;
+            if (FolderParameters.IncludeFiles.Contains(newIncludeFile))
+                return;
+
+            FolderParameters.IncludeFiles.Add(newIncludeFile);
+            FolderParameters.IncludeFiles = new ObservableCollection<String>(FolderParameters.IncludeFiles.OrderBy(s => s));
+        }
+
+        private void RemoveIncludeFileExecuted(string includeFile)
+        {
+            FolderParameters.IncludeFiles.Remove(includeFile);
         }
 
     }

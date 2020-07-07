@@ -11,6 +11,7 @@ namespace FindAndReplace
 
 	public partial class Finder
 	{
+		public bool IsSearchingFilenameOnly { get; set; }
 		public string Dir { get; set; }
 		public bool IncludeSubDirectories { get; set; }
 		public string FileMask { get; set; }
@@ -41,7 +42,8 @@ namespace FindAndReplace
 		{
 			Verify.Argument.IsNotEmpty(Dir, "Dir");
 			Verify.Argument.IsNotEmpty(FileMask, "FileMask");
-			Verify.Argument.IsNotEmpty(FindText, "FindText");
+			if (!IsSearchingFilenameOnly)
+				Verify.Argument.IsNotEmpty(FindText, "FindText");
 
 			Status status = Status.Processing;
 
@@ -125,15 +127,20 @@ namespace FindAndReplace
 
 		private FindResultItem FindInFile(string filePath)
 		{
-			var resultItem = new FindResultItem();
-			resultItem.IsSuccess = true;
-			resultItem.IncludeFilesWithoutMatches = IncludeFilesWithoutMatches;
-
-			resultItem.FileName = Path.GetFileName(filePath);
-			resultItem.FilePath = filePath;
-			resultItem.FileRelativePath = $".{filePath.Substring(Dir.Length)}";
-
-			byte[] sampleBytes;
+            var resultItem = new FindResultItem
+            {
+                IsSuccess = true,
+                IncludeFilesWithoutMatches = IncludeFilesWithoutMatches,
+                FileName = Path.GetFileName(filePath),
+                FilePath = filePath,
+                FileRelativePath = $".{filePath.Substring(Dir.Length)}",
+				Matches = new List<LiteMatch>
+				{
+					new LiteMatch { Index = 0, Length = 1 }
+				},
+				NumMatches = 1
+            };
+            byte[] sampleBytes;
 
 			StopWatch.Start("ReadSampleFileContent");
 
@@ -185,6 +192,8 @@ namespace FindAndReplace
 			}
 
 			resultItem.FileEncoding = encoding;
+			if (IsSearchingFilenameOnly)
+				return resultItem;
 
 			StopWatch.Start("ReadFullFileContent");
 

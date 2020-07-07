@@ -258,6 +258,8 @@ namespace FindAndReplace.Wpf.ViewModels
             ProcessStatus = new ProcessStatus();
             Results.Clear();
 
+            FindParameters.IsSearchingFilenameOnly = String.IsNullOrEmpty(FindParameters.FindString);
+
             finderThreadWorker.InvokeWorker(FolderParameters, FindParameters, ShowFindResult);
 
             UpdateIsRunning(false);

@@ -21,6 +21,7 @@ namespace FindAndReplace.Wpf.Services
                 ExcludeFileMask = folderParameters.ExcludeFilesString,
                 ExcludeDir = folderParameters.ExcludeDirectoriesString,
 
+                IsSearchingFilenameOnly = findParameters.IsSearchingFilenameOnly,
                 FindText = findParameters.FindString,
                 FindTextHasRegEx = findParameters.IsRegex,
                 IsCaseSensitive = findParameters.IsCaseSensitive,

@@ -22,9 +22,9 @@
 
                 <DockPanel LastChildFill="True" DockPanel.Dock="Bottom">
                     <TextBlock DockPanel.Dock="Top" 
-                        Text="{Binding Status, StringFormat='Status: {0}'}"/>
+                               Text="{Binding Status, StringFormat='Status: {0}'}"/>
                     <Button DockPanel.Dock="Right" 
-                    Content="Cancel" 
+                            Content="Cancel" 
                     Command="{Binding CancelCommand}"/>
                     <ProgressBar DockPanel.Dock="Left" 
                             Margin="5" 

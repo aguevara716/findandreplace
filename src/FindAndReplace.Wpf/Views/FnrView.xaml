@@ -3,6 +3,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:conv="clr-namespace:FindAndReplace.Wpf.Converters"
       xmlns:dvm="clr-namespace:FindAndReplace.Wpf.DesignViewModels"
       mc:Ignorable="d"
       DataContext="{Binding FnrViewModel, Source={StaticResource Locator}}"
@@ -319,6 +320,9 @@
                                        PlacementTarget="{Binding ElementName=moreOptionsButton}">
                                     <Border Style="{StaticResource PopupBorderStyle}">
                                         <StackPanel Orientation="Vertical">
+                                            <CheckBox Name="FilenameOnlyCheckbox" 
+                                                      Content="Only search filenames"
+                                                      IsChecked="{Binding FindParameters.IsSearchingFilenameOnly}"/>
                                             <CheckBox Content="Case sensitive" 
                                                       IsChecked="{Binding FindParameters.IsCaseSensitive}"/>
                                             <CheckBox Content="Use regular expressions" 
@@ -351,7 +355,8 @@
                             </Grid>
                             <TextBox DockPanel.Dock="Top"
                                      Style="{StaticResource MultilineTextBoxStyle}"
-                                     Text="{Binding FindParameters.FindString}"/>
+                                     Text="{Binding FindParameters.FindString}"
+                                     IsEnabled="{Binding ElementName=FilenameOnlyCheckbox, Path=IsChecked, Converter={conv:NegateBooleanConverter}}"/>
                         </DockPanel>
                     </Grid>
 

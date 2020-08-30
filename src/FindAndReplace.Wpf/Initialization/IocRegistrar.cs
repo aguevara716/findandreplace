@@ -47,13 +47,7 @@ namespace FindAndReplace.Wpf.Initialization
         {
             IocWrapper.Register<IClipboardDataService, ClipboardDataService>();
             IocWrapper.Register<IExceptionFormatter, ExceptionFormatter>();
-            IocWrapper.Register<IFinderMapper, FinderMapper>();
-            IocWrapper.Register<IFinderThreadWorker, FinderThreadWorker>();
             IocWrapper.Register<IMatchPreviewGenerator, MatchPreviewGenerator>();
-            IocWrapper.Register<IProcessStatusMapper, ProcessStatusMapper>();
-            IocWrapper.Register<IReplacerMapper, ReplacerMapper>();
-            IocWrapper.Register<IReplacerThreadWorker, ReplacerThreadWorker>();
-            IocWrapper.Register<IResultMapper, ResultMapper>();
             IocWrapper.Register<ISettingsService, SettingsService>();
         }
 

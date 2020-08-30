@@ -10,7 +10,7 @@ namespace FindAndReplace.Wpf.DesignViewModels
     public class DesignFnrViewModel : FnrViewModel
     {
         public DesignFnrViewModel()
-            : base(null, null, null, null, null, null, null)
+            : base(null, null)
         {
             Encodings = new List<String> { "Encoding 1", "Encoding 2", "Encoding 3" };
             FolderParameters = FolderParametersFactory.GetFolderParameters(100);

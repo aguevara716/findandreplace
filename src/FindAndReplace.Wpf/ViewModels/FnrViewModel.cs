@@ -16,13 +16,8 @@ namespace FindAndReplace.Wpf.ViewModels
     public class FnrViewModel : ViewModelBase
     {
         // Dependencies
-        private readonly IDialogService dialogService;
-        private readonly IFinderThreadWorker finderThreadWorker;
-        private readonly IProcessStatusMapper processStatusMapper;
-        private readonly IReplacerMapper replacerMapper;
-        private readonly IReplacerThreadWorker replacerThreadWorker;
-        private readonly IResultMapper resultMapper;
-        private readonly ISettingsService settingsService;
+        private readonly IDialogService _dialogService;
+        private readonly ISettingsService _settingsService;
 
         // Variables
         private bool isRunning;
@@ -84,7 +79,6 @@ namespace FindAndReplace.Wpf.ViewModels
         public RelayCommand FindCommand { get; private set; }
         public RelayCommand ReplaceCommand { get; private set; }
         public RelayCommand CancelCommand { get; private set; }
-        public RelayCommand GenerateCommandLineCommand { get; private set; }
         public RelayCommand SwapCommand { get; private set; }
         public RelayCommand<Result> OpenFileCommand { get; private set; }
         public RelayCommand<Result> OpenFolderCommand { get; private set; }
@@ -96,21 +90,11 @@ namespace FindAndReplace.Wpf.ViewModels
         public RelayCommand<String> RemoveIncludeFileCommand { get; private set; }
 
         // Constructors
-        public FnrViewModel(IDialogService ds,
-                            IFinderThreadWorker ftw,
-                            IProcessStatusMapper psm,
-                            IReplacerMapper rm,
-                            IReplacerThreadWorker rtw,
-                            IResultMapper resm,
-                            ISettingsService ss)
+        public FnrViewModel(IDialogService dialogService,
+                            ISettingsService settingsService)
         {
-            dialogService = ds;
-            finderThreadWorker = ftw;
-            processStatusMapper = psm;
-            replacerMapper = rm;
-            replacerThreadWorker = rtw;
-            resultMapper = resm;
-            settingsService = ss;
+            _dialogService = dialogService;
+            _settingsService = settingsService;
 
             InitializeVariables();
 
@@ -123,7 +107,6 @@ namespace FindAndReplace.Wpf.ViewModels
             FindCommand = new RelayCommand(FindExecuted, FindOrReplaceCanExecute);
             ReplaceCommand = new RelayCommand(ReplaceExecuted, FindOrReplaceCanExecute);
             CancelCommand = new RelayCommand(CancelExecuted, CancelCanExecute);
-            GenerateCommandLineCommand = new RelayCommand(GenerateCommandLineExecuted);
             SwapCommand = new RelayCommand(SwapExecuted);
             OpenFileCommand = new RelayCommand<Result>(OpenFileExecuted);
             OpenFolderCommand = new RelayCommand<Result>(OpenFolderExecuted);
@@ -160,49 +143,9 @@ namespace FindAndReplace.Wpf.ViewModels
             CancelCommand.RaiseCanExecuteChanged();
         }
 
-        private void ShowFindResult(Finder.FindResultItem resultItem, Stats stats, Status status)
-        {
-            ProcessStatus = processStatusMapper.Map(stats);
-
-            if (!resultItem.IncludeInResultsList)
-                return;
-            var result = resultMapper.Map(resultItem);
-            Results.Add(result);
-
-            UpdateStatus(stats.Files.Processed, stats.Files.Total, resultItem.FileRelativePath, status);
-        }
-
-        private void ShowReplaceResult(Replacer.ReplaceResultItem resultItem, Stats stats, Status status)
-        {
-            ProcessStatus = processStatusMapper.Map(stats);
-
-            if (!resultItem.IncludeInResultsList)
-                return;
-            var result = resultMapper.Map(resultItem);
-            Results.Add(result);
-
-            UpdateStatus(stats.Files.Processed, stats.Files.Total, resultItem.FileRelativePath, status);
-        }
-
-        private void UpdateStatus(int processed, int total, string lastFile, Status status)
-        {
-            switch (status)
-            {
-                case FindAndReplace.Status.Processing:
-                    Status = $"Processing {processed:N0} of {total:N0} files. Last file: {lastFile}";
-                    break;
-                case FindAndReplace.Status.Completed:
-                    Status = $"Processed {total:N0} files.";
-                    break;
-                case FindAndReplace.Status.Cancelled:
-                    Status = "Operation was cancelled";
-                    break;
-            }
-        }
-
         private void UpdateSettings()
         {
-            settingsService.SaveSettings(FolderParameters, FindParameters, ReplaceParameters);
+            _settingsService.SaveSettings(FolderParameters, FindParameters, ReplaceParameters);
         }
 
         // Commands CanExecute
@@ -229,7 +172,7 @@ namespace FindAndReplace.Wpf.ViewModels
             Encodings = new List<string>(localEncodings);
             FindParameters.Encoding = Encodings.First();
 
-            var settingsTuple = settingsService.LoadSettings();
+            var settingsTuple = _settingsService.LoadSettings();
             if (settingsTuple == null)
                 return;
             FolderParameters = settingsTuple.FolderParameters;
@@ -244,7 +187,7 @@ namespace FindAndReplace.Wpf.ViewModels
 
         private void SelectRootDirectoryExecuted()
         {
-            var selectedPath = dialogService.ShowFolderPickerDialog("Select root directory", FolderParameters.RootDirectory, false);
+            var selectedPath = _dialogService.ShowFolderPickerDialog("Select root directory", FolderParameters.RootDirectory, false);
             if (String.IsNullOrEmpty(selectedPath))
                 return;
 
@@ -253,52 +196,17 @@ namespace FindAndReplace.Wpf.ViewModels
 
         private void FindExecuted()
         {
-            UpdateIsRunning(true);
             UpdateSettings();
-            ProcessStatus = new ProcessStatus();
-            Results.Clear();
-
-            FindParameters.IsSearchingFilenameOnly = String.IsNullOrEmpty(FindParameters.FindString);
-
-            finderThreadWorker.InvokeWorker(FolderParameters, FindParameters, ShowFindResult);
-
-            UpdateIsRunning(false);
         }
 
         private void ReplaceExecuted()
         {
-            if (String.IsNullOrEmpty(ReplaceParameters.ReplaceString))
-            {
-                var response = dialogService.ShowYesNo("Are you sure you would like to replace with an empty string?", "Replace Confirmation");
-                if (!response)
-                    return;
-            }
-
-            UpdateIsRunning(true);
             UpdateSettings();
-            ProcessStatus = new ProcessStatus();
-            Results.Clear();
-
-            replacerThreadWorker.InvokeWorker(FolderParameters, FindParameters, ReplaceParameters, ShowReplaceResult);
-
-            UpdateIsRunning(false);
         }
 
         private void CancelExecuted()
         {
-            // TODO specify which process is executing
-            finderThreadWorker.CancelWorker();
-            replacerThreadWorker.CancelWorker();
 
-            UpdateIsRunning(false);
-        }
-
-        private void GenerateCommandLineExecuted()
-        {
-            var replacer = replacerMapper.Map(FolderParameters, FindParameters, ReplaceParameters);
-            var exePath = "fnr.exe";
-            var commandLineArgs = replacer.GenCommandLine(findParameters.IsShowingEncoding);
-            dialogService.ShowMessage($"{exePath} {commandLineArgs}", "Command Line");
         }
 
         private void SwapExecuted()

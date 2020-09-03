@@ -48,7 +48,7 @@ namespace FindAndReplace.Wpf.Backend.Filesystem
 
                     foreach (var excludedDirectory in excludedDirectories)
                     {
-                        if (!relativePathToFile.Contains(excludedDirectory))
+                        if (!subdirsToFile.Contains(excludedDirectory))
                             continue;
 
                         filesInDirectory.Remove(file);
@@ -79,23 +79,27 @@ namespace FindAndReplace.Wpf.Backend.Filesystem
             try
             {
                 var filteredFilesHashSet = new HashSet<string>();
-                foreach (var filePath in filesInDirectory)
-                {
-                    var filename = Path.GetFileName(filePath);
-                    if (String.IsNullOrEmpty(filename))
-                        continue;
 
-                    foreach (var excludedFileMask in excludedFileMasks)
+                foreach(var excludedFileMask in excludedFileMasks)
+                {
+                    var regexPattern = excludedFileMask.ConvertWildcardPatternToRegexPattern();
+
+                    foreach(var filePath in filesInDirectory.ToList())
                     {
-                        var regexPattern = excludedFileMask.ConvertWildcardPatternToRegexPattern();
+                        var filename = Path.GetFileName(filePath);
+                        if (string.IsNullOrEmpty(filename))
+                            continue;
                         if (Regex.IsMatch(filePath, regexPattern))
                             continue;
-                        
+
                         filteredFilesHashSet.Add(filePath);
                     }
+
+                    filesInDirectory = filteredFilesHashSet.ToList();
+                    filteredFilesHashSet.Clear();
                 }
 
-                return FileDiscoveryResult.CreateSuccess<FileDiscoveryResult>(rootDirectory, filteredFilesHashSet.ToList());
+                return FileDiscoveryResult.CreateSuccess<FileDiscoveryResult>(rootDirectory, filesInDirectory);
             }
             catch (Exception ex)
             {

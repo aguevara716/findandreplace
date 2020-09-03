@@ -124,8 +124,9 @@ namespace FindAndReplace.Wpf.Backend.Tests.Filesystem
         {
             var rootDirectory = @"C:\Users\devnull\";
             var filesInDirectory = SeedFilesInDirectory(rootDirectory, 10)
-                .Union(SeedFilesInDirectory("ExcludeMe", 10))
-                .Union(SeedFilesInDirectory("IncludeMe", 10))
+                .Union(SeedFilesInDirectory($"{rootDirectory}ExcludeMe", 10))
+                .Union(SeedFilesInDirectory($"{rootDirectory}IncludeMe", 10))
+                .Union(SeedFilesInDirectory(@$"{rootDirectory}FirstDirectory\SecondDirectory\ExcludeMe", 10))
                 .ToList();
             var excludedDirectories = new List<string>
             {
@@ -138,8 +139,7 @@ namespace FindAndReplace.Wpf.Backend.Tests.Filesystem
                                                                                  excludedDirectories,
                                                                                  isRecursive);
 
-            fileDiscoveryResult.IsSuccessful.Should().BeTrue(because: fileDiscoveryResult.Exception.Message);
-            fileDiscoveryResult.Files.Should().NotHaveSameCount(filesInDirectory);
+            fileDiscoveryResult.IsSuccessful.Should().BeTrue();
             fileDiscoveryResult.Files.All(f => !f.Contains("ExcludeMe"));
         }
 

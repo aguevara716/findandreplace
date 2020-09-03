@@ -37,7 +37,7 @@ namespace FindAndReplace.Wpf.Backend.Filesystem
                 if (!isRecursive || excludedDirectories.IsNullOrEmpty())
                     return FileDiscoveryResult.CreateSuccess<FileDiscoveryResult>(rootDirectory, filesInDirectory);
 
-                foreach (var file in filesInDirectory)
+                foreach (var file in filesInDirectory.ToList())
                 {
                     var substringStartIndex = rootDirectory.Length - 1;
                     var substringLength = file.LastIndexOf('\\') != -1

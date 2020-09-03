@@ -40,11 +40,11 @@ namespace FindAndReplace.Wpf.Backend.Filesystem
                 foreach (var file in filesInDirectory.ToList())
                 {
                     var substringStartIndex = rootDirectory.Length - 1;
-                    var substringLength = file.LastIndexOf('\\') != -1
-                        ? (file.LastIndexOf('\\') + 1) - rootDirectory.Length
+                    var substringLength = file.LastIndexOf(Path.DirectorySeparatorChar) != -1
+                        ? (file.LastIndexOf(Path.DirectorySeparatorChar) + 1) - rootDirectory.Length
                         : file.Length - rootDirectory.Length;
 
-                    var relativePathToFile = file.Substring(substringStartIndex, substringLength);
+                    var subdirsToFile = file.Substring(substringStartIndex, substringLength);
 
                     foreach (var excludedDirectory in excludedDirectories)
                     {

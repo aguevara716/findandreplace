@@ -15,6 +15,9 @@ namespace FindAndReplace.Wpf.Backend.Filesystem
     {
         public FileDiscoveryResult GetFiles(string rootDirectory, IList<string> fileMasks, bool isRecursive)
         {
+            if (string.IsNullOrEmpty(rootDirectory))
+                return FileDiscoveryResult.CreateFailure<FileDiscoveryResult>(rootDirectory, "Root directory must be specified");
+
             var enumerationOptions = new EnumerationOptions
             {
                 AttributesToSkip = FileAttributes.Hidden | FileAttributes.System,
@@ -57,5 +60,6 @@ namespace FindAndReplace.Wpf.Backend.Filesystem
                                                                               ex);
             }
         }
+
     }
 }

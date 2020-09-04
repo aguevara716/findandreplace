@@ -90,7 +90,7 @@ namespace FindAndReplace.Wpf.Backend.Filesystem
                         var filename = Path.GetFileName(filePath);
                         if (string.IsNullOrEmpty(filename))
                             continue;
-                        if (Regex.IsMatch(filePath, regexPattern))
+                        if (Regex.IsMatch(filename, regexPattern))
                             continue;
 
                         filteredFilesHashSet.Add(filePath);

@@ -92,6 +92,25 @@ namespace FindAndReplace.Wpf.Backend.Tests.Filesystem
             fileDiscoveryResult.Should().Be(failureResult);
         }
 
+        [Test]
+        public void DiscoverFiles_Should_ReturnFailureIfFileRetrieverReturnsZeroFiles()
+        {
+            var rootDirectory = "asdf";
+            var fdr = MockSuccess(rootDirectory, 0);
+            _fileRetriever.GetFiles(null, null, false).ReturnsForAnyArgs(fdr);
+
+            var fileDiscoveryResult = _fileDiscoverer.DiscoverFiles(rootDirectory,
+                                                                    Enumerable.Empty<string>().ToList(),
+                                                                    Enumerable.Empty<string>().ToList(),
+                                                                    Enumerable.Empty<string>().ToList(),
+                                                                    false);
+
+            fileDiscoveryResult.ErrorMessage.Should().NotBeNullOrEmpty();
+            fileDiscoveryResult.Exception.Should().BeNull();
+            fileDiscoveryResult.Files.Should().BeNullOrEmpty();
+            fileDiscoveryResult.IsSuccessful.Should().BeFalse();
+        }
+
         // file filterer filter out excluded directories
         [Test]
         public void DiscoverFiles_Should_CallFilterOutExcludedDirectories()

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using FindAndReplace.Wpf.Backend.Results;
 
 namespace FindAndReplace.Wpf.Backend.Filesystem
@@ -36,6 +37,8 @@ namespace FindAndReplace.Wpf.Backend.Filesystem
             var filesMatchingMasksResult = _fileRetriever.GetFiles(rootDirectory, fileMasks, isRecursive);
             if (!filesMatchingMasksResult.IsSuccessful)
                 return filesMatchingMasksResult;
+            if (!filesMatchingMasksResult.Files.Any())
+                return FileDiscoveryResult.CreateFailure<FileDiscoveryResult>(rootDirectory, "Unable to find any matching files");
 
             var filesInDirectory = filesMatchingMasksResult.Files;
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 
 namespace FindAndReplace.Wpf.Backend.Results
 {
@@ -13,6 +14,19 @@ namespace FindAndReplace.Wpf.Backend.Results
         protected BaseResult()
         {
 
+        }
+
+        public string GetErrorText()
+        {
+            var errorTextBuilder = new StringBuilder();
+            if (!string.IsNullOrEmpty(ErrorMessage))
+                errorTextBuilder.Append(ErrorMessage);
+            if (!string.IsNullOrEmpty(ErrorMessage) && Exception != null)
+                errorTextBuilder.AppendLine();
+            if (Exception != null)
+                errorTextBuilder.Append(Exception.Message);
+            var errorText = errorTextBuilder.ToString();
+            return errorText;
         }
 
         public static TResult CreateSuccess<TResult>(string path, TPayload payload)

@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using FindAndReplace.Wpf.Backend.Results;
 
 namespace FindAndReplace.Wpf.Backend.Filesystem
@@ -32,17 +34,27 @@ namespace FindAndReplace.Wpf.Backend.Filesystem
             if (!fileMasks.Any())
                 fileMasks.Add("*");
 
-            var filesInDirectoryHashSet = new HashSet<string>();
-            foreach (var fileMask in fileMasks)
+            FileDiscoveryResult errorFileDiscoveryResult = null;
+            var filesInDirectoryDictionary = new ConcurrentDictionary<string, bool>();
+            Parallel.ForEach(fileMasks, fileMask =>
             {
                 var fdr = GetFiles(rootDirectory, fileMask, enumerationOptions);
                 if (!fdr.IsSuccessful)
-                    return fdr;
+                {
+                    errorFileDiscoveryResult = fdr;
+                    return;
+                }
 
-                filesInDirectoryHashSet.UnionWith(fdr.Files);
-            }
+                foreach (var file in fdr.Files)
+                {
+                    filesInDirectoryDictionary.AddOrUpdate(file, true, (s, b) => true);
+                }
+            });
+            if (errorFileDiscoveryResult != null)
+                return errorFileDiscoveryResult;
 
-            var filesMatchingMasksResult = FileDiscoveryResult.CreateSuccess<FileDiscoveryResult>(rootDirectory, filesInDirectoryHashSet.ToList());
+            var filesInDirectoryCollection = filesInDirectoryDictionary.Keys.ToList();
+            var filesMatchingMasksResult = FileDiscoveryResult.CreateSuccess<FileDiscoveryResult>(rootDirectory, filesInDirectoryCollection);
             return filesMatchingMasksResult;
         }
 

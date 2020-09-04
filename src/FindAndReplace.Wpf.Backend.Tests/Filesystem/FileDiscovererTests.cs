@@ -42,11 +42,7 @@ namespace FindAndReplace.Wpf.Backend.Tests.Filesystem
             return FileDiscoveryResult.CreateFailure<FileDiscoveryResult>(rootDirectory, exception);
         }
 
-        // FileDiscoveryResult DiscoverFiles(string rootDirectory, 
-        //    IList<string> fileMasks, 
-        //    IList<string> excludedDirectories, 
-        //    IList<string> excludedFileMasks, 
-        //    bool isRecursive)
+        // FileDiscoveryResult DiscoverFiles(string rootDirectory, IList<string> fileMasks, IList<string> excludedDirectories, IList<string> excludedFileMasks, bool isRecursive)
         [Test]
         [TestCase(true)]
         [TestCase(false)]

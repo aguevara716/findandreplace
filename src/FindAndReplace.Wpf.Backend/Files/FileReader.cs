@@ -1,11 +1,15 @@
 ﻿using System;
 using System.IO;
+using System.Threading.Tasks;
 using FindAndReplace.Wpf.Backend.Results;
 
 namespace FindAndReplace.Wpf.Backend.Files
 {
     public interface IFileReader
     {
+        FileContentResult GetFileContent(string filePath);
+        Task<FileContentResult> GetFileContentAsync(string filePath);
+
         FileSampleResult GetFileSampleData(string filePath);
         FileSampleResult GetFileSampleData(string filePath, int numberOfBytesToIngest);
     }
@@ -13,6 +17,31 @@ namespace FindAndReplace.Wpf.Backend.Files
     public class FileReader : IFileReader
     {
         private const int DEFAULT_NUMBER_OF_BYTES_TO_INGEST = 10240; // 10 kiB
+
+        public FileContentResult GetFileContent(string filePath)
+        {
+            return GetFileContentAsync(filePath).Result;
+        }
+
+        public async Task<FileContentResult> GetFileContentAsync(string filePath)
+        {
+            if (string.IsNullOrEmpty(filePath))
+                return FileContentResult.CreateFailure<FileContentResult>(filePath, "File path is required");
+
+            try
+            {
+                var fileContent = string.Empty;
+                using (var streamReader = new StreamReader(filePath))
+                {
+                    fileContent = await streamReader.ReadToEndAsync();
+                }
+                return FileContentResult.CreateSuccess<FileContentResult>(filePath, fileContent);
+            }
+            catch (Exception ex)
+            {
+                return FileContentResult.CreateFailure<FileContentResult>(filePath, "Unable to read contents of file", ex);
+            }
+        }
 
         public FileSampleResult GetFileSampleData(string filePath)
         {

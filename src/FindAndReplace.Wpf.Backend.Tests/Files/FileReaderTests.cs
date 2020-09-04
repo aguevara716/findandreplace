@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using FindAndReplace.Wpf.Backend.Files;
 using FluentAssertions;
 using NUnit.Framework;
@@ -23,9 +24,42 @@ namespace FindAndReplace.Wpf.Backend.Tests.Files
         // Private Methods
         private string GetFilePath()
         {
+            return GetFilePath("*.dll");
+        }
+
+        private string GetFilePath(string searchCriteria)
+        {
             var rootDirectory = Directory.GetCurrentDirectory();
-            var firstDll = Directory.GetFiles(rootDirectory, "*.dll").First();
+            var firstDll = Directory.GetFiles(rootDirectory, searchCriteria).First();
             return firstDll;
+        }
+
+        // FileContentResult GetFileContent(string filePath);
+        // Task<FileContentResult> GetFileContentAsync(string filePath);
+        [Test]
+        [TestCase(true)]
+        [TestCase(false)]
+        public async Task GetFileContentAsync_Should_ReturnFailureIfFilePathIsNullOrEmpty(bool isNull)
+        {
+            string filePath = isNull
+                ? null
+                : string.Empty;
+
+            var fileContentResult = await _fileReader.GetFileContentAsync(filePath);
+
+            fileContentResult.IsSuccessful.Should().BeFalse();
+            fileContentResult.ErrorMessage.Should().BeNullOrEmpty();
+        }
+
+        [Test]
+        public async Task GetFileContentAsync_Should_ReturnSuccessForTextFiles()
+        {
+            var filePath = GetFilePath("*.json");
+
+            var fileContentResult = await _fileReader.GetFileContentAsync(filePath);
+
+            fileContentResult.IsSuccessful.Should().BeTrue();
+            fileContentResult.Content.Should().NotBeNullOrEmpty();
         }
 
         // FileSampleResult GetFileSampleData(string filePath);

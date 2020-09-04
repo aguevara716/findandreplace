@@ -16,7 +16,8 @@ namespace FindAndReplace.Wpf.Backend.Tests.Filesystem
         [SetUp]
         public void BeforeEach()
         {
-            _fileFilterer = new FileFilterer();
+            var relativePathExtractor = new RelativePathExtractor();
+            _fileFilterer = new FileFilterer(relativePathExtractor);
         }
 
         // Private Methods

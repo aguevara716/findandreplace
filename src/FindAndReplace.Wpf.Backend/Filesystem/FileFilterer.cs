@@ -21,6 +21,13 @@ namespace FindAndReplace.Wpf.Backend.Filesystem
 
     public class FileFilterer : IFileFilterer
     {
+        private readonly IRelativePathExtractor _relativePathExtractor;
+
+        public FileFilterer(IRelativePathExtractor relativePathExtractor)
+        {
+            _relativePathExtractor = relativePathExtractor;
+        }
+
         public FileDiscoveryResult FilterOutExcludedDirectories(string rootDirectory,
                                                                 IList<string> filesInDirectory,
                                                                 IList<string> excludedDirectories,
@@ -39,16 +46,10 @@ namespace FindAndReplace.Wpf.Backend.Filesystem
 
                 foreach (var file in filesInDirectory.ToList())
                 {
-                    var substringStartIndex = rootDirectory.Length - 1;
-                    var substringLength = file.LastIndexOf(Path.DirectorySeparatorChar) != -1
-                        ? (file.LastIndexOf(Path.DirectorySeparatorChar) + 1) - rootDirectory.Length
-                        : file.Length - rootDirectory.Length;
-
-                    var subdirsToFile = file.Substring(substringStartIndex, substringLength);
-
+                    var relativePath = _relativePathExtractor.GetRelativePathWithoutFilename(rootDirectory, file);
                     foreach (var excludedDirectory in excludedDirectories)
                     {
-                        if (!subdirsToFile.Contains(excludedDirectory))
+                        if (!relativePath.Contains(excludedDirectory))
                             continue;
 
                         filesInDirectory.Remove(file);

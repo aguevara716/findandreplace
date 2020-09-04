@@ -171,6 +171,8 @@ namespace FindAndReplace.Wpf.Backend.Tests.Filesystem
 
         //FileDiscoveryResult FilterOutExcludedFileMasks(string rootDirectory, IList<string> filesInDirectory, IList<string> excludedFileMasks);
         [Test]
+        [TestCase(true)]
+        [TestCase(false)]
         public void FilterOutExcludedFileMasks_Should_ReturnFailureIfRootDirectoryIsNullOrEmpty(bool isNull)
         {
             var rootDirectory = isNull

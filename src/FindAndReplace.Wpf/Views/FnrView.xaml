@@ -427,7 +427,10 @@
                                         Binding="{Binding Filename}"/>
                     <DataGridTextColumn Header="Path" 
                                         Width="*"
-                                        Binding="{Binding FileRelativePath}"/>
+                                        Binding="{Binding RelativePath}"/>
+                    <DataGridTextColumn Header="Extension"
+                                        Width="*"
+                                        Binding="{Binding Extension}"/>
                     <DataGridTextColumn Header="Matches" 
                                         Width="Auto"
                                         Binding="{Binding MatchCount}"/>

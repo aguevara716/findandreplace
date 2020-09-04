@@ -46,6 +46,13 @@ namespace FindAndReplace.Wpf.Models
             set { Set(nameof(IsRetainingModifiedDate), ref isRetainingModifiedDate, value); }
         }
 
+        private bool isSearchingFilenameOnly;
+        public bool IsSearchingFilenameOnly 
+        {
+            get { return isSearchingFilenameOnly; }
+            set { Set(nameof(IsSearchingFilenameOnly), ref isSearchingFilenameOnly, value); }
+        }
+
         private bool isShowingEncoding;
         public bool IsShowingEncoding
         {
@@ -66,7 +73,5 @@ namespace FindAndReplace.Wpf.Models
             get { return isUsingEscapeCharacters; }
             set { Set(nameof(IsUsingEscapeCharacters), ref isUsingEscapeCharacters, value); }
         }
-
-        public bool IsSearchingFilenameOnly { get; set; }
     }
 }

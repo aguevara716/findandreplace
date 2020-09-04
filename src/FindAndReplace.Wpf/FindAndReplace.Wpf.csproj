@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\FindAndReplace.Wpf.Backend\FindAndReplace.Wpf.Backend.csproj" />
     <ProjectReference Include="..\FindAndReplace\FindAndReplace.csproj" />
   </ItemGroup>
 

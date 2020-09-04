@@ -5,7 +5,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using FindAndReplace.Wpf.Backend.Filesystem;
 using FindAndReplace.Wpf.Dialogs;
+using FindAndReplace.Wpf.Mappers;
 using FindAndReplace.Wpf.Models;
 using FindAndReplace.Wpf.Services;
 using GalaSoft.MvvmLight;
@@ -17,6 +19,8 @@ namespace FindAndReplace.Wpf.ViewModels
     {
         // Dependencies
         private readonly IDialogService _dialogService;
+        private readonly IFileDiscoverer _fileDiscoverer;
+        private readonly IFileResultMapper _fileResultMapper;
         private readonly ISettingsService _settingsService;
 
         // Variables
@@ -51,8 +55,8 @@ namespace FindAndReplace.Wpf.ViewModels
             set { Set(nameof(ProcessStatus), ref processStatus, value); }
         }
 
-        private ObservableCollection<Result> results;
-        public ObservableCollection<Result> Results
+        private ObservableCollection<FileResult> results;
+        public ObservableCollection<FileResult> Results
         {
             get { return results; }
             set { Set(nameof(Results), ref results, value); }
@@ -80,8 +84,8 @@ namespace FindAndReplace.Wpf.ViewModels
         public RelayCommand ReplaceCommand { get; private set; }
         public RelayCommand CancelCommand { get; private set; }
         public RelayCommand SwapCommand { get; private set; }
-        public RelayCommand<Result> OpenFileCommand { get; private set; }
-        public RelayCommand<Result> OpenFolderCommand { get; private set; }
+        public RelayCommand<FileResult> OpenFileCommand { get; private set; }
+        public RelayCommand<FileResult> OpenFolderCommand { get; private set; }
         public RelayCommand<String> AddExcludeDirectoryCommand { get; private set; }
         public RelayCommand<String> RemoveExcludeDirectoryCommand { get; private set; }
         public RelayCommand<String> AddExcludeFileCommand { get; private set; }
@@ -91,9 +95,13 @@ namespace FindAndReplace.Wpf.ViewModels
 
         // Constructors
         public FnrViewModel(IDialogService dialogService,
+                            IFileDiscoverer fileDiscoverer,
+                            IFileResultMapper fileResultMapper,
                             ISettingsService settingsService)
         {
             _dialogService = dialogService;
+            _fileDiscoverer = fileDiscoverer;
+            _fileResultMapper = fileResultMapper;
             _settingsService = settingsService;
 
             InitializeVariables();
@@ -108,8 +116,8 @@ namespace FindAndReplace.Wpf.ViewModels
             ReplaceCommand = new RelayCommand(ReplaceExecuted, FindOrReplaceCanExecute);
             CancelCommand = new RelayCommand(CancelExecuted, CancelCanExecute);
             SwapCommand = new RelayCommand(SwapExecuted);
-            OpenFileCommand = new RelayCommand<Result>(OpenFileExecuted);
-            OpenFolderCommand = new RelayCommand<Result>(OpenFolderExecuted);
+            OpenFileCommand = new RelayCommand<FileResult>(OpenFileExecuted);
+            OpenFolderCommand = new RelayCommand<FileResult>(OpenFolderExecuted);
             AddExcludeDirectoryCommand = new RelayCommand<String>(AddExcludeDirectoryExecuted);
             RemoveExcludeDirectoryCommand = new RelayCommand<String>(RemoveExcludeDirectoryExecuted);
             AddExcludeFileCommand = new RelayCommand<String>(AddExcludeFileExecuted);
@@ -125,7 +133,7 @@ namespace FindAndReplace.Wpf.ViewModels
             FindParameters = new FindParameters();
             ReplaceParameters = new ReplaceParameters();
             ProcessStatus = new ProcessStatus();
-            Results = new ObservableCollection<Result>();
+            Results = new ObservableCollection<FileResult>();
             Encodings = new List<string>();
             Status = String.Empty;
 
@@ -194,9 +202,35 @@ namespace FindAndReplace.Wpf.ViewModels
             FolderParameters.RootDirectory = selectedPath;
         }
 
-        private void FindExecuted()
+        private async void FindExecuted()
         {
             UpdateSettings();
+            UpdateIsRunning(true);
+
+            ProcessStatus = new ProcessStatus();
+            Results.Clear();
+            Status = "Searching for files";
+
+            var startTime = DateTime.Now;
+            var fileDiscoveryResult = await _fileDiscoverer.DiscoverFilesAsync(FolderParameters.RootDirectory,
+                                                                               FolderParameters.IncludeFiles,
+                                                                               FolderParameters.ExcludeDirectories,
+                                                                               FolderParameters.ExcludeFiles,
+                                                                               FolderParameters.IsRecursive);
+            var timeTaken = DateTime.Now - startTime;
+            ProcessStatus.EllapsedTime = timeTaken;
+            Status = $"Found {fileDiscoveryResult.Files?.Count ?? 0:N0} files in {ProcessStatus.EllapsedTime.TotalMilliseconds:N0} ms";
+            if (!fileDiscoveryResult.IsSuccessful)
+            {
+                UpdateIsRunning(false);
+                var errorText = fileDiscoveryResult.GetErrorText();
+                _dialogService.ShowMessage(errorText, "Error Finding Files");
+                return;
+            }
+
+            var fileResults = _fileResultMapper.Map(FolderParameters.RootDirectory, fileDiscoveryResult.Files);
+            Results = new ObservableCollection<FileResult>(fileResults);
+            UpdateIsRunning(false);
         }
 
         private void ReplaceExecuted()
@@ -217,19 +251,19 @@ namespace FindAndReplace.Wpf.ViewModels
             ReplaceParameters.ReplaceString = originalFindString;
         }
 
-        private void OpenFileExecuted(Result resultItem)
+        private void OpenFileExecuted(FileResult fileResult)
         {
             var startInfo = new ProcessStartInfo
             {
-                FileName = resultItem.FilePath,
+                FileName = fileResult.FullPath,
                 UseShellExecute = true
             };
             Process.Start(startInfo);
         }
 
-        private void OpenFolderExecuted(Result resultItem)
+        private void OpenFolderExecuted(FileResult fileResult)
         {
-            var folder = Path.GetDirectoryName(resultItem.FilePath);
+            var folder = Path.GetDirectoryName(fileResult.FullPath);
             var startInfo = new ProcessStartInfo
             {
                 FileName = folder,

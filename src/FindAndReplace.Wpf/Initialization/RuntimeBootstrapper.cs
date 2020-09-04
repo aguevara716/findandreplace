@@ -11,6 +11,8 @@
         public static void ExecuteStartupSteps()
         {
             IocRegistrar.RegisterDialogService();
+            IocRegistrar.RegisterFilesystemServices();
+            IocRegistrar.RegisterMappers();
             IocRegistrar.RegisterNavigationServices();
             IocRegistrar.RegisterServices();
             IocRegistrar.RegisterViewModels();

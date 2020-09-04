@@ -1,6 +1,8 @@
-﻿using FindAndReplace.Wpf.DesignViewModels;
+﻿using FindAndReplace.Wpf.Backend.Filesystem;
+using FindAndReplace.Wpf.DesignViewModels;
 using FindAndReplace.Wpf.Dialogs;
 using FindAndReplace.Wpf.Ioc;
+using FindAndReplace.Wpf.Mappers;
 using FindAndReplace.Wpf.Navigation;
 using FindAndReplace.Wpf.Services;
 using FindAndReplace.Wpf.ViewModels;
@@ -20,6 +22,19 @@ namespace FindAndReplace.Wpf.Initialization
         public static void RegisterDialogService()
         {
             IocWrapper.Register<IDialogService, DialogService>();
+        }
+
+        public static void RegisterFilesystemServices()
+        {
+            IocWrapper.Register<IFileDiscoverer, FileDiscoverer>();
+            IocWrapper.Register<IFileFilterer, FileFilterer>();
+            IocWrapper.Register<IFileRetriever, FileRetriever>();
+            IocWrapper.Register<IRelativePathExtractor, RelativePathExtractor>();
+        }
+
+        public static void RegisterMappers()
+        {
+            IocWrapper.Register<IFileResultMapper, FileResultMapper>();
         }
 
         public static void RegisterNavigationServices()

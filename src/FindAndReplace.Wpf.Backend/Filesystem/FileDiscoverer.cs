@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using FindAndReplace.Wpf.Backend.Results;
 
 namespace FindAndReplace.Wpf.Backend.Filesystem
@@ -12,6 +13,12 @@ namespace FindAndReplace.Wpf.Backend.Filesystem
                                           IList<string> excludedDirectories,
                                           IList<string> excludedFileMasks,
                                           bool isRecursive);
+
+        Task<FileDiscoveryResult> DiscoverFilesAsync(string rootDirectory,
+                                                     IList<string> fileMasks,
+                                                     IList<string> excludedDirectories,
+                                                     IList<string> excludedFileMasks,
+                                                     bool isRecursive);
     }
 
     public class FileDiscoverer : IFileDiscoverer
@@ -49,5 +56,22 @@ namespace FindAndReplace.Wpf.Backend.Filesystem
             var filesFilteredByExcludedFileMasksResult = _fileFilterer.FilterOutExcludedFileMasks(rootDirectory, filesInDirectory, excludedFileMasks);
             return filesFilteredByExcludedFileMasksResult;
         }
+
+        public Task<FileDiscoveryResult> DiscoverFilesAsync(string rootDirectory,
+                                                                  IList<string> fileMasks,
+                                                                  IList<string> excludedDirectories,
+                                                                  IList<string> excludedFileMasks,
+                                                                  bool isRecursive)
+        {
+            return Task.Run
+            (
+                () => DiscoverFiles(rootDirectory, 
+                                    fileMasks, 
+                                    excludedDirectories, 
+                                    excludedFileMasks, 
+                                    isRecursive)
+            );
+        }
+
     }
 }

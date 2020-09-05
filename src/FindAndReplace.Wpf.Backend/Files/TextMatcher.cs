@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using FindAndReplace.Wpf.Backend.Extensions;
 using FindAndReplace.Wpf.Backend.Results;
 
 namespace FindAndReplace.Wpf.Backend.Files
@@ -33,7 +34,7 @@ namespace FindAndReplace.Wpf.Backend.Files
                 return TextMatcherResult.CreateFailure<TextMatcherResult>(filePath, "Find text is required");
             if (content == null)
                 return TextMatcherResult.CreateFailure<TextMatcherResult>(filePath, "Content should not be null");
-            if (content == string.Empty)
+            if (content.IsEmpty())
                 return TextMatcherResult.CreateSuccess<TextMatcherResult>(filePath, new List<TextMatch>());
 
             try

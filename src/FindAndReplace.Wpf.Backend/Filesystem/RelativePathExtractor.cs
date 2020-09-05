@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using FindAndReplace.Wpf.Backend.Extensions;
 
 namespace FindAndReplace.Wpf.Backend.Filesystem
 {
@@ -17,7 +18,7 @@ namespace FindAndReplace.Wpf.Backend.Filesystem
             if (string.IsNullOrEmpty(fullPath))
                 throw new ArgumentNullException(nameof(fullPath), $"{nameof(fullPath)} cannot be null or empty");
 
-            if (rootDirectory == string.Empty)
+            if (rootDirectory.IsEmpty())
                 return fullPath;
 
             var rootDirectoryEndsWithDirectorySeparatorChar = rootDirectory.EndsWith(Path.DirectorySeparatorChar);

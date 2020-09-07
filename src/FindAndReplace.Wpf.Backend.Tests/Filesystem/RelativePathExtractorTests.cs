@@ -19,8 +19,6 @@ namespace FindAndReplace.Wpf.Backend.Tests.Filesystem
             _relativePathExtractor = new RelativePathExtractor();
         }
 
-        // Private Methods
-
         // string GetRelativePathWithoutFilename(string rootDirectory, string fullPath);
         [Test]
         public void GetRelativePathWithoutFilename_Should_ThrowExceptionIfRootDirectoryIsNull()

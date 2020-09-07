@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 using FindAndReplace.Wpf.Backend.Files;
 using FluentAssertions;
@@ -21,16 +20,10 @@ namespace FindAndReplace.Wpf.Backend.Tests.Files
         }
 
         // Private Methods
-        private string GetFilePath()
-        {
-            return GetFilePath("*.dll");
-        }
-
         private string GetFilePath(string searchPattern)
         {
-            var rootDirectory = Directory.GetCurrentDirectory();
-            var firstDll = Directory.GetFiles(rootDirectory, searchPattern, SearchOption.AllDirectories).First();
-            return firstDll;
+            var firstFile = FilePathGenerator.GetRealFiles(searchPattern).First();
+            return firstFile;
         }
 
         private byte[] GetFileSample(string filePath)
@@ -64,7 +57,7 @@ namespace FindAndReplace.Wpf.Backend.Tests.Files
         [TestCase(false)]
         public void CheckIsBinaryFile_Should_ReturnFailureIfSampleBytesIsNullOrEmpty(bool isNull)
         {
-            var filePath = GetFilePath();
+            var filePath = GetFilePath("*.dll");
             byte[] sampleBytes = isNull
                 ? null
                 : Enumerable.Empty<byte>().ToArray();

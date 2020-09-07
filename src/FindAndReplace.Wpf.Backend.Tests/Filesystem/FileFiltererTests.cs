@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using FindAndReplace.Wpf.Backend.Filesystem;
+using FindAndReplace.Wpf.Backend.Tests.Files;
 using FluentAssertions;
 using NUnit.Framework;
 
@@ -19,27 +20,6 @@ namespace FindAndReplace.Wpf.Backend.Tests.Filesystem
             var relativePathExtractor = new RelativePathExtractor();
             _fileFilterer = new FileFilterer(relativePathExtractor);
         }
-
-        // Private Methods
-        private IEnumerable<string> SeedFilesInDirectory(string rootPath, int count)
-        {
-            if (!rootPath.EndsWith(Path.DirectorySeparatorChar))
-                rootPath += Path.DirectorySeparatorChar;
-
-            var extensions = new List<string>
-            {
-                ".cs",
-                ".exe",
-                ".zip",
-                ".pdf"
-            };
-            for (var index = 0; index < count; index++)
-            {
-                var extension = extensions[index % extensions.Count];
-                yield return $"{rootPath}File-{index}{extension}";
-            }
-        }
-
 
         //FileDiscoveryResult FilterOutExcludedDirectories(string rootDirectory, IList<string> filesInDirectory, IList<string> excludedDirectories, bool isRecursive);
         [Test]
@@ -123,13 +103,13 @@ namespace FindAndReplace.Wpf.Backend.Tests.Filesystem
         public void FilterOutExcludedDirectories_Should_RemoveFilesWithinExcludedDirectories()
         {
             var rootDirectory = Directory.GetCurrentDirectory();
-            var filesInDirectory = SeedFilesInDirectory(rootDirectory, 10)
-                .Union(SeedFilesInDirectory($"{rootDirectory}{Path.DirectorySeparatorChar}ExcludeMe", 10))
-                .Union(SeedFilesInDirectory($"{rootDirectory}{Path.DirectorySeparatorChar}ExcludeMe2", 10))
-                .Union(SeedFilesInDirectory($"{rootDirectory}{Path.DirectorySeparatorChar}ExcludeMe3", 10))
-                .Union(SeedFilesInDirectory(@$"{rootDirectory}{Path.DirectorySeparatorChar}FirstDirectory{Path.DirectorySeparatorChar}SecondDirectory{Path.DirectorySeparatorChar}ExcludeMe4", 10))
-                .Union(SeedFilesInDirectory($"{rootDirectory}{Path.DirectorySeparatorChar}IncludeMe", 10))
-                .Union(SeedFilesInDirectory($"{rootDirectory}{Path.DirectorySeparatorChar}Exclusion", 10))
+            var filesInDirectory = FilePathGenerator.GenerateFilePaths(rootDirectory, 10)
+                .Union(FilePathGenerator.GenerateFilePaths($"{rootDirectory}{Path.DirectorySeparatorChar}ExcludeMe", 10))
+                .Union(FilePathGenerator.GenerateFilePaths($"{rootDirectory}{Path.DirectorySeparatorChar}ExcludeMe2", 10))
+                .Union(FilePathGenerator.GenerateFilePaths($"{rootDirectory}{Path.DirectorySeparatorChar}ExcludeMe3", 10))
+                .Union(FilePathGenerator.GenerateFilePaths(@$"{rootDirectory}{Path.DirectorySeparatorChar}FirstDirectory{Path.DirectorySeparatorChar}SecondDirectory{Path.DirectorySeparatorChar}ExcludeMe4", 10))
+                .Union(FilePathGenerator.GenerateFilePaths($"{rootDirectory}{Path.DirectorySeparatorChar}IncludeMe", 10))
+                .Union(FilePathGenerator.GenerateFilePaths($"{rootDirectory}{Path.DirectorySeparatorChar}Exclusion", 10))
                 .ToList();
             var excludedDirectories = new List<string>
             {
@@ -154,9 +134,9 @@ namespace FindAndReplace.Wpf.Backend.Tests.Filesystem
         public void FilterOutExcludedDirectories_Should_ReturnFailureIfExceptionWasThrown()
         {
             var rootDirectory = Directory.GetCurrentDirectory();
-            var filesInDirectory = SeedFilesInDirectory(rootDirectory, 10)
+            var filesInDirectory = FilePathGenerator.GenerateFilePaths(rootDirectory, 10)
                 // Without the root directory here, it'll trigger an out of range exeption
-                .Union(SeedFilesInDirectory($"{Path.DirectorySeparatorChar}Folder", 10))
+                .Union(FilePathGenerator.GenerateFilePaths($"{Path.DirectorySeparatorChar}Folder", 10))
                 .ToList();
             var excludedDirectories = Enumerable.Range(0, 10).Select(x => x.ToString()).ToList();
             var isRecursive = true;
@@ -225,9 +205,9 @@ namespace FindAndReplace.Wpf.Backend.Tests.Filesystem
         public void FilterOutExcludedFileMasks_Should_RemoveFilesWithExcludedFilenames()
         {
             var rootDirectory = Directory.GetCurrentDirectory();
-            var filesInDirectory = SeedFilesInDirectory(rootDirectory, 10)
-                .Union(SeedFilesInDirectory($"{rootDirectory}{Path.DirectorySeparatorChar}FirstDirectory", 10))
-                .Union(SeedFilesInDirectory(@$"{rootDirectory}{Path.DirectorySeparatorChar}FirstDirectory{Path.DirectorySeparatorChar}SecondDirectory", 10))
+            var filesInDirectory = FilePathGenerator.GenerateFilePaths(rootDirectory, 10)
+                .Union(FilePathGenerator.GenerateFilePaths($"{rootDirectory}{Path.DirectorySeparatorChar}FirstDirectory", 10))
+                .Union(FilePathGenerator.GenerateFilePaths(@$"{rootDirectory}{Path.DirectorySeparatorChar}FirstDirectory{Path.DirectorySeparatorChar}SecondDirectory", 10))
                 .ToList();
             var excludedFileMasks = new List<string>()
             {

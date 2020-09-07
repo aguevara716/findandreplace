@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using FindAndReplace.Wpf.Backend.Filesystem;
+using FindAndReplace.Wpf.Backend.Tests.Files;
 using FluentAssertions;
 using NUnit.Framework;
 
@@ -14,11 +15,7 @@ namespace FindAndReplace.Wpf.Backend.Tests.Filesystem
         // Constants
         private readonly string ROOT_DIRECTORY = Path.Combine(Directory.GetCurrentDirectory(), "SampleFiles");
         private const string INNER_DIRECTORY_NAME = "InnerDirectory";
-        private readonly string[] EXTENSIONS = new string[]
-        {
-            ".cs", ".txt", ".log", ".pdf"
-        };
-
+        
         // Dependencies
         private IFileRetriever _fileRetriever;
 
@@ -64,13 +61,8 @@ namespace FindAndReplace.Wpf.Backend.Tests.Filesystem
             var path = Path.Combine(paths);
             CreateDirectoryIfNotExists(path);
 
-            var filePathFormat = Path.Combine(path, "File-{0}{1}");
-            for(var index = 0; index < fileQuantity; index++)
-            {
-                var extension = EXTENSIONS[index % EXTENSIONS.Length];
-                var filename = string.Format(filePathFormat, index, extension);
-                File.Create(filename);
-            }
+            var filepaths = FilePathGenerator.GenerateFilePaths(path, fileQuantity);
+            FilePathGenerator.GenerateFiles(filepaths);
         }
 
         // FileDiscoveryResult GetFiles(string rootDirectory, IList<string> fileMasks, bool isRecursive)

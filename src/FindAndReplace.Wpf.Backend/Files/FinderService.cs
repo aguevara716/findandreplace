@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -33,6 +32,7 @@ namespace FindAndReplace.Wpf.Backend.Files
             _textMatcher = textMatcher;
         }
 
+        // Private Methods
         private TextMatcherResult BuildFailure<T>(BaseResult<T> result)
         {
             return TextMatcherResult.CreateFailure<TextMatcherResult>(result.Path,

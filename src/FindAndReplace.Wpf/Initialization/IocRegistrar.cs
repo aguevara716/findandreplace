@@ -1,4 +1,5 @@
-﻿using FindAndReplace.Wpf.Backend.Filesystem;
+﻿using FindAndReplace.Wpf.Backend.Files;
+using FindAndReplace.Wpf.Backend.Filesystem;
 using FindAndReplace.Wpf.DesignViewModels;
 using FindAndReplace.Wpf.Dialogs;
 using FindAndReplace.Wpf.Ioc;
@@ -22,6 +23,15 @@ namespace FindAndReplace.Wpf.Initialization
         public static void RegisterDialogService()
         {
             IocWrapper.Register<IDialogService, DialogService>();
+        }
+
+        public static void RegisterFileServices()
+        {
+            IocWrapper.Register<IBinaryFileDetector, BinaryFileDetector>();
+            IocWrapper.Register<IEncodingDetector, Backend.Files.EncodingDetector>();
+            IocWrapper.Register<IFileReader, FileReader>();
+            IocWrapper.Register<IFinderService, FinderService>();
+            IocWrapper.Register<ITextMatcher, TextMatcher>();
         }
 
         public static void RegisterFilesystemServices()

@@ -227,9 +227,13 @@ namespace FindAndReplace.Wpf.ViewModels
                 fileResult.ErrorMessage = textMatcherResult.GetErrorText();
                 fileResult.HasError = !String.IsNullOrEmpty(fileResult.ErrorMessage);
                 fileResult.TextMatches = textMatcherResult.TextMatches?.ToList();
-                if (fileResult.HasError || (fileResult.TextMatches?.Any() ?? false))
-                    Results.Add(fileResult);
 
+                var shouldAddResult = fileResult.HasError ||
+                                      (!FindParameters.IsOnlyShowingFilesWithoutMatches && (fileResult.TextMatches?.Any() ?? false)) ||
+                                      (FindParameters.IsOnlyShowingFilesWithoutMatches && (!fileResult.TextMatches?.Any() ?? true));
+                if (shouldAddResult)
+                    Results.Add(fileResult);
+                
                 ProcessStatus.FilesProcessedCount++;
                 ProcessStatus.FilesWithMatchesCount += textMatcherResult.IsSuccessful && textMatcherResult.TextMatches.Any() ? 1 : 0;
                 ProcessStatus.FilesWithoutMatchesCount += !textMatcherResult.IsSuccessful || !textMatcherResult.TextMatches.Any() ? 1 : 0;

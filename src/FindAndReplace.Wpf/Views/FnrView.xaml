@@ -325,6 +325,8 @@
                                             <CheckBox Name="FilenameOnlyCheckbox" 
                                                       Content="Only search filenames"
                                                       IsChecked="{Binding FindParameters.IsSearchingFilenameOnly}"/>
+                                            <CheckBox Content="Only show files without matches"
+                                                      IsChecked="{Binding FindParameters.IsOnlyShowingFilesWithoutMatches}"/>
                                             <CheckBox Content="Case sensitive" 
                                                       IsChecked="{Binding FindParameters.IsCaseSensitive}"/>
                                             <CheckBox Content="Use regular expressions" 

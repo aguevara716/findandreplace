@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using FindAndReplace.Wpf.Backend.Files;
 using FindAndReplace.Wpf.Backend.Filesystem;
 using FindAndReplace.Wpf.Dialogs;
 using FindAndReplace.Wpf.Mappers;
@@ -21,6 +22,7 @@ namespace FindAndReplace.Wpf.ViewModels
         private readonly IDialogService _dialogService;
         private readonly IFileDiscoverer _fileDiscoverer;
         private readonly IFileResultMapper _fileResultMapper;
+        private readonly IFinderService _finderService;
         private readonly ISettingsService _settingsService;
 
         // Variables
@@ -90,11 +92,13 @@ namespace FindAndReplace.Wpf.ViewModels
         public FnrViewModel(IDialogService dialogService,
                             IFileDiscoverer fileDiscoverer,
                             IFileResultMapper fileResultMapper,
+                            IFinderService finderService,
                             ISettingsService settingsService)
         {
             _dialogService = dialogService;
             _fileDiscoverer = fileDiscoverer;
             _fileResultMapper = fileResultMapper;
+            _finderService = finderService;
             _settingsService = settingsService;
 
             InitializeVariables();
@@ -200,8 +204,7 @@ namespace FindAndReplace.Wpf.ViewModels
                                                                                FolderParameters.ExcludeDirectories,
                                                                                FolderParameters.ExcludeFiles,
                                                                                FolderParameters.IsRecursive);
-            var timeTaken = DateTime.Now - startTime;
-            ProcessStatus.EllapsedTime = timeTaken;
+            ProcessStatus.EllapsedTime = DateTime.Now - startTime;
             Status = $"Found {fileDiscoveryResult.Files?.Count ?? 0:N0} files in {ProcessStatus.EllapsedTime.TotalMilliseconds:N0} ms";
             if (!fileDiscoveryResult.IsSuccessful)
             {
@@ -211,8 +214,30 @@ namespace FindAndReplace.Wpf.ViewModels
                 return;
             }
 
-            var fileResults = _fileResultMapper.Map(FolderParameters.RootDirectory, fileDiscoveryResult.Files);
-            Results = new ObservableCollection<FileResult>(fileResults);
+            ProcessStatus.TotalFilesCount = fileDiscoveryResult.Files.Count;
+
+            Results = new ObservableCollection<FileResult>();
+            foreach (var filePath in fileDiscoveryResult.Files)
+            {
+                Status = $"Scanning file \"{filePath}\"";
+
+                var textMatcherResult = await _finderService.FindTextInFileAsync(filePath, FindParameters.FindString, FindParameters.IsRegex, FindParameters.IsUsingEscapeCharacters, FindParameters.IsCaseSensitive);
+                
+                var fileResult = _fileResultMapper.Map(FolderParameters.RootDirectory, filePath);
+                fileResult.ErrorMessage = textMatcherResult.GetErrorText();
+                fileResult.HasError = !String.IsNullOrEmpty(fileResult.ErrorMessage);
+                fileResult.TextMatches = textMatcherResult.TextMatches?.ToList();
+                if (fileResult.HasError || (fileResult.TextMatches?.Any() ?? false))
+                    Results.Add(fileResult);
+
+                ProcessStatus.FilesProcessedCount++;
+                ProcessStatus.FilesWithMatchesCount += textMatcherResult.IsSuccessful && textMatcherResult.TextMatches.Any() ? 1 : 0;
+                ProcessStatus.FilesWithoutMatchesCount += !textMatcherResult.IsSuccessful || !textMatcherResult.TextMatches.Any() ? 1 : 0;
+                ProcessStatus.MatchesCount += textMatcherResult.TextMatches?.Count ?? 0;
+                ProcessStatus.EllapsedTime = DateTime.Now - startTime;
+            }
+
+            Status = "Finished";
             UpdateIsRunning(false);
         }
 

@@ -47,8 +47,10 @@ namespace FindAndReplace.Wpf.Services
             {
                 FindString = Settings.Default.FindString,
                 IsCaseSensitive = Settings.Default.IsCaseSensitive,
+                IsOnlyShowingFilesWithoutMatches = Settings.Default.IsOnlyShowingFilesWithoutMatches,
                 IsRegex = Settings.Default.IsRegex,
                 IsRetainingModifiedDate = Settings.Default.IsRetainingModifiedDate,
+                IsSearchingFilenameOnly = Settings.Default.IsSearchingFilenameOnly,
                 IsUsingEscapeCharacters = Settings.Default.IsUsingEscapeCharacters
             };
             var replaceParameters = new ReplaceParameters
@@ -62,18 +64,23 @@ namespace FindAndReplace.Wpf.Services
 
         public void SaveSettings(FolderParameters folderParameters, FindParameters findParameters, ReplaceParameters replaceParameters)
         {
+            // Folder Parameters
             Settings.Default.ExcludeDirectories = folderParameters.ExcludeDirectoriesString;
             Settings.Default.ExcludeMask = folderParameters.ExcludeFilesString;
             Settings.Default.FileMask = folderParameters.IncludeFilesString;
             Settings.Default.IsRecursive = folderParameters.IsRecursive;
             Settings.Default.RootDirectory = folderParameters.RootDirectory;
 
+            // Find Parameters
             Settings.Default.FindString = findParameters.FindString;
             Settings.Default.IsCaseSensitive = findParameters.IsCaseSensitive;
+            Settings.Default.IsOnlyShowingFilesWithoutMatches = findParameters.IsOnlyShowingFilesWithoutMatches;
             Settings.Default.IsRegex = findParameters.IsRegex;
             Settings.Default.IsRetainingModifiedDate = findParameters.IsRetainingModifiedDate;
+            Settings.Default.IsSearchingFilenameOnly = findParameters.IsSearchingFilenameOnly;
             Settings.Default.IsUsingEscapeCharacters = findParameters.IsUsingEscapeCharacters;
 
+            // Replace Parameters
             Settings.Default.ReplaceString = replaceParameters.ReplaceString;
 
             Settings.Default.Save();

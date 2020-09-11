@@ -18,6 +18,13 @@ namespace FindAndReplace.Wpf.Models
             set { Set(nameof(IsCaseSensitive), ref isCaseSensitive, value); }
         }
 
+        private bool isOnlyShowingFilesWithoutMatches;
+        public bool IsOnlyShowingFilesWithoutMatches
+        {
+            get { return isOnlyShowingFilesWithoutMatches; }
+            set { Set(nameof(IsOnlyShowingFilesWithoutMatches), ref isOnlyShowingFilesWithoutMatches, value); }
+        }
+
         private bool isRegex;
         public bool IsRegex
         {

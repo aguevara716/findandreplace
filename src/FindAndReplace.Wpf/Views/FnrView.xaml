@@ -24,6 +24,8 @@
                 <DockPanel LastChildFill="True" DockPanel.Dock="Bottom">
                     <TextBlock DockPanel.Dock="Top" 
                                Text="{Binding Status, StringFormat='Status: {0}'}"/>
+                    <TextBlock DockPanel.Dock="Top"
+                               Text="{Binding Results.Count, StringFormat='Records: {0:N0}'}"/>
                     <Button DockPanel.Dock="Right" 
                             Content="Cancel" 
                     Command="{Binding CancelCommand}"/>

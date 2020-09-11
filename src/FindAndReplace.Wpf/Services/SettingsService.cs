@@ -47,10 +47,8 @@ namespace FindAndReplace.Wpf.Services
             {
                 FindString = Settings.Default.FindString,
                 IsCaseSensitive = Settings.Default.IsCaseSensitive,
-                IsIncludingFilesWithoutMatches = Settings.Default.IsIncludingFilesWithoutMatches,
                 IsRegex = Settings.Default.IsRegex,
                 IsRetainingModifiedDate = Settings.Default.IsRetainingModifiedDate,
-                IsSkippingBinaryDetection = Settings.Default.IsSkippingBinaryDetection,
                 IsUsingEscapeCharacters = Settings.Default.IsUsingEscapeCharacters
             };
             var replaceParameters = new ReplaceParameters
@@ -72,10 +70,8 @@ namespace FindAndReplace.Wpf.Services
 
             Settings.Default.FindString = findParameters.FindString;
             Settings.Default.IsCaseSensitive = findParameters.IsCaseSensitive;
-            Settings.Default.IsIncludingFilesWithoutMatches = findParameters.IsIncludingFilesWithoutMatches;
             Settings.Default.IsRegex = findParameters.IsRegex;
             Settings.Default.IsRetainingModifiedDate = findParameters.IsRetainingModifiedDate;
-            Settings.Default.IsSkippingBinaryDetection = findParameters.IsSkippingBinaryDetection;
             Settings.Default.IsUsingEscapeCharacters = findParameters.IsUsingEscapeCharacters;
 
             Settings.Default.ReplaceString = replaceParameters.ReplaceString;

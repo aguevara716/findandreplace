@@ -18,13 +18,6 @@ namespace FindAndReplace.Wpf.Models
             set { Set(nameof(IsCaseSensitive), ref isCaseSensitive, value); }
         }
 
-        private bool isIncludingFilesWithoutMatches;
-        public bool IsIncludingFilesWithoutMatches
-        {
-            get { return isIncludingFilesWithoutMatches; }
-            set { Set(nameof(IsIncludingFilesWithoutMatches), ref isIncludingFilesWithoutMatches, value); }
-        }
-
         private bool isRegex;
         public bool IsRegex
         {
@@ -44,14 +37,6 @@ namespace FindAndReplace.Wpf.Models
         {
             get { return isSearchingFilenameOnly; }
             set { Set(nameof(IsSearchingFilenameOnly), ref isSearchingFilenameOnly, value); }
-        }
-
-
-        private bool isSkippingBinaryDetection;
-        public bool IsSkippingBinaryDetection
-        {
-            get { return isSkippingBinaryDetection; }
-            set { Set(nameof(IsSkippingBinaryDetection), ref isSkippingBinaryDetection, value); }
         }
 
         private bool isUsingEscapeCharacters;

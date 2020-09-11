@@ -16,18 +16,15 @@ namespace FindAndReplace.Wpf.Backend.Files
     {
         // Dependencies
         private readonly IBinaryFileDetector _binaryFileDetector;
-        private readonly IEncodingDetector _encodingDetector;
         private readonly IFileReader _fileReader;
         private readonly ITextMatcher _textMatcher;
 
         // Constructors
         public FinderService(IBinaryFileDetector binaryFileDetector,
-                             IEncodingDetector encodingDetector,
                              IFileReader fileReader,
                              ITextMatcher textMatcher)
         {
             _binaryFileDetector = binaryFileDetector;
-            _encodingDetector = encodingDetector;
             _fileReader = fileReader;
             _textMatcher = textMatcher;
         }
@@ -56,10 +53,6 @@ namespace FindAndReplace.Wpf.Backend.Files
                 return BuildFailure(binaryFileDetectionResult);
             if (binaryFileDetectionResult.IsBinaryFile)
                 return TextMatcherResult.CreateFailure<TextMatcherResult>(filePath, "Binary file detected");
-
-            var encodingDetectionResult = _encodingDetector.DetectFileEncoding(filePath, fileSampleResult.Sample);
-            if (!encodingDetectionResult.IsSuccessful)
-                return BuildFailure(encodingDetectionResult);
 
             var fileContentResult = await _fileReader.GetFileContentAsync(filePath);
             if (!fileContentResult.IsSuccessful)

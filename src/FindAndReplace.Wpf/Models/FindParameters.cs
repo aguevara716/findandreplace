@@ -4,13 +4,6 @@ namespace FindAndReplace.Wpf.Models
 {
     public class FindParameters : ObservableObject
     {
-        private string encoding;
-        public string Encoding
-        {
-            get { return encoding; }
-            set { Set(nameof(Encoding), ref encoding, value); }
-        }
-
         private string findString;
         public string FindString
         {
@@ -53,12 +46,6 @@ namespace FindAndReplace.Wpf.Models
             set { Set(nameof(IsSearchingFilenameOnly), ref isSearchingFilenameOnly, value); }
         }
 
-        private bool isShowingEncoding;
-        public bool IsShowingEncoding
-        {
-            get { return isShowingEncoding; }
-            set { Set(nameof(IsShowingEncoding), ref isShowingEncoding, value); }
-        }
 
         private bool isSkippingBinaryDetection;
         public bool IsSkippingBinaryDetection

@@ -62,13 +62,6 @@ namespace FindAndReplace.Wpf.ViewModels
             set { Set(nameof(Results), ref results, value); }
         }
 
-        private List<String> encodings;
-        public List<String> Encodings
-        {
-            get { return encodings; }
-            set { Set(nameof(Encodings), ref encodings, value); }
-        }
-
         private string status;
         public string Status
         {
@@ -134,7 +127,6 @@ namespace FindAndReplace.Wpf.ViewModels
             ReplaceParameters = new ReplaceParameters();
             ProcessStatus = new ProcessStatus();
             Results = new ObservableCollection<FileResult>();
-            Encodings = new List<string>();
             Status = String.Empty;
 
             isRunning = false;
@@ -171,15 +163,6 @@ namespace FindAndReplace.Wpf.ViewModels
         // Commands Executed
         private void LoadedExecuted()
         {
-            var localEncodings = new List<String>
-            {
-                "Auto Detect"
-            };
-            localEncodings.AddRange(Encoding.GetEncodings().Select(ei => ei.Name.ToUpper()).OrderBy(e => e));
-
-            Encodings = new List<string>(localEncodings);
-            FindParameters.Encoding = Encodings.First();
-
             var settingsTuple = _settingsService.LoadSettings();
             if (settingsTuple == null)
                 return;

@@ -16,7 +16,6 @@ namespace FindAndReplace.Wpf.Backend.Tests.Files
     {
         // Dependencies
         private IBinaryFileDetector _binaryFileDetector;
-        private IEncodingDetector _encodingDetector;
         private IFileReader _fileReader;
         private ITextMatcher _textMatcher;
         private IFinderService _finderService;
@@ -26,12 +25,10 @@ namespace FindAndReplace.Wpf.Backend.Tests.Files
         public void BeforeEach()
         {
             _binaryFileDetector = Substitute.For<IBinaryFileDetector>();
-            _encodingDetector = Substitute.For<IEncodingDetector>();
             _fileReader = Substitute.For<IFileReader>();
             _textMatcher = Substitute.For<ITextMatcher>();
 
             _finderService = new FinderService(_binaryFileDetector,
-                                               _encodingDetector,
                                                _fileReader,
                                                _textMatcher);
         }
@@ -45,6 +42,7 @@ namespace FindAndReplace.Wpf.Backend.Tests.Files
             var isRegexSearch = true;
             var isUsingEscapeCharacters = true;
             var isCaseSensitive = true;
+            _fileReader.GetFileSampleData(filePath).Returns(FileSampleResult.CreateFailure<FileSampleResult>(filePath, Guid.NewGuid().ToString(), new Exception(Guid.NewGuid().ToString())));
 
             _ = await _finderService.FindTextInFileAsync(filePath, findText, isRegexSearch, isUsingEscapeCharacters, isCaseSensitive);
 
@@ -69,7 +67,6 @@ namespace FindAndReplace.Wpf.Backend.Tests.Files
             textMatcherResult.Exception.Should().Be(fileSampleResultFailure.Exception);
             _fileReader.Received().GetFileSampleData(filePath);
             _binaryFileDetector.DidNotReceiveWithAnyArgs().CheckIsBinaryFile(null, null);
-            _encodingDetector.DidNotReceiveWithAnyArgs().DetectFileEncoding(null, null);
             _ = _fileReader.DidNotReceiveWithAnyArgs().GetFileContentAsync(null);
             _textMatcher.DidNotReceiveWithAnyArgs().FindTextInFile(null, null, null, false, false, false);
         }
@@ -94,7 +91,6 @@ namespace FindAndReplace.Wpf.Backend.Tests.Files
             textMatcherResult.Exception.Should().Be(binaryDetectionResultFailure.Exception);
             _fileReader.Received().GetFileSampleData(filePath);
             _binaryFileDetector.Received().CheckIsBinaryFile(filePath, sampleData);
-            _encodingDetector.DidNotReceiveWithAnyArgs().DetectFileEncoding(null, null);
             _ = _fileReader.DidNotReceiveWithAnyArgs().GetFileContentAsync(null);
             _textMatcher.DidNotReceiveWithAnyArgs().FindTextInFile(null, null, null, false, false, false);
         }
@@ -119,33 +115,6 @@ namespace FindAndReplace.Wpf.Backend.Tests.Files
             textMatcherResult.Exception.Should().BeNull();
             _fileReader.Received().GetFileSampleData(filePath);
             _binaryFileDetector.Received().CheckIsBinaryFile(filePath, sampleData);
-            _encodingDetector.DidNotReceiveWithAnyArgs().DetectFileEncoding(null, null);
-            _ = _fileReader.DidNotReceiveWithAnyArgs().GetFileContentAsync(null);
-            _textMatcher.DidNotReceiveWithAnyArgs().FindTextInFile(null, null, null, false, false, false);
-        }
-
-        [Test]
-        public async Task FindTextInFileAsync_Should_ReturnIfEncodingDetectionFails()
-        {
-            var filePath = Guid.NewGuid().ToString();
-            var findText = Guid.NewGuid().ToString();
-            var isRegexSearch = true;
-            var isUsingEscapeCharacters = true;
-            var isCaseSensitive = true;
-            byte[] fileSampleData = new byte[] { 123, 123, 123 };
-            _fileReader.GetFileSampleData(filePath).Returns(FileSampleResult.CreateSuccess<FileSampleResult>(filePath, fileSampleData));
-            _binaryFileDetector.CheckIsBinaryFile(filePath, Arg.Any<byte[]>()).Returns(BinaryFileDetectionResult.CreateSuccess<BinaryFileDetectionResult>(filePath, false));
-            var encodingDetectionResultFailure = EncodingDetectionResult.CreateFailure<EncodingDetectionResult>(filePath, Guid.NewGuid().ToString(), new Exception(Guid.NewGuid().ToString()));
-            _encodingDetector.DetectFileEncoding(filePath, fileSampleData).Returns(encodingDetectionResultFailure);
-            
-            var textMatcherResult = await _finderService.FindTextInFileAsync(filePath, findText, isRegexSearch, isUsingEscapeCharacters, isCaseSensitive);
-
-            textMatcherResult.IsSuccessful.Should().BeFalse();
-            textMatcherResult.ErrorMessage.Should().Be(encodingDetectionResultFailure.ErrorMessage);
-            textMatcherResult.Exception.Should().Be(encodingDetectionResultFailure.Exception);
-            _fileReader.Received().GetFileSampleData(filePath);
-            _binaryFileDetector.Received().CheckIsBinaryFile(filePath, fileSampleData);
-            _encodingDetector.Received().DetectFileEncoding(filePath, fileSampleData);
             _ = _fileReader.DidNotReceiveWithAnyArgs().GetFileContentAsync(null);
             _textMatcher.DidNotReceiveWithAnyArgs().FindTextInFile(null, null, null, false, false, false);
         }
@@ -160,7 +129,6 @@ namespace FindAndReplace.Wpf.Backend.Tests.Files
             var isCaseSensitive = true;
             _fileReader.GetFileSampleData(filePath).ReturnsForAnyArgs(FileSampleResult.CreateSuccess<FileSampleResult>(filePath, null));
             _binaryFileDetector.CheckIsBinaryFile(filePath, Arg.Any<byte[]>()).ReturnsForAnyArgs(BinaryFileDetectionResult.CreateSuccess<BinaryFileDetectionResult>(filePath, false));
-            _encodingDetector.DetectFileEncoding(filePath, Arg.Any<byte[]>()).ReturnsForAnyArgs(EncodingDetectionResult.CreateSuccess<EncodingDetectionResult>(filePath, Encoding.UTF8));
             var fileContentResultFailure = FileContentResult.CreateFailure<FileContentResult>(filePath, Guid.NewGuid().ToString(), new Exception(Guid.NewGuid().ToString()));
             _fileReader.GetFileContentAsync(filePath).Returns(fileContentResultFailure);
 
@@ -171,7 +139,6 @@ namespace FindAndReplace.Wpf.Backend.Tests.Files
             textMatcherResult.Exception.Should().Be(fileContentResultFailure.Exception);
             _fileReader.Received().GetFileSampleData(filePath);
             _binaryFileDetector.Received().CheckIsBinaryFile(filePath, Arg.Any<byte[]>());
-            _encodingDetector.Received().DetectFileEncoding(filePath, Arg.Any<byte[]>());
             _ = _fileReader.Received().GetFileContentAsync(filePath);
             _textMatcher.DidNotReceiveWithAnyArgs().FindTextInFile(null, null, null, false, false, false);
         }
@@ -188,7 +155,6 @@ namespace FindAndReplace.Wpf.Backend.Tests.Files
             var isCaseSensitive = true;
             _fileReader.GetFileSampleData(filePath).ReturnsForAnyArgs(FileSampleResult.CreateSuccess<FileSampleResult>(filePath, null));
             _binaryFileDetector.CheckIsBinaryFile(filePath, Arg.Any<byte[]>()).ReturnsForAnyArgs(BinaryFileDetectionResult.CreateSuccess<BinaryFileDetectionResult>(filePath, false));
-            _encodingDetector.DetectFileEncoding(filePath, Arg.Any<byte[]>()).ReturnsForAnyArgs(EncodingDetectionResult.CreateSuccess<EncodingDetectionResult>(filePath, Encoding.UTF8));
             var fileContent = Guid.NewGuid().ToString();
             _fileReader.GetFileContentAsync(filePath).Returns(FileContentResult.CreateSuccess<FileContentResult>(filePath, fileContent));
             TextMatcherResult actualTextMatcherResult;
@@ -214,7 +180,6 @@ namespace FindAndReplace.Wpf.Backend.Tests.Files
             receivedTextMatcherResult.TextMatches.Should().BeEquivalentTo(actualTextMatcherResult.TextMatches);
             _fileReader.Received().GetFileSampleData(filePath);
             _binaryFileDetector.Received().CheckIsBinaryFile(filePath, Arg.Any<byte[]>());
-            _encodingDetector.Received().DetectFileEncoding(filePath, Arg.Any<byte[]>());
             _ = _fileReader.Received().GetFileContentAsync(filePath);
             _textMatcher.Received().FindTextInFile(filePath, findText, fileContent, isRegexSearch, isUsingEscapeCharacters, isCaseSensitive);
         }

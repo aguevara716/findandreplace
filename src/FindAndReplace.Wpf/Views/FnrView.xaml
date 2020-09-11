@@ -331,19 +331,10 @@
                                                       IsChecked="{Binding FindParameters.IsSkippingBinaryDetection}"/>
                                             <CheckBox Content="Keep modified date" 
                                                       IsChecked="{Binding FindParameters.IsRetainingModifiedDate}"/>
-                                            <CheckBox Content="Show encoding" 
-                                                      IsChecked="{Binding FindParameters.IsShowingEncoding}"/>
                                             <CheckBox Content="Include files without matches" 
                                                       IsChecked="{Binding FindParameters.IsIncludingFilesWithoutMatches}"/>
                                             <CheckBox Content="Use escape chars" 
                                                       IsChecked="{Binding FindParameters.IsUsingEscapeCharacters}"/>
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBlock Text="Encoding:" 
-                                                           VerticalAlignment="Center"/>
-                                                <ComboBox SelectedIndex="0" 
-                                                          ItemsSource="{Binding Encodings}" 
-                                                          SelectedValue="{Binding FindParameters.Encoding}"/>
-                                            </StackPanel>
                                             <Button Content="Swap &quot;Find&quot; and &quot;Replace&quot; Text" 
                                                     Command="{Binding SwapCommand}"/>
                                         </StackPanel>

@@ -28,7 +28,6 @@ namespace FindAndReplace.Wpf.Initialization
         public static void RegisterFileServices()
         {
             IocWrapper.Register<IBinaryFileDetector, BinaryFileDetector>();
-            IocWrapper.Register<IEncodingDetector, Backend.Files.EncodingDetector>();
             IocWrapper.Register<IFileReader, FileReader>();
             IocWrapper.Register<IFinderService, FinderService>();
             IocWrapper.Register<ITextMatcher, TextMatcher>();

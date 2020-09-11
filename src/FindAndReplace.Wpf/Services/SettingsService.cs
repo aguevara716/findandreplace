@@ -45,13 +45,11 @@ namespace FindAndReplace.Wpf.Services
             };
             var findParameters = new FindParameters
             {
-                Encoding = Settings.Default.Encoding,
                 FindString = Settings.Default.FindString,
                 IsCaseSensitive = Settings.Default.IsCaseSensitive,
                 IsIncludingFilesWithoutMatches = Settings.Default.IsIncludingFilesWithoutMatches,
                 IsRegex = Settings.Default.IsRegex,
                 IsRetainingModifiedDate = Settings.Default.IsRetainingModifiedDate,
-                IsShowingEncoding = Settings.Default.IsShowingEncoding,
                 IsSkippingBinaryDetection = Settings.Default.IsSkippingBinaryDetection,
                 IsUsingEscapeCharacters = Settings.Default.IsUsingEscapeCharacters
             };
@@ -72,13 +70,11 @@ namespace FindAndReplace.Wpf.Services
             Settings.Default.IsRecursive = folderParameters.IsRecursive;
             Settings.Default.RootDirectory = folderParameters.RootDirectory;
 
-            Settings.Default.Encoding = findParameters.Encoding;
             Settings.Default.FindString = findParameters.FindString;
             Settings.Default.IsCaseSensitive = findParameters.IsCaseSensitive;
             Settings.Default.IsIncludingFilesWithoutMatches = findParameters.IsIncludingFilesWithoutMatches;
             Settings.Default.IsRegex = findParameters.IsRegex;
             Settings.Default.IsRetainingModifiedDate = findParameters.IsRetainingModifiedDate;
-            Settings.Default.IsShowingEncoding = findParameters.IsShowingEncoding;
             Settings.Default.IsSkippingBinaryDetection = findParameters.IsSkippingBinaryDetection;
             Settings.Default.IsUsingEscapeCharacters = findParameters.IsUsingEscapeCharacters;
 

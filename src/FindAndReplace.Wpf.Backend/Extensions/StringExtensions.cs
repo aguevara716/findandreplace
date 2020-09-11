@@ -13,5 +13,10 @@ namespace FindAndReplace.Wpf.Backend.Extensions
             return $"^{regexPattern}$";
         }
 
+        public static bool IsEmpty(this string @string)
+        {
+            return @string.Length == 0;
+        }
+
     }
 }

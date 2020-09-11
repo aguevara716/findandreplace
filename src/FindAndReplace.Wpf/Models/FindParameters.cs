@@ -4,13 +4,6 @@ namespace FindAndReplace.Wpf.Models
 {
     public class FindParameters : ObservableObject
     {
-        private string encoding;
-        public string Encoding
-        {
-            get { return encoding; }
-            set { Set(nameof(Encoding), ref encoding, value); }
-        }
-
         private string findString;
         public string FindString
         {
@@ -25,11 +18,11 @@ namespace FindAndReplace.Wpf.Models
             set { Set(nameof(IsCaseSensitive), ref isCaseSensitive, value); }
         }
 
-        private bool isIncludingFilesWithoutMatches;
-        public bool IsIncludingFilesWithoutMatches
+        private bool isOnlyShowingFilesWithoutMatches;
+        public bool IsOnlyShowingFilesWithoutMatches
         {
-            get { return isIncludingFilesWithoutMatches; }
-            set { Set(nameof(IsIncludingFilesWithoutMatches), ref isIncludingFilesWithoutMatches, value); }
+            get { return isOnlyShowingFilesWithoutMatches; }
+            set { Set(nameof(IsOnlyShowingFilesWithoutMatches), ref isOnlyShowingFilesWithoutMatches, value); }
         }
 
         private bool isRegex;
@@ -51,20 +44,6 @@ namespace FindAndReplace.Wpf.Models
         {
             get { return isSearchingFilenameOnly; }
             set { Set(nameof(IsSearchingFilenameOnly), ref isSearchingFilenameOnly, value); }
-        }
-
-        private bool isShowingEncoding;
-        public bool IsShowingEncoding
-        {
-            get { return isShowingEncoding; }
-            set { Set(nameof(IsShowingEncoding), ref isShowingEncoding, value); }
-        }
-
-        private bool isSkippingBinaryDetection;
-        public bool IsSkippingBinaryDetection
-        {
-            get { return isSkippingBinaryDetection; }
-            set { Set(nameof(IsSkippingBinaryDetection), ref isSkippingBinaryDetection, value); }
         }
 
         private bool isUsingEscapeCharacters;

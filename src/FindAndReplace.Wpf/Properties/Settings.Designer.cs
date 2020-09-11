@@ -12,7 +12,7 @@ namespace FindAndReplace.Wpf.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.6.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.7.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -86,18 +86,6 @@ namespace FindAndReplace.Wpf.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string Encoding {
-            get {
-                return ((string)(this["Encoding"]));
-            }
-            set {
-                this["Encoding"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string FindString {
             get {
                 return ((string)(this["FindString"]));
@@ -116,18 +104,6 @@ namespace FindAndReplace.Wpf.Properties {
             }
             set {
                 this["IsCaseSensitive"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool IsIncludingFilesWithoutMatches {
-            get {
-                return ((bool)(this["IsIncludingFilesWithoutMatches"]));
-            }
-            set {
-                this["IsIncludingFilesWithoutMatches"] = value;
             }
         }
         
@@ -158,30 +134,6 @@ namespace FindAndReplace.Wpf.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool IsShowingEncoding {
-            get {
-                return ((bool)(this["IsShowingEncoding"]));
-            }
-            set {
-                this["IsShowingEncoding"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool IsSkippingBinaryDetection {
-            get {
-                return ((bool)(this["IsSkippingBinaryDetection"]));
-            }
-            set {
-                this["IsSkippingBinaryDetection"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool IsUsingEscapeCharacters {
             get {
                 return ((bool)(this["IsUsingEscapeCharacters"]));
@@ -200,6 +152,30 @@ namespace FindAndReplace.Wpf.Properties {
             }
             set {
                 this["ReplaceString"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool IsOnlyShowingFilesWithoutMatches {
+            get {
+                return ((bool)(this["IsOnlyShowingFilesWithoutMatches"]));
+            }
+            set {
+                this["IsOnlyShowingFilesWithoutMatches"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool IsSearchingFilenameOnly {
+            get {
+                return ((bool)(this["IsSearchingFilenameOnly"]));
+            }
+            set {
+                this["IsSearchingFilenameOnly"] = value;
             }
         }
     }

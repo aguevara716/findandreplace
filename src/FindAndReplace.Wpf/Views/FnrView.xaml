@@ -24,6 +24,8 @@
                 <DockPanel LastChildFill="True" DockPanel.Dock="Bottom">
                     <TextBlock DockPanel.Dock="Top" 
                                Text="{Binding Status, StringFormat='Status: {0}'}"/>
+                    <TextBlock DockPanel.Dock="Top"
+                               Text="{Binding Results.Count, StringFormat='Records: {0:N0}'}"/>
                     <Button DockPanel.Dock="Right" 
                             Content="Cancel" 
                     Command="{Binding CancelCommand}"/>
@@ -323,27 +325,16 @@
                                             <CheckBox Name="FilenameOnlyCheckbox" 
                                                       Content="Only search filenames"
                                                       IsChecked="{Binding FindParameters.IsSearchingFilenameOnly}"/>
+                                            <CheckBox Content="Only show files without matches"
+                                                      IsChecked="{Binding FindParameters.IsOnlyShowingFilesWithoutMatches}"/>
                                             <CheckBox Content="Case sensitive" 
                                                       IsChecked="{Binding FindParameters.IsCaseSensitive}"/>
                                             <CheckBox Content="Use regular expressions" 
                                                       IsChecked="{Binding FindParameters.IsRegex}"/>
-                                            <CheckBox Content="Skip binary file detection" 
-                                                      IsChecked="{Binding FindParameters.IsSkippingBinaryDetection}"/>
                                             <CheckBox Content="Keep modified date" 
                                                       IsChecked="{Binding FindParameters.IsRetainingModifiedDate}"/>
-                                            <CheckBox Content="Show encoding" 
-                                                      IsChecked="{Binding FindParameters.IsShowingEncoding}"/>
-                                            <CheckBox Content="Include files without matches" 
-                                                      IsChecked="{Binding FindParameters.IsIncludingFilesWithoutMatches}"/>
                                             <CheckBox Content="Use escape chars" 
                                                       IsChecked="{Binding FindParameters.IsUsingEscapeCharacters}"/>
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBlock Text="Encoding:" 
-                                                           VerticalAlignment="Center"/>
-                                                <ComboBox SelectedIndex="0" 
-                                                          ItemsSource="{Binding Encodings}" 
-                                                          SelectedValue="{Binding FindParameters.Encoding}"/>
-                                            </StackPanel>
                                             <Button Content="Swap &quot;Find&quot; and &quot;Replace&quot; Text" 
                                                     Command="{Binding SwapCommand}"/>
                                         </StackPanel>
@@ -428,12 +419,9 @@
                     <DataGridTextColumn Header="Path" 
                                         Width="*"
                                         Binding="{Binding RelativePath}"/>
-                    <DataGridTextColumn Header="Extension"
-                                        Width="*"
-                                        Binding="{Binding Extension}"/>
                     <DataGridTextColumn Header="Matches" 
                                         Width="Auto"
-                                        Binding="{Binding MatchCount}"/>
+                                        Binding="{Binding TextMatches.Count}"/>
                     <DataGridTextColumn Header="Error" 
                                         Width="*"
                                         Binding="{Binding ErrorMessage}"/>

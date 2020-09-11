@@ -18,6 +18,9 @@ namespace FindAndReplace.Wpf.Backend.Results
 
         public string GetErrorText()
         {
+            if (IsSuccessful)
+                return string.Empty;
+
             var errorTextBuilder = new StringBuilder();
             if (!string.IsNullOrEmpty(ErrorMessage))
                 errorTextBuilder.Append(ErrorMessage);

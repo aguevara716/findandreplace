@@ -45,14 +45,12 @@ namespace FindAndReplace.Wpf.Services
             };
             var findParameters = new FindParameters
             {
-                Encoding = Settings.Default.Encoding,
                 FindString = Settings.Default.FindString,
                 IsCaseSensitive = Settings.Default.IsCaseSensitive,
-                IsIncludingFilesWithoutMatches = Settings.Default.IsIncludingFilesWithoutMatches,
+                IsOnlyShowingFilesWithoutMatches = Settings.Default.IsOnlyShowingFilesWithoutMatches,
                 IsRegex = Settings.Default.IsRegex,
                 IsRetainingModifiedDate = Settings.Default.IsRetainingModifiedDate,
-                IsShowingEncoding = Settings.Default.IsShowingEncoding,
-                IsSkippingBinaryDetection = Settings.Default.IsSkippingBinaryDetection,
+                IsSearchingFilenameOnly = Settings.Default.IsSearchingFilenameOnly,
                 IsUsingEscapeCharacters = Settings.Default.IsUsingEscapeCharacters
             };
             var replaceParameters = new ReplaceParameters
@@ -66,22 +64,23 @@ namespace FindAndReplace.Wpf.Services
 
         public void SaveSettings(FolderParameters folderParameters, FindParameters findParameters, ReplaceParameters replaceParameters)
         {
+            // Folder Parameters
             Settings.Default.ExcludeDirectories = folderParameters.ExcludeDirectoriesString;
             Settings.Default.ExcludeMask = folderParameters.ExcludeFilesString;
             Settings.Default.FileMask = folderParameters.IncludeFilesString;
             Settings.Default.IsRecursive = folderParameters.IsRecursive;
             Settings.Default.RootDirectory = folderParameters.RootDirectory;
 
-            Settings.Default.Encoding = findParameters.Encoding;
+            // Find Parameters
             Settings.Default.FindString = findParameters.FindString;
             Settings.Default.IsCaseSensitive = findParameters.IsCaseSensitive;
-            Settings.Default.IsIncludingFilesWithoutMatches = findParameters.IsIncludingFilesWithoutMatches;
+            Settings.Default.IsOnlyShowingFilesWithoutMatches = findParameters.IsOnlyShowingFilesWithoutMatches;
             Settings.Default.IsRegex = findParameters.IsRegex;
             Settings.Default.IsRetainingModifiedDate = findParameters.IsRetainingModifiedDate;
-            Settings.Default.IsShowingEncoding = findParameters.IsShowingEncoding;
-            Settings.Default.IsSkippingBinaryDetection = findParameters.IsSkippingBinaryDetection;
+            Settings.Default.IsSearchingFilenameOnly = findParameters.IsSearchingFilenameOnly;
             Settings.Default.IsUsingEscapeCharacters = findParameters.IsUsingEscapeCharacters;
 
+            // Replace Parameters
             Settings.Default.ReplaceString = replaceParameters.ReplaceString;
 
             Settings.Default.Save();

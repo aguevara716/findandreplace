@@ -417,7 +417,7 @@
                                         Binding="{Binding RelativePath}"/>
                     <DataGridTextColumn Header="Matches" 
                                         Width="Auto"
-                                        Binding="{Binding MatchCount}"/>
+                                        Binding="{Binding TextMatches.Count}"/>
                     <DataGridTextColumn Header="Error" 
                                         Width="*"
                                         Binding="{Binding ErrorMessage}"/>

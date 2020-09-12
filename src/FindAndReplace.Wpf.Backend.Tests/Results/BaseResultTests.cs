@@ -63,6 +63,8 @@ namespace FindAndReplace.Wpf.Backend.Tests.Results
         }
 
         [Test]
+        [TestCase(true)]
+        [TestCase(false)]
         public void GetErrorText_Should_OnlyContainExceptionMessageIfErrorMessageIsNullOrEmpty(bool isNull)
         {
             var exception = new Exception(Guid.NewGuid().ToString());

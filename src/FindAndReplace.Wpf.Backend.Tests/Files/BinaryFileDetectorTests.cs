@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using FindAndReplace.Wpf.Backend.Files;
 using FluentAssertions;
@@ -22,7 +23,7 @@ namespace FindAndReplace.Wpf.Backend.Tests.Files
         // Private Methods
         private string GetFilePath(string searchPattern)
         {
-            var firstFile = FilePathGenerator.GetRealFiles(searchPattern).First();
+            var firstFile = FilePathGenerator.GetRealFiles(Directory.GetCurrentDirectory(), searchPattern).First();
             return firstFile;
         }
 

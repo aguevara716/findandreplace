@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using FindAndReplace.Wpf.Backend.Extensions;
 using FindAndReplace.Wpf.Backend.Results;
 
@@ -29,28 +30,34 @@ namespace FindAndReplace.Wpf.Backend.Files
             if (!textMatches.Any())
                 return MatchPreviewExtractionResult.CreateSuccess<MatchPreviewExtractionResult>(filePath, new List<PreviewText>());
 
-            var lines = fileContent.Split(Environment.NewLine, StringSplitOptions.None);
+            var fileContentLines = fileContent.SplitOnNewline();
 
             try
             {
                 var previews = new List<PreviewText>();
                 foreach (var textMatch in textMatches)
                 {
-                    var startingLineIndex = FindMatchLineNumber(lines, textMatch.StartIndex);
-                    var endingLineIndex = FindMatchLineNumber(lines, textMatch.StartIndex + textMatch.Length);
+                    var startingLineIndex = FindMatchLineNumber(fileContentLines, textMatch.StartIndex);
+                    var endingLineIndex = FindMatchLineNumber(fileContentLines, textMatch.StartIndex + textMatch.Length);
 
+                    // these 2 lines will avoid an index out of bounds exception
                     var startingPreviewLineIndex = Math.Max(startingLineIndex - PREVIEW_LINE_COUNT, 0);
-                    var endingPreviewLineIndex = Math.Min(endingLineIndex + PREVIEW_LINE_COUNT, lines.Length);
+                    var endingPreviewLineIndex = Math.Min(endingLineIndex + PREVIEW_LINE_COUNT, fileContentLines.Length - 1);
 
                     var pt = new PreviewText
                     {
                         MatchEndingLineNumber = endingLineIndex,
                         MatchStartingLineNumber = startingLineIndex
                     };
+
+                    var lineNumbersLength = endingPreviewLineIndex.ToString().Length;
+                    var contentStringBuilder = new StringBuilder();
                     for (var currentLineIndex = startingPreviewLineIndex; currentLineIndex <= endingPreviewLineIndex; currentLineIndex++)
                     {
-                        pt.Content += $"{lines[currentLineIndex]}{Environment.NewLine}";
+                        var lineNumberString = (currentLineIndex + 1).ToString().PadLeft(lineNumbersLength);
+                        contentStringBuilder.AppendLine($"{lineNumberString} {fileContentLines[currentLineIndex]}");
                     }
+                    pt.Content = contentStringBuilder.ToString();
                     previews.Add(pt);
                 }
 
@@ -62,19 +69,19 @@ namespace FindAndReplace.Wpf.Backend.Files
             }
         }
 
-        private int FindMatchLineNumber(string[] fileContentLines, int matchStartIndex)
+        private int FindMatchLineNumber(string[] fileContentLines, int targetedCharacterIndex)
         {
-            var separatorLength = Environment.NewLine.Length;
-            var lineIndex = 0;
+            var newlineCharacterLength = Environment.NewLine.Length;
+            var currentLineIndex = 0;
+            var consumedCharacterCount = fileContentLines[currentLineIndex].Length + newlineCharacterLength;
 
-            var charsCount = fileContentLines[lineIndex].Length + separatorLength;
-            while (charsCount <= matchStartIndex)
+            while (consumedCharacterCount <= targetedCharacterIndex)
             {
-                lineIndex++;
-                charsCount += fileContentLines[lineIndex].Length + separatorLength;
+                currentLineIndex++;
+                consumedCharacterCount += fileContentLines[currentLineIndex].Length + newlineCharacterLength;
             }
 
-            return lineIndex;
+            return currentLineIndex;
         }
 
     }

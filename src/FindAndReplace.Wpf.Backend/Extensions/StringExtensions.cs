@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System;
+using System.Text.RegularExpressions;
 
 namespace FindAndReplace.Wpf.Backend.Extensions
 {
@@ -17,6 +18,13 @@ namespace FindAndReplace.Wpf.Backend.Extensions
         {
             return @string.Length == 0;
         }
+
+        public static string NormalizeNewlines(this string @string)
+        {
+            var normalizedString = Regex.Replace(@string, "\r\n|\n\r|\n|\r", Environment.NewLine);
+            return normalizedString;
+        }
+
 
     }
 }

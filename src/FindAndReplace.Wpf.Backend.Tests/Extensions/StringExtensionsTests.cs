@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using FindAndReplace.Wpf.Backend.Extensions;
 using FluentAssertions;
 using NUnit.Framework;
@@ -91,6 +94,44 @@ namespace FindAndReplace.Wpf.Backend.Tests.Extensions
             var isEmpty = @string.IsEmpty();
 
             isEmpty.Should().BeFalse();
+        }
+
+        // string NormalizeNewlines(this string @string, string desiredLineEnding)
+        [Test]
+        public void NormalizeNewlines_Should_ThrowExceptionForNullInput()
+        {
+            string inputString = null;
+
+            var normalizeNewlinesAction = new Action(() => inputString.NormalizeNewlines());
+
+            normalizeNewlinesAction.Should().Throw<ArgumentNullException>();
+        }
+
+        [Test]
+        public void NormalizeNewlines_Should_ReturnEmptyStringForEmptyInput()
+        {
+            var inputString = string.Empty;
+
+            var normalizedString = inputString.NormalizeNewlines();
+
+            normalizedString.Should().BeEmpty();
+        }
+
+        [Test]
+        public void NormalizeNewlines_Should_ReplaceVariousNewlineCharactersWithDesiredNewlineCharacter()
+        {
+            var desiredNewlineCharacter = Environment.NewLine;
+            var blacklistedNewlineCharacters = new List<string> { "\r\n", "\n\r", "\n", "\r" };
+            var inputString = $"asdf{string.Join("asdf", blacklistedNewlineCharacters)}asdf";
+            blacklistedNewlineCharacters.Remove(desiredNewlineCharacter);
+
+            var normalizedString = inputString.NormalizeNewlines();
+
+            normalizedString.Should().Contain(desiredNewlineCharacter);
+            foreach(var blacklistedNewlineCharacter in blacklistedNewlineCharacters)
+            {
+                normalizedString.Should().NotMatchRegex($@"\w{blacklistedNewlineCharacter}\w");
+            }
         }
 
     }

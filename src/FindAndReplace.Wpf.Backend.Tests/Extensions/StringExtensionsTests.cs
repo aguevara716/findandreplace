@@ -134,5 +134,58 @@ namespace FindAndReplace.Wpf.Backend.Tests.Extensions
             }
         }
 
+        // string[] SplitOnNewline(this string @string)
+        [Test]
+        public void SplitOnNewline_Should_ThrowExceptionForNullStrings()
+        {
+            string @string = null;
+
+            var splitOnNewlineAction = new Action(() => @string.SplitOnNewline());
+
+            splitOnNewlineAction.Should().Throw<Exception>();
+        }
+
+        [Test]
+        public void SplitOnNewline_Should_ReturnEmptyStringForEmptyStrings()
+        {
+            var @string = string.Empty;
+
+            var lines = @string.SplitOnNewline();
+
+            lines.Should().HaveCount(1);
+            lines.First().Should().Be(string.Empty);
+        }
+
+        [Test]
+        public void SplitOnNewline_Should_ReturnInputStringIfStringHasNoNewlineCharacters()
+        {
+            var @string = "asdf";
+
+            var lines = @string.SplitOnNewline();
+
+            lines.Should().HaveCount(1);
+            lines.First().Should().Be(@string);
+        }
+
+        [Test]
+        public void SplitOnNewline_Should_SplitByEnvironmentNewline()
+        {
+            var firstLine = @"`1234567890-=";
+            var secondLine = @"qwertyuiop[]\";
+            var thirdLine = @"asdfghjkl;'";
+            var fourthLine = @"zxcvbnm,./";
+            var fifthLine = "1234567890";
+            var @string = $"{firstLine}{Environment.NewLine}{secondLine}{Environment.NewLine}{thirdLine}{Environment.NewLine}{fourthLine}{Environment.NewLine}{fifthLine}";
+
+            var lines = @string.SplitOnNewline();
+
+            lines.Should().HaveCount(5);
+            lines[0].Should().Be(firstLine);
+            lines[1].Should().Be(secondLine);
+            lines[2].Should().Be(thirdLine);
+            lines[3].Should().Be(fourthLine);
+            lines[4].Should().Be(fifthLine);
+        }
+
     }
 }

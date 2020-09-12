@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
+using FindAndReplace.Wpf.Backend.Extensions;
 using FindAndReplace.Wpf.Backend.Results;
 
 namespace FindAndReplace.Wpf.Backend.Files
@@ -35,6 +36,7 @@ namespace FindAndReplace.Wpf.Backend.Files
                 {
                     fileContent = await streamReader.ReadToEndAsync();
                 }
+                fileContent = fileContent.NormalizeNewlines();
                 return FileContentResult.CreateSuccess<FileContentResult>(filePath, fileContent);
             }
             catch (Exception ex)

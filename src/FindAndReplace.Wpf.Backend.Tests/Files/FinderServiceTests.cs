@@ -17,6 +17,7 @@ namespace FindAndReplace.Wpf.Backend.Tests.Files
         // Dependencies
         private IBinaryFileDetector _binaryFileDetector;
         private IFileReader _fileReader;
+        private IMatchPreviewExtractor _matchPreviewExtractor;
         private ITextMatcher _textMatcher;
         private IFinderService _finderService;
 
@@ -26,10 +27,12 @@ namespace FindAndReplace.Wpf.Backend.Tests.Files
         {
             _binaryFileDetector = Substitute.For<IBinaryFileDetector>();
             _fileReader = Substitute.For<IFileReader>();
+            _matchPreviewExtractor = Substitute.For<IMatchPreviewExtractor>();
             _textMatcher = Substitute.For<ITextMatcher>();
 
             _finderService = new FinderService(_binaryFileDetector,
                                                _fileReader,
+                                               _matchPreviewExtractor,
                                                _textMatcher);
         }
 

@@ -17,15 +17,18 @@ namespace FindAndReplace.Wpf.Backend.Files
         // Dependencies
         private readonly IBinaryFileDetector _binaryFileDetector;
         private readonly IFileReader _fileReader;
+        private readonly IMatchPreviewExtractor _matchPreviewExtractor;
         private readonly ITextMatcher _textMatcher;
 
         // Constructors
         public FinderService(IBinaryFileDetector binaryFileDetector,
                              IFileReader fileReader,
+                             IMatchPreviewExtractor matchPreviewExtractor,
                              ITextMatcher textMatcher)
         {
             _binaryFileDetector = binaryFileDetector;
             _fileReader = fileReader;
+            _matchPreviewExtractor = matchPreviewExtractor;
             _textMatcher = textMatcher;
         }
 
@@ -64,6 +67,15 @@ namespace FindAndReplace.Wpf.Backend.Files
                                                                 isRegexSearch,
                                                                 isUsingEscapeCharacters,
                                                                 isCaseSensitive);
+            // if (!textMatcherResult.IsSuccessful)
+            //     return BuildFailure(textMatcherResult);
+            // 
+            // var matchPreviewExtractionResult = _matchPreviewExtractor.ExtractMatchPreviews(filePath,
+            //                                                                                fileContentResult.Content,
+            //                                                                                textMatcherResult.TextMatches);
+            // if (!matchPreviewExtractionResult.IsSuccessful)
+            //     return BuildFailure(matchPreviewExtractionResult);
+
             return textMatcherResult;
         }
 

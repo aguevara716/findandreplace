@@ -8,8 +8,15 @@ namespace FindAndReplace.Wpf.Backend.Files
 {
     public interface IFinderService
     {
-        Task<TextMatcherResult> FindTextInFileAsync(string filePath, string findText, bool isRegexSearch, bool isUsingEscapeCharacters, bool isCaseSensitive);
-        IEnumerable<TextMatcherResult> FindTextInFiles(IDictionary<string, string> fileContentDictionary, bool isRegexSearch, bool isUsingEscapeCharacters, bool isCaseSensitive);
+        Task<TextMatcherResult> FindTextInFileAsync(string filePath, 
+                                                    string findText, 
+                                                    bool isRegexSearch, 
+                                                    bool isUsingEscapeCharacters, 
+                                                    bool isCaseSensitive);
+        IEnumerable<TextMatcherResult> FindTextInFiles(IDictionary<string, string> fileContentDictionary, 
+                                                       bool isRegexSearch, 
+                                                       bool isUsingEscapeCharacters, 
+                                                       bool isCaseSensitive);
     }
 
     public class FinderService : IFinderService

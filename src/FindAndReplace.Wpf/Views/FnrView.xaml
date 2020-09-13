@@ -396,7 +396,8 @@
                       EnableRowVirtualization="True"
                       FrozenColumnCount="1"
                       SelectionMode="Single"
-                      SelectionUnit="FullRow">
+                      SelectionUnit="FullRow"
+                      d:SelectedIndex="0">
                 <DataGrid.InputBindings>
                     <MouseBinding Gesture="LeftDoubleClick"
                                   Command="{Binding OpenFileCommand}"
@@ -404,11 +405,14 @@
                 </DataGrid.InputBindings>
                 <DataGrid.ContextMenu>
                     <ContextMenu>
-                        <MenuItem Header="Open" 
+                        <MenuItem Header="Open File" 
                                   Command="{Binding OpenFileCommand}"
                                   CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"/>
                         <MenuItem Header="Open Folder"
                                   Command="{Binding OpenFolderCommand}"
+                                  CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"/>
+                        <MenuItem Header="Copy Path"
+                                  Command="{Binding CopyPathCommand}"
                                   CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"/>
                     </ContextMenu>
                 </DataGrid.ContextMenu>
@@ -421,21 +425,41 @@
                                         Binding="{Binding RelativePath}"/>
                     <DataGridTextColumn Header="Matches" 
                                         Width="Auto"
-                                        Binding="{Binding TextMatches.Count}"/>
+                                        Binding="{Binding Previews.Count}"/>
                     <DataGridTextColumn Header="Error" 
                                         Width="*"
                                         Binding="{Binding ErrorMessage}"/>
                 </DataGrid.Columns>
             </DataGrid>
-            <TextBox Grid.Row="1"
-                     HorizontalScrollBarVisibility="Auto"
-                     VerticalScrollBarVisibility="Auto"
-                     IsReadOnly="True"
-                     IsReadOnlyCaretVisible="True"
-                     AcceptsReturn="True"
-                     FontFamily="Consolas"
-                     Margin="0"
-                     Text="{Binding ElementName=resultsDataGrid, Path=SelectedItem.PreviewText}"/>
+            <StackPanel Grid.Row="1">
+                <TextBlock Text="{Binding ElementName=resultsDataGrid, Path=SelectedItem.FullPath, StringFormat='Showing previews for file: &quot;{0}&quot;'}"/>
+                <ScrollViewer Grid.Row="1">
+                    <ItemsControl ItemsSource="{Binding ElementName=resultsDataGrid, Path=SelectedItem.Previews}" >
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Label Content="{Binding}"
+                                           Style="{StaticResource PreviewTextLabelStyle}">
+                                        <Label.ContextMenu>
+                                            <ContextMenu>
+                                                <MenuItem Header="Copy This Snippet"
+                                                          Command="{Binding RelativeSource={RelativeSource AncestorType=Page}, Path=DataContext.CopyPreviewCommand}"
+                                                          CommandParameter="{Binding}"/>
+                                            </ContextMenu>
+                                        </Label.ContextMenu>
+                                    </Label>
+                                    <Button Content="Copy This Snippet"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Top"
+                                            Margin="5,2"
+                                            Command="{Binding RelativeSource={RelativeSource AncestorType=Page}, Path=DataContext.CopyPreviewCommand}"
+                                            CommandParameter="{Binding}"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </StackPanel>
         </Grid>
     </Grid>
 

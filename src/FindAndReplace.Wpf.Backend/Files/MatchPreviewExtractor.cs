@@ -49,7 +49,7 @@ namespace FindAndReplace.Wpf.Backend.Files
                     for (var currentLineIndex = startingPreviewLineIndex; currentLineIndex <= endingPreviewLineIndex; currentLineIndex++)
                     {
                         var lineNumberString = (currentLineIndex + 1).ToString().PadLeft(lineNumbersLength);
-                        contentStringBuilder.AppendLine($"{lineNumberString} {fileContentLines[currentLineIndex]}");
+                        contentStringBuilder.AppendLine($"{lineNumberString}|{fileContentLines[currentLineIndex]}");
                     }
                     previews.Add(contentStringBuilder.ToString());
                 }

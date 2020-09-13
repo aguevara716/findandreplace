@@ -431,35 +431,33 @@
                                         Binding="{Binding ErrorMessage}"/>
                 </DataGrid.Columns>
             </DataGrid>
-            <StackPanel Grid.Row="1">
-                <TextBlock Text="{Binding ElementName=resultsDataGrid, Path=SelectedItem.FullPath, StringFormat='Showing previews for file: &quot;{0}&quot;'}"/>
+            <Grid Grid.Row="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" 
+                           Text="{Binding ElementName=resultsDataGrid, Path=SelectedItem.FullPath, StringFormat='Showing previews for file: {0}'}"/>
                 <ScrollViewer Grid.Row="1">
-                    <ItemsControl ItemsSource="{Binding ElementName=resultsDataGrid, Path=SelectedItem.Previews}" >
+                    <ItemsControl ItemsSource="{Binding ElementName=resultsDataGrid, Path=SelectedItem.Previews}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Grid>
-                                    <Label Content="{Binding}"
-                                           Style="{StaticResource PreviewTextLabelStyle}">
-                                        <Label.ContextMenu>
-                                            <ContextMenu>
-                                                <MenuItem Header="Copy This Snippet"
-                                                          Command="{Binding RelativeSource={RelativeSource AncestorType=Page}, Path=DataContext.CopyPreviewCommand}"
-                                                          CommandParameter="{Binding}"/>
-                                            </ContextMenu>
-                                        </Label.ContextMenu>
-                                    </Label>
-                                    <Button Content="Copy This Snippet"
-                                            HorizontalAlignment="Left"
-                                            VerticalAlignment="Top"
-                                            Margin="5,2"
-                                            Command="{Binding RelativeSource={RelativeSource AncestorType=Page}, Path=DataContext.CopyPreviewCommand}"
-                                            CommandParameter="{Binding}"/>
-                                </Grid>
+                                <Border BorderThickness="1"
+                                        BorderBrush="Black">
+                                    <Grid>
+                                        <TextBlock Text="{Binding}"
+                                                   Style="{StaticResource PreviewTextBlockStyle}"/>
+                                        <Button Content="Copy This Snippet"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Top"
+                                                Margin="5,2"/>
+                                    </Grid>
+                                </Border>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
                 </ScrollViewer>
-            </StackPanel>
+            </Grid>
         </Grid>
     </Grid>
 

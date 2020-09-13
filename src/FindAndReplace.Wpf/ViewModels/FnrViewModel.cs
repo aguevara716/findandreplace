@@ -19,6 +19,7 @@ namespace FindAndReplace.Wpf.ViewModels
     public class FnrViewModel : ViewModelBase
     {
         // Dependencies
+        private readonly IClipboardDataService _clipboardDataService;
         private readonly IDialogService _dialogService;
         private readonly IFileDiscoverer _fileDiscoverer;
         private readonly IFileResultMapper _fileResultMapper;
@@ -81,20 +82,24 @@ namespace FindAndReplace.Wpf.ViewModels
         public RelayCommand SwapCommand { get; private set; }
         public RelayCommand<FileResult> OpenFileCommand { get; private set; }
         public RelayCommand<FileResult> OpenFolderCommand { get; private set; }
+        public RelayCommand<FileResult> CopyPathCommand { get; private set; }
         public RelayCommand<String> AddExcludeDirectoryCommand { get; private set; }
         public RelayCommand<String> RemoveExcludeDirectoryCommand { get; private set; }
         public RelayCommand<String> AddExcludeFileCommand { get; private set; }
         public RelayCommand<String> RemoveExcludeFileCommand { get; private set; }
         public RelayCommand<String> AddIncludeFileCommand { get; private set; }
         public RelayCommand<String> RemoveIncludeFileCommand { get; private set; }
+        public RelayCommand<String> CopyPreviewCommand { get; private set; }
 
         // Constructors
-        public FnrViewModel(IDialogService dialogService,
+        public FnrViewModel(IClipboardDataService clipboardDataService,
+                            IDialogService dialogService,
                             IFileDiscoverer fileDiscoverer,
                             IFileResultMapper fileResultMapper,
                             IFinderService finderService,
                             ISettingsService settingsService)
         {
+            _clipboardDataService = clipboardDataService;
             _dialogService = dialogService;
             _fileDiscoverer = fileDiscoverer;
             _fileResultMapper = fileResultMapper;
@@ -115,12 +120,14 @@ namespace FindAndReplace.Wpf.ViewModels
             SwapCommand = new RelayCommand(SwapExecuted);
             OpenFileCommand = new RelayCommand<FileResult>(OpenFileExecuted);
             OpenFolderCommand = new RelayCommand<FileResult>(OpenFolderExecuted);
+            CopyPathCommand = new RelayCommand<FileResult>(CopyPathExecuted);
             AddExcludeDirectoryCommand = new RelayCommand<String>(AddExcludeDirectoryExecuted);
             RemoveExcludeDirectoryCommand = new RelayCommand<String>(RemoveExcludeDirectoryExecuted);
             AddExcludeFileCommand = new RelayCommand<String>(AddExcludeFileExecuted);
             RemoveExcludeFileCommand = new RelayCommand<String>(RemoveExcludeFileExecuted);
             AddIncludeFileCommand = new RelayCommand<String>(AddIncludeFileExecuted);
             RemoveIncludeFileCommand = new RelayCommand<String>(RemoveIncludeFileExecuted);
+            CopyPreviewCommand = new RelayCommand<string>(CopyPreviewExecuted);
         }
 
         // Private Methods
@@ -221,23 +228,23 @@ namespace FindAndReplace.Wpf.ViewModels
             {
                 Status = $"Scanning file \"{filePath}\"";
 
-                var textMatcherResult = await _finderService.FindTextInFileAsync(filePath, FindParameters.FindString, FindParameters.IsRegex, FindParameters.IsUsingEscapeCharacters, FindParameters.IsCaseSensitive);
+                var matchPreviewExtractionResult = await _finderService.FindTextInFileAsync(filePath, FindParameters.FindString, FindParameters.IsRegex, FindParameters.IsUsingEscapeCharacters, FindParameters.IsCaseSensitive);
                 
                 var fileResult = _fileResultMapper.Map(FolderParameters.RootDirectory, filePath);
-                fileResult.ErrorMessage = textMatcherResult.GetErrorText();
+                fileResult.ErrorMessage = matchPreviewExtractionResult.GetErrorText();
                 fileResult.HasError = !String.IsNullOrEmpty(fileResult.ErrorMessage);
-                fileResult.TextMatches = textMatcherResult.TextMatches?.ToList();
+                fileResult.Previews = matchPreviewExtractionResult.Previews?.ToList();
 
                 var shouldAddResult = fileResult.HasError ||
-                                      (!FindParameters.IsOnlyShowingFilesWithoutMatches && (fileResult.TextMatches?.Any() ?? false)) ||
-                                      (FindParameters.IsOnlyShowingFilesWithoutMatches && (!fileResult.TextMatches?.Any() ?? true));
+                                      (!FindParameters.IsOnlyShowingFilesWithoutMatches && (fileResult.Previews?.Any() ?? false)) ||
+                                      (FindParameters.IsOnlyShowingFilesWithoutMatches && (!fileResult.Previews?.Any() ?? true));
                 if (shouldAddResult)
                     Results.Add(fileResult);
                 
                 ProcessStatus.FilesProcessedCount++;
-                ProcessStatus.FilesWithMatchesCount += textMatcherResult.IsSuccessful && textMatcherResult.TextMatches.Any() ? 1 : 0;
-                ProcessStatus.FilesWithoutMatchesCount += !textMatcherResult.IsSuccessful || !textMatcherResult.TextMatches.Any() ? 1 : 0;
-                ProcessStatus.MatchesCount += textMatcherResult.TextMatches?.Count ?? 0;
+                ProcessStatus.FilesWithMatchesCount += matchPreviewExtractionResult.IsSuccessful && matchPreviewExtractionResult.Previews.Any() ? 1 : 0;
+                ProcessStatus.FilesWithoutMatchesCount += !matchPreviewExtractionResult.IsSuccessful || !matchPreviewExtractionResult.Previews.Any() ? 1 : 0;
+                ProcessStatus.MatchesCount += matchPreviewExtractionResult.Previews?.Count ?? 0;
                 ProcessStatus.EllapsedTime = DateTime.Now - startTime;
             }
 
@@ -248,6 +255,7 @@ namespace FindAndReplace.Wpf.ViewModels
         private void ReplaceExecuted()
         {
             UpdateSettings();
+            _dialogService.ShowMessage("This doesn't actually do anything yet", "Not Implemented");
         }
 
         private void CancelExecuted()
@@ -282,6 +290,11 @@ namespace FindAndReplace.Wpf.ViewModels
                 UseShellExecute = true
             };
             Process.Start(startInfo);
+        }
+
+        private void CopyPathExecuted(FileResult fileResult)
+        {
+            _clipboardDataService.SetText(fileResult.FullPath);
         }
 
         private void AddExcludeDirectoryExecuted(string newExcludeDirectory)
@@ -330,6 +343,11 @@ namespace FindAndReplace.Wpf.ViewModels
         private void RemoveIncludeFileExecuted(string includeFile)
         {
             FolderParameters.IncludeFiles.Remove(includeFile);
+        }
+
+        private void CopyPreviewExecuted(string previewText)
+        {
+            _clipboardDataService.SetText(previewText);
         }
 
     }

@@ -75,7 +75,7 @@ namespace FindAndReplace.Wpf.Backend.Tests.Files
             var matchPreviewExtractionResult = _matchPreviewExtractor.ExtractMatchPreviews(filePath, fileContent, textMatches);
 
             matchPreviewExtractionResult.IsSuccessful.Should().BeTrue();
-            matchPreviewExtractionResult.PreviewText.Should().BeEmpty();
+            matchPreviewExtractionResult.Previews.Should().BeEmpty();
         }
 
         [Test]
@@ -88,7 +88,7 @@ namespace FindAndReplace.Wpf.Backend.Tests.Files
             var matchPreviewExtractionResult = _matchPreviewExtractor.ExtractMatchPreviews(filePath, fileContent, textMatches);
 
             matchPreviewExtractionResult.IsSuccessful.Should().BeTrue();
-            matchPreviewExtractionResult.PreviewText.Should().BeEmpty();
+            matchPreviewExtractionResult.Previews.Should().BeEmpty();
         }
 
         [Test]

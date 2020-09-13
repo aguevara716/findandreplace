@@ -4,7 +4,7 @@ namespace FindAndReplace.Wpf.Backend.Results
 {
     public class MatchPreviewExtractionResult : BaseResult<List<PreviewText>>
     {
-        public List<PreviewText> PreviewText { get { return Payload; } }
+        public List<PreviewText> Previews { get { return Payload; } }
     }
 
 }

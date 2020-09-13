@@ -26,15 +26,15 @@ namespace FindAndReplace.Wpf.Backend.Files
                 return MatchPreviewExtractionResult.CreateFailure<MatchPreviewExtractionResult>(filePath, "Matches must be provided");
 
             if (fileContent.IsEmpty())
-                return MatchPreviewExtractionResult.CreateSuccess<MatchPreviewExtractionResult>(filePath, new List<PreviewText>());
+                return MatchPreviewExtractionResult.CreateSuccess<MatchPreviewExtractionResult>(filePath, new List<string>());
             if (!textMatches.Any())
-                return MatchPreviewExtractionResult.CreateSuccess<MatchPreviewExtractionResult>(filePath, new List<PreviewText>());
+                return MatchPreviewExtractionResult.CreateSuccess<MatchPreviewExtractionResult>(filePath, new List<string>());
 
             var fileContentLines = fileContent.SplitOnNewline();
 
             try
             {
-                var previews = new List<PreviewText>();
+                var previews = new List<string>();
                 foreach (var textMatch in textMatches)
                 {
                     var startingLineIndex = FindMatchLineNumber(fileContentLines, textMatch.StartIndex);
@@ -44,12 +44,6 @@ namespace FindAndReplace.Wpf.Backend.Files
                     var startingPreviewLineIndex = Math.Max(startingLineIndex - PREVIEW_LINE_COUNT, 0);
                     var endingPreviewLineIndex = Math.Min(endingLineIndex + PREVIEW_LINE_COUNT, fileContentLines.Length - 1);
 
-                    var pt = new PreviewText
-                    {
-                        MatchEndingLineNumber = endingLineIndex,
-                        MatchStartingLineNumber = startingLineIndex
-                    };
-
                     var lineNumbersLength = endingPreviewLineIndex.ToString().Length;
                     var contentStringBuilder = new StringBuilder();
                     for (var currentLineIndex = startingPreviewLineIndex; currentLineIndex <= endingPreviewLineIndex; currentLineIndex++)
@@ -57,8 +51,7 @@ namespace FindAndReplace.Wpf.Backend.Files
                         var lineNumberString = (currentLineIndex + 1).ToString().PadLeft(lineNumbersLength);
                         contentStringBuilder.AppendLine($"{lineNumberString} {fileContentLines[currentLineIndex]}");
                     }
-                    pt.Content = contentStringBuilder.ToString();
-                    previews.Add(pt);
+                    previews.Add(contentStringBuilder.ToString());
                 }
 
                 return MatchPreviewExtractionResult.CreateSuccess<MatchPreviewExtractionResult>(filePath, previews);

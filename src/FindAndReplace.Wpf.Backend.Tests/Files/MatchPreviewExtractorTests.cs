@@ -111,7 +111,7 @@ namespace FindAndReplace.Wpf.Backend.Tests.Files
             var actualPreviewResult = _matchPreviewExtractor.ExtractMatchPreviews(filePath, fileContent, textMatches);
 
             actualPreviewResult.IsSuccessful.Should().BeTrue();
-            actualPreviewResult.Previews.First().Content.Should().Be(expectedPreviewText);
+            actualPreviewResult.Previews.First().Should().Be(expectedPreviewText);
         }
 
     }

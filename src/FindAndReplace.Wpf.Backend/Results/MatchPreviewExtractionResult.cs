@@ -2,9 +2,9 @@
 
 namespace FindAndReplace.Wpf.Backend.Results
 {
-    public class MatchPreviewExtractionResult : BaseResult<List<PreviewText>>
+    public class MatchPreviewExtractionResult : BaseResult<List<string>>
     {
-        public List<PreviewText> Previews { get { return Payload; } }
+        public List<string> Previews { get { return Payload; } }
     }
 
 }

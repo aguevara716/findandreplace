@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using FindAndReplace.Wpf.Backend.Files;
 using FindAndReplace.Wpf.Backend.Results;
 using FluentAssertions;
@@ -96,7 +97,7 @@ namespace FindAndReplace.Wpf.Backend.Tests.Files
         {
             // Data is from a real execution of fnr.exe
             var filePath = "asdf";
-            var fileContent = "using EnergyPi.Web.Builders;\r\nusing EnergyPi.Web.Data;\nusing EnergyPi.Web.DataServices;\nusing EnergyPi.Web.Entities;\nusing EnergyPi.Web.Repositories;\nusing Microsoft.AspNetCore.Builder;\nusing Microsoft.AspNetCore.Hosting;\nusing Microsoft.AspNetCore.Identity;\nusing Microsoft.EntityFrameworkCore;\nusing Microsoft.Extensions.Configuration;\nusing Microsoft.Extensions.DependencyInjection;\nusing Microsoft.Extensions.Hosting;\n\nnamespace EnergyPi.Web\n{\n    public class Startup\n    {\n        public Startup(IConfiguration configuration)\n        {\n            Configuration = configuration;\n        }\n\n        public IConfiguration Configuration { get; }\n\n        // This method gets called by the runtime. Use this method to add services to the container.\n        public void ConfigureServices(IServiceCollection services)\n        {\n            services.AddDbContext<AuthenticationDbContext>(options => options.UseMySql(Configuration.GetConnectionString(\"AuthenticationConnection\")));\n            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<AuthenticationDbContext>();\n\n            services.AddDbContext<DataDbContext>(options => options.UseMySql(Configuration.GetConnectionString(\"DataConnection\")));\n\n            services = AddCustomServices(services);\n\n            services.AddControllersWithViews().AddRazorRuntimeCompilation();\n            services.AddRazorPages();\n        }\n\n        private IServiceCollection AddCustomServices(IServiceCollection services)\n        {\n            // repositories\n            services.AddTransient<IRepository<EnergyLogs>, DataRepository<EnergyLogs>>();\n            services.AddTransient<IRepository<WeatherLogs>, DataRepository<WeatherLogs>>();\n\n            // data services\n            services.AddTransient<IEnergyLogsDataService, EnergyLogsDataService>();\n            services.AddTransient<IWeatherLogsDataService, WeatherLogsDataService>();\n\n            // builders\n            services.AddTransient<ITodayViewModelBuilder, TodayViewModelBuilder>();\n            services.AddTransient<IHistoryViewModelBuilder, HistoryViewModelBuilder>();\n\n            return services;\n        }\n\n        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.\n        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)\n        {\n            if (env.IsDevelopment())\n            {\n                app.UseDeveloperExceptionPage();\n                app.UseDatabaseErrorPage();\n            }\n            else\n            {\n                app.UseExceptionHandler(\"/Home/Error\");\n                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.\n                app.UseHsts();\n            }\n            app.UseHttpsRedirection();\n            app.UseStaticFiles();\n\n            app.UseRouting();\n\n            app.UseAuthentication();\n            app.UseAuthorization();\n\n            app.UseEndpoints(endpoints =>\n            {\n                endpoints.MapControllerRoute\n                (\n                    name: \"default\",\n                    pattern: \"{controller=Home}/{action=Index}/{id?}\"\n                );\n                endpoints.MapRazorPages();\n            });\n        }\n\n    }\n}\n";
+            var fileContent = "using EnergyPi.Web.Builders;\r\nusing EnergyPi.Web.Data;\r\nusing EnergyPi.Web.DataServices;\r\nusing EnergyPi.Web.Entities;\r\nusing EnergyPi.Web.Repositories;\r\nusing Microsoft.AspNetCore.Builder;\r\nusing Microsoft.AspNetCore.Hosting;\r\nusing Microsoft.AspNetCore.Identity;\r\nusing Microsoft.EntityFrameworkCore;\r\nusing Microsoft.Extensions.Configuration;\r\nusing Microsoft.Extensions.DependencyInjection;\r\nusing Microsoft.Extensions.Hosting;\r\n\r\nnamespace EnergyPi.Web\r\n{\r\n    public class Startup\r\n    {\r\n        public Startup(IConfiguration configuration)\r\n        {\r\n";
             var textMatches = new List<TextMatch>
             {
                 new TextMatch
@@ -106,9 +107,11 @@ namespace FindAndReplace.Wpf.Backend.Tests.Files
                 }
             };
             var expectedPreviewText = "14 namespace EnergyPi.Web\r\n15 {\r\n16     public class Startup\r\n17     {\r\n18         public Startup(IConfiguration configuration)\r\n";
-            
-            // TODO test the actual logic
-            Assert.Fail();
+
+            var actualPreviewResult = _matchPreviewExtractor.ExtractMatchPreviews(filePath, fileContent, textMatches);
+
+            actualPreviewResult.IsSuccessful.Should().BeTrue();
+            actualPreviewResult.Previews.First().Content.Should().Be(expectedPreviewText);
         }
 
     }

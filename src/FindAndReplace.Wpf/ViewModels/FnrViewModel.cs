@@ -4,9 +4,9 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
 using FindAndReplace.Wpf.Backend.Files;
 using FindAndReplace.Wpf.Backend.Filesystem;
+using FindAndReplace.Wpf.Backend.Results;
 using FindAndReplace.Wpf.Dialogs;
 using FindAndReplace.Wpf.Mappers;
 using FindAndReplace.Wpf.Models;
@@ -228,14 +228,19 @@ namespace FindAndReplace.Wpf.ViewModels
             {
                 Status = $"Scanning file \"{filePath}\"";
 
-                var matchPreviewExtractionResult = await _finderService.FindTextInFileAsync(filePath, FindParameters.FindString, FindParameters.IsRegex, FindParameters.IsUsingEscapeCharacters, FindParameters.IsCaseSensitive);
-                
+                MatchPreviewExtractionResult matchPreviewExtractionResult;
+                if (!FindParameters.IsSearchingFilenameOnly)
+                    matchPreviewExtractionResult = await _finderService.FindTextInFileAsync(filePath, FindParameters.FindString, FindParameters.IsRegex, FindParameters.IsUsingEscapeCharacters, FindParameters.IsCaseSensitive);
+                else
+                    matchPreviewExtractionResult = MatchPreviewExtractionResult.CreateSuccess<MatchPreviewExtractionResult>(filePath, new List<string>());
+
                 var fileResult = _fileResultMapper.Map(FolderParameters.RootDirectory, filePath);
                 fileResult.ErrorMessage = matchPreviewExtractionResult.GetErrorText();
                 fileResult.HasError = !String.IsNullOrEmpty(fileResult.ErrorMessage);
                 fileResult.Previews = matchPreviewExtractionResult.Previews?.ToList();
 
                 var shouldAddResult = fileResult.HasError ||
+                                      FindParameters.IsSearchingFilenameOnly ||
                                       (!FindParameters.IsOnlyShowingFilesWithoutMatches && (fileResult.Previews?.Any() ?? false)) ||
                                       (FindParameters.IsOnlyShowingFilesWithoutMatches && (!fileResult.Previews?.Any() ?? true));
                 if (shouldAddResult)

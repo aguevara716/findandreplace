@@ -117,10 +117,33 @@
                                     <ItemsControl ItemsSource="{Binding FolderParameters.ExcludeDirectories}">
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
-                                                <DockPanel LastChildFill="True">
+                                                <DockPanel LastChildFill="True" Background="Transparent">
+                                                    <DockPanel.Triggers>
+                                                        <EventTrigger RoutedEvent="MouseEnter">
+                                                            <BeginStoryboard>
+                                                                <Storyboard>
+                                                                    <DoubleAnimation Storyboard.Target="{Binding ElementName=deleteExcludeDirectoryButton}"
+                                                                                     Storyboard.TargetProperty="Opacity"
+                                                                                     Duration="0:0:0.25"
+                                                                                     To="1.0"/>
+                                                                </Storyboard>
+                                                            </BeginStoryboard>
+                                                        </EventTrigger>
+                                                        <EventTrigger RoutedEvent="MouseLeave">
+                                                            <BeginStoryboard>
+                                                                <Storyboard>
+                                                                    <DoubleAnimation Storyboard.Target="{Binding ElementName=deleteExcludeDirectoryButton}"
+                                                                                     Storyboard.TargetProperty="Opacity"
+                                                                                     Duration="0:0:0.25"
+                                                                                     To="0.1"/>
+                                                                </Storyboard>
+                                                            </BeginStoryboard>
+                                                        </EventTrigger>
+                                                    </DockPanel.Triggers>
                                                     <ToggleButton DockPanel.Dock="Right"
                                                                   Content="Delete"
-                                                                  Name="deleteExcludeDirectoryButton"/>
+                                                                  Name="deleteExcludeDirectoryButton"
+                                                                  Opacity="0.1"/>
                                                     <Popup IsOpen="{Binding ElementName=deleteExcludeDirectoryButton, Path=IsChecked}"
                                                            PlacementTarget="{Binding ElementName=deleteExcludeDirectoryButton}">
                                                         <Border Style="{StaticResource PopupBorderStyle}">
@@ -182,11 +205,34 @@
                                     <ItemsControl ItemsSource="{Binding FolderParameters.ExcludeFiles}">
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
-                                                <DockPanel LastChildFill="True">
+                                                <DockPanel LastChildFill="True" Background="Transparent">
+                                                    <DockPanel.Triggers>
+                                                        <EventTrigger RoutedEvent="MouseEnter">
+                                                            <BeginStoryboard>
+                                                                <Storyboard>
+                                                                    <DoubleAnimation Storyboard.Target="{Binding ElementName=deleteExcludeFileButton}"
+                                                                                     Storyboard.TargetProperty="Opacity"
+                                                                                     Duration="0:0:0.25"
+                                                                                     To="1.0"/>
+                                                                </Storyboard>
+                                                            </BeginStoryboard>
+                                                        </EventTrigger>
+                                                        <EventTrigger RoutedEvent="MouseLeave">
+                                                            <BeginStoryboard>
+                                                                <Storyboard>
+                                                                    <DoubleAnimation Storyboard.Target="{Binding ElementName=deleteExcludeFileButton}"
+                                                                                     Storyboard.TargetProperty="Opacity"
+                                                                                     Duration="0:0:0.25"
+                                                                                     To="0.1"/>
+                                                                </Storyboard>
+                                                            </BeginStoryboard>
+                                                        </EventTrigger>
+                                                    </DockPanel.Triggers>
                                                     <ToggleButton DockPanel.Dock="Right" 
                                                                   IsTabStop="False" 
                                                                   Content="Delete"
-                                                                  Name="deleteExcludeFileButton"/>
+                                                                  Name="deleteExcludeFileButton"
+                                                                  Opacity="0.1"/>
                                                     <Popup IsOpen="{Binding ElementName=deleteExcludeFileButton, Path=IsChecked}"
                                                            PlacementTarget="{Binding ElementName=deleteExcludeFileButton}">
                                                         <Border Style="{StaticResource PopupBorderStyle}">
@@ -246,11 +292,34 @@
                                     <ItemsControl ItemsSource="{Binding FolderParameters.IncludeFiles}">
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
-                                                <DockPanel LastChildFill="True">
+                                                <DockPanel LastChildFill="True" Background="Transparent">
+                                                    <DockPanel.Triggers>
+                                                        <EventTrigger RoutedEvent="MouseEnter">
+                                                            <BeginStoryboard>
+                                                                <Storyboard>
+                                                                    <DoubleAnimation Storyboard.Target="{Binding ElementName=deleteIncludeFileButton}"
+                                                                                     Storyboard.TargetProperty="Opacity"
+                                                                                     Duration="0:0:0.25"
+                                                                                     To="1.0"/>
+                                                                </Storyboard>
+                                                            </BeginStoryboard>
+                                                        </EventTrigger>
+                                                        <EventTrigger RoutedEvent="MouseLeave">
+                                                            <BeginStoryboard>
+                                                                <Storyboard>
+                                                                    <DoubleAnimation Storyboard.Target="{Binding ElementName=deleteIncludeFileButton}"
+                                                                                     Storyboard.TargetProperty="Opacity"
+                                                                                     Duration="0:0:0.25"
+                                                                                     To="0.1"/>
+                                                                </Storyboard>
+                                                            </BeginStoryboard>
+                                                        </EventTrigger>
+                                                    </DockPanel.Triggers>
                                                     <ToggleButton DockPanel.Dock="Right" 
                                                                   IsTabStop="False" 
                                                                   Content="Delete"
-                                                                  Name="deleteIncludeFileButton"/>
+                                                                  Name="deleteIncludeFileButton"
+                                                                  Opacity="0.1"/>
                                                     <Popup IsOpen="{Binding ElementName=deleteIncludeFileButton, Path=IsChecked}"
                                                            PlacementTarget="{Binding ElementName=deleteIncludeFileButton}">
                                                         <Border Style="{StaticResource PopupBorderStyle}">
@@ -452,7 +521,7 @@
                                                     <Storyboard>
                                                         <DoubleAnimation Storyboard.TargetProperty="Opacity" 
                                                                          Storyboard.Target="{Binding ElementName=CopyButton}"
-                                                                         Duration="0:0:0.5" 
+                                                                         Duration="0:0:0.25" 
                                                                          To="1.00"/>
                                                     </Storyboard>
                                                 </BeginStoryboard>
@@ -462,8 +531,8 @@
                                                     <Storyboard>
                                                         <DoubleAnimation Storyboard.TargetProperty="Opacity" 
                                                                          Storyboard.Target="{Binding ElementName=CopyButton}"
-                                                                         Duration="0:0:0.5" 
-                                                                         To="0"/>
+                                                                         Duration="0:0:0.25" 
+                                                                         To="0.1"/>
                                                     </Storyboard>
                                                 </BeginStoryboard>
                                             </EventTrigger>
@@ -474,7 +543,7 @@
                                                 HorizontalAlignment="Left"
                                                 VerticalAlignment="Top"
                                                 Margin="0"
-                                                Opacity="0"
+                                                Opacity="0.1"
                                                 Name="CopyButton"/>
                                     </Grid>
                                 </Border>

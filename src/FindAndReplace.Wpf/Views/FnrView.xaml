@@ -443,14 +443,39 @@
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <Border BorderThickness="1"
-                                        BorderBrush="Black">
+                                        BorderBrush="Black"
+                                        Margin="5,2">
                                     <Grid>
+                                        <Grid.Triggers>
+                                            <EventTrigger RoutedEvent="MouseEnter">
+                                                <BeginStoryboard>
+                                                    <Storyboard>
+                                                        <DoubleAnimation Storyboard.TargetProperty="Opacity" 
+                                                                         Storyboard.Target="{Binding ElementName=CopyButton}"
+                                                                         Duration="0:0:0.5" 
+                                                                         To="1.00"/>
+                                                    </Storyboard>
+                                                </BeginStoryboard>
+                                            </EventTrigger>
+                                            <EventTrigger RoutedEvent="MouseLeave">
+                                                <BeginStoryboard>
+                                                    <Storyboard>
+                                                        <DoubleAnimation Storyboard.TargetProperty="Opacity" 
+                                                                         Storyboard.Target="{Binding ElementName=CopyButton}"
+                                                                         Duration="0:0:0.5" 
+                                                                         To="0"/>
+                                                    </Storyboard>
+                                                </BeginStoryboard>
+                                            </EventTrigger>
+                                        </Grid.Triggers>
                                         <TextBlock Text="{Binding}"
                                                    Style="{StaticResource PreviewTextBlockStyle}"/>
                                         <Button Content="Copy This Snippet"
                                                 HorizontalAlignment="Left"
                                                 VerticalAlignment="Top"
-                                                Margin="5,2"/>
+                                                Margin="0"
+                                                Opacity="0"
+                                                Name="CopyButton"/>
                                     </Grid>
                                 </Border>
                             </DataTemplate>

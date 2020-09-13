@@ -44,7 +44,7 @@ namespace FindAndReplace.Wpf.Backend.Files
                     var startingPreviewLineIndex = Math.Max(startingLineIndex - PREVIEW_LINE_COUNT, 0);
                     var endingPreviewLineIndex = Math.Min(endingLineIndex + PREVIEW_LINE_COUNT, fileContentLines.Length - 1);
 
-                    var lineNumbersLength = endingPreviewLineIndex.ToString().Length;
+                    var lineNumbersLength = (endingPreviewLineIndex + 1).ToString().Length;
                     var contentStringBuilder = new StringBuilder();
                     for (var currentLineIndex = startingPreviewLineIndex; currentLineIndex <= endingPreviewLineIndex; currentLineIndex++)
                     {

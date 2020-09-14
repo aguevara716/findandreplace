@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using FindAndReplace.Wpf.Backend.Files;
@@ -22,15 +21,10 @@ namespace FindAndReplace.Wpf.Backend.Tests.Files
         }
 
         // Private Methods
-        private string GetFilePath()
-        {
-            return GetFilePath("*.dll");
-        }
-
         private string GetFilePath(string searchCriteria)
         {
-            var rootDirectory = Directory.GetCurrentDirectory();
-            var firstDll = Directory.GetFiles(rootDirectory, searchCriteria).First();
+            var firstDll = FilePathGenerator.GetRealFiles(Directory.GetCurrentDirectory(), searchCriteria)
+                                            .First();
             return firstDll;
         }
 
@@ -48,7 +42,7 @@ namespace FindAndReplace.Wpf.Backend.Tests.Files
             var fileContentResult = await _fileReader.GetFileContentAsync(filePath);
 
             fileContentResult.IsSuccessful.Should().BeFalse();
-            fileContentResult.ErrorMessage.Should().BeNullOrEmpty();
+            fileContentResult.ErrorMessage.Should().NotBeNullOrEmpty();
         }
 
         [Test]
@@ -83,7 +77,7 @@ namespace FindAndReplace.Wpf.Backend.Tests.Files
         [Test]
         public void GetFileSampleData_Should_ReturnFileSampleData()
         {
-            var filePath = GetFilePath();
+            var filePath = GetFilePath("*.dll");
 
             var fileSampleResult = _fileReader.GetFileSampleData(filePath);
 

@@ -117,10 +117,33 @@
                                     <ItemsControl ItemsSource="{Binding FolderParameters.ExcludeDirectories}">
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
-                                                <DockPanel LastChildFill="True">
+                                                <DockPanel LastChildFill="True" Background="Transparent">
+                                                    <DockPanel.Triggers>
+                                                        <EventTrigger RoutedEvent="MouseEnter">
+                                                            <BeginStoryboard>
+                                                                <Storyboard>
+                                                                    <DoubleAnimation Storyboard.Target="{Binding ElementName=deleteExcludeDirectoryButton}"
+                                                                                     Storyboard.TargetProperty="Opacity"
+                                                                                     Duration="0:0:0.25"
+                                                                                     To="1.0"/>
+                                                                </Storyboard>
+                                                            </BeginStoryboard>
+                                                        </EventTrigger>
+                                                        <EventTrigger RoutedEvent="MouseLeave">
+                                                            <BeginStoryboard>
+                                                                <Storyboard>
+                                                                    <DoubleAnimation Storyboard.Target="{Binding ElementName=deleteExcludeDirectoryButton}"
+                                                                                     Storyboard.TargetProperty="Opacity"
+                                                                                     Duration="0:0:0.25"
+                                                                                     To="0.1"/>
+                                                                </Storyboard>
+                                                            </BeginStoryboard>
+                                                        </EventTrigger>
+                                                    </DockPanel.Triggers>
                                                     <ToggleButton DockPanel.Dock="Right"
                                                                   Content="Delete"
-                                                                  Name="deleteExcludeDirectoryButton"/>
+                                                                  Name="deleteExcludeDirectoryButton"
+                                                                  Opacity="0.1"/>
                                                     <Popup IsOpen="{Binding ElementName=deleteExcludeDirectoryButton, Path=IsChecked}"
                                                            PlacementTarget="{Binding ElementName=deleteExcludeDirectoryButton}">
                                                         <Border Style="{StaticResource PopupBorderStyle}">
@@ -182,11 +205,34 @@
                                     <ItemsControl ItemsSource="{Binding FolderParameters.ExcludeFiles}">
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
-                                                <DockPanel LastChildFill="True">
+                                                <DockPanel LastChildFill="True" Background="Transparent">
+                                                    <DockPanel.Triggers>
+                                                        <EventTrigger RoutedEvent="MouseEnter">
+                                                            <BeginStoryboard>
+                                                                <Storyboard>
+                                                                    <DoubleAnimation Storyboard.Target="{Binding ElementName=deleteExcludeFileButton}"
+                                                                                     Storyboard.TargetProperty="Opacity"
+                                                                                     Duration="0:0:0.25"
+                                                                                     To="1.0"/>
+                                                                </Storyboard>
+                                                            </BeginStoryboard>
+                                                        </EventTrigger>
+                                                        <EventTrigger RoutedEvent="MouseLeave">
+                                                            <BeginStoryboard>
+                                                                <Storyboard>
+                                                                    <DoubleAnimation Storyboard.Target="{Binding ElementName=deleteExcludeFileButton}"
+                                                                                     Storyboard.TargetProperty="Opacity"
+                                                                                     Duration="0:0:0.25"
+                                                                                     To="0.1"/>
+                                                                </Storyboard>
+                                                            </BeginStoryboard>
+                                                        </EventTrigger>
+                                                    </DockPanel.Triggers>
                                                     <ToggleButton DockPanel.Dock="Right" 
                                                                   IsTabStop="False" 
                                                                   Content="Delete"
-                                                                  Name="deleteExcludeFileButton"/>
+                                                                  Name="deleteExcludeFileButton"
+                                                                  Opacity="0.1"/>
                                                     <Popup IsOpen="{Binding ElementName=deleteExcludeFileButton, Path=IsChecked}"
                                                            PlacementTarget="{Binding ElementName=deleteExcludeFileButton}">
                                                         <Border Style="{StaticResource PopupBorderStyle}">
@@ -246,11 +292,34 @@
                                     <ItemsControl ItemsSource="{Binding FolderParameters.IncludeFiles}">
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
-                                                <DockPanel LastChildFill="True">
+                                                <DockPanel LastChildFill="True" Background="Transparent">
+                                                    <DockPanel.Triggers>
+                                                        <EventTrigger RoutedEvent="MouseEnter">
+                                                            <BeginStoryboard>
+                                                                <Storyboard>
+                                                                    <DoubleAnimation Storyboard.Target="{Binding ElementName=deleteIncludeFileButton}"
+                                                                                     Storyboard.TargetProperty="Opacity"
+                                                                                     Duration="0:0:0.25"
+                                                                                     To="1.0"/>
+                                                                </Storyboard>
+                                                            </BeginStoryboard>
+                                                        </EventTrigger>
+                                                        <EventTrigger RoutedEvent="MouseLeave">
+                                                            <BeginStoryboard>
+                                                                <Storyboard>
+                                                                    <DoubleAnimation Storyboard.Target="{Binding ElementName=deleteIncludeFileButton}"
+                                                                                     Storyboard.TargetProperty="Opacity"
+                                                                                     Duration="0:0:0.25"
+                                                                                     To="0.1"/>
+                                                                </Storyboard>
+                                                            </BeginStoryboard>
+                                                        </EventTrigger>
+                                                    </DockPanel.Triggers>
                                                     <ToggleButton DockPanel.Dock="Right" 
                                                                   IsTabStop="False" 
                                                                   Content="Delete"
-                                                                  Name="deleteIncludeFileButton"/>
+                                                                  Name="deleteIncludeFileButton"
+                                                                  Opacity="0.1"/>
                                                     <Popup IsOpen="{Binding ElementName=deleteIncludeFileButton, Path=IsChecked}"
                                                            PlacementTarget="{Binding ElementName=deleteIncludeFileButton}">
                                                         <Border Style="{StaticResource PopupBorderStyle}">
@@ -396,7 +465,8 @@
                       EnableRowVirtualization="True"
                       FrozenColumnCount="1"
                       SelectionMode="Single"
-                      SelectionUnit="FullRow">
+                      SelectionUnit="FullRow"
+                      d:SelectedIndex="0">
                 <DataGrid.InputBindings>
                     <MouseBinding Gesture="LeftDoubleClick"
                                   Command="{Binding OpenFileCommand}"
@@ -404,11 +474,14 @@
                 </DataGrid.InputBindings>
                 <DataGrid.ContextMenu>
                     <ContextMenu>
-                        <MenuItem Header="Open" 
+                        <MenuItem Header="Open File" 
                                   Command="{Binding OpenFileCommand}"
                                   CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"/>
                         <MenuItem Header="Open Folder"
                                   Command="{Binding OpenFolderCommand}"
+                                  CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"/>
+                        <MenuItem Header="Copy Path"
+                                  Command="{Binding CopyPathCommand}"
                                   CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"/>
                     </ContextMenu>
                 </DataGrid.ContextMenu>
@@ -421,21 +494,64 @@
                                         Binding="{Binding RelativePath}"/>
                     <DataGridTextColumn Header="Matches" 
                                         Width="Auto"
-                                        Binding="{Binding TextMatches.Count}"/>
+                                        Binding="{Binding Previews.Count}"/>
                     <DataGridTextColumn Header="Error" 
                                         Width="*"
                                         Binding="{Binding ErrorMessage}"/>
                 </DataGrid.Columns>
             </DataGrid>
-            <TextBox Grid.Row="1"
-                     HorizontalScrollBarVisibility="Auto"
-                     VerticalScrollBarVisibility="Auto"
-                     IsReadOnly="True"
-                     IsReadOnlyCaretVisible="True"
-                     AcceptsReturn="True"
-                     FontFamily="Consolas"
-                     Margin="0"
-                     Text="{Binding ElementName=resultsDataGrid, Path=SelectedItem.PreviewText}"/>
+            <Grid Grid.Row="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" 
+                           Text="{Binding ElementName=resultsDataGrid, Path=SelectedItem.FullPath, StringFormat='Showing previews for file: {0}'}"/>
+                <ScrollViewer Grid.Row="1">
+                    <ItemsControl ItemsSource="{Binding ElementName=resultsDataGrid, Path=SelectedItem.Previews}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border BorderThickness="1"
+                                        BorderBrush="Black"
+                                        Margin="5,2">
+                                    <Grid>
+                                        <Grid.Triggers>
+                                            <EventTrigger RoutedEvent="MouseEnter">
+                                                <BeginStoryboard>
+                                                    <Storyboard>
+                                                        <DoubleAnimation Storyboard.TargetProperty="Opacity" 
+                                                                         Storyboard.Target="{Binding ElementName=CopyButton}"
+                                                                         Duration="0:0:0.25" 
+                                                                         To="1.00"/>
+                                                    </Storyboard>
+                                                </BeginStoryboard>
+                                            </EventTrigger>
+                                            <EventTrigger RoutedEvent="MouseLeave">
+                                                <BeginStoryboard>
+                                                    <Storyboard>
+                                                        <DoubleAnimation Storyboard.TargetProperty="Opacity" 
+                                                                         Storyboard.Target="{Binding ElementName=CopyButton}"
+                                                                         Duration="0:0:0.25" 
+                                                                         To="0.1"/>
+                                                    </Storyboard>
+                                                </BeginStoryboard>
+                                            </EventTrigger>
+                                        </Grid.Triggers>
+                                        <TextBlock Text="{Binding}"
+                                                   Style="{StaticResource PreviewTextBlockStyle}"/>
+                                        <Button Content="Copy This Snippet"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Top"
+                                                Margin="0"
+                                                Opacity="0.1"
+                                                Name="CopyButton"/>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Grid>
         </Grid>
     </Grid>
 

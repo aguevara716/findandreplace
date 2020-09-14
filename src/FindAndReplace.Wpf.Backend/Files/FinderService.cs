@@ -8,8 +8,15 @@ namespace FindAndReplace.Wpf.Backend.Files
 {
     public interface IFinderService
     {
-        Task<TextMatcherResult> FindTextInFileAsync(string filePath, string findText, bool isRegexSearch, bool isUsingEscapeCharacters, bool isCaseSensitive);
-        IEnumerable<TextMatcherResult> FindTextInFiles(IDictionary<string, string> fileContentDictionary, bool isRegexSearch, bool isUsingEscapeCharacters, bool isCaseSensitive);
+        Task<MatchPreviewExtractionResult> FindTextInFileAsync(string filePath, 
+                                                               string findText, 
+                                                               bool isRegexSearch, 
+                                                               bool isUsingEscapeCharacters, 
+                                                               bool isCaseSensitive);
+        IEnumerable<MatchPreviewExtractionResult> FindTextInFiles(IDictionary<string, string> fileContentDictionary, 
+                                                                  bool isRegexSearch, 
+                                                                  bool isUsingEscapeCharacters, 
+                                                                  bool isCaseSensitive);
     }
 
     public class FinderService : IFinderService
@@ -17,28 +24,31 @@ namespace FindAndReplace.Wpf.Backend.Files
         // Dependencies
         private readonly IBinaryFileDetector _binaryFileDetector;
         private readonly IFileReader _fileReader;
+        private readonly IMatchPreviewExtractor _matchPreviewExtractor;
         private readonly ITextMatcher _textMatcher;
 
         // Constructors
         public FinderService(IBinaryFileDetector binaryFileDetector,
                              IFileReader fileReader,
+                             IMatchPreviewExtractor matchPreviewExtractor,
                              ITextMatcher textMatcher)
         {
             _binaryFileDetector = binaryFileDetector;
             _fileReader = fileReader;
+            _matchPreviewExtractor = matchPreviewExtractor;
             _textMatcher = textMatcher;
         }
 
         // Private Methods
-        private TextMatcherResult BuildFailure<T>(BaseResult<T> result)
+        private MatchPreviewExtractionResult BuildFailure<T>(BaseResult<T> result)
         {
-            return TextMatcherResult.CreateFailure<TextMatcherResult>(result.Path,
-                                                                      result.ErrorMessage,
-                                                                      result.Exception);
+            return MatchPreviewExtractionResult.CreateFailure<MatchPreviewExtractionResult>(result.Path,
+                                                                                            result.ErrorMessage,
+                                                                                            result.Exception);
         }
 
         // Public Methods
-        public async Task<TextMatcherResult> FindTextInFileAsync(string filePath,
+        public async Task<MatchPreviewExtractionResult> FindTextInFileAsync(string filePath,
                                                                  string findText,
                                                                  bool isRegexSearch,
                                                                  bool isUsingEscapeCharacters,
@@ -52,7 +62,7 @@ namespace FindAndReplace.Wpf.Backend.Files
             if (!binaryFileDetectionResult.IsSuccessful)
                 return BuildFailure(binaryFileDetectionResult);
             if (binaryFileDetectionResult.IsBinaryFile)
-                return TextMatcherResult.CreateFailure<TextMatcherResult>(filePath, "Binary file detected");
+                return MatchPreviewExtractionResult.CreateFailure<MatchPreviewExtractionResult>(filePath, "Binary file detected");
 
             var fileContentResult = await _fileReader.GetFileContentAsync(filePath);
             if (!fileContentResult.IsSuccessful)
@@ -64,22 +74,28 @@ namespace FindAndReplace.Wpf.Backend.Files
                                                                 isRegexSearch,
                                                                 isUsingEscapeCharacters,
                                                                 isCaseSensitive);
-            return textMatcherResult;
+            if (!textMatcherResult.IsSuccessful)
+                return BuildFailure(textMatcherResult);
+            
+            var matchPreviewExtractionResult = _matchPreviewExtractor.ExtractMatchPreviews(filePath,
+                                                                                           fileContentResult.Content,
+                                                                                           textMatcherResult.TextMatches);
+            return matchPreviewExtractionResult;
         }
 
-        public IEnumerable<TextMatcherResult> FindTextInFiles(IDictionary<string, string> fileContentDictionary,
-                                                              bool isRegexSearch,
-                                                              bool isUsingEscapeCharacters,
-                                                              bool isCaseSensitive)
+        public IEnumerable<MatchPreviewExtractionResult> FindTextInFiles(IDictionary<string, string> fileContentDictionary,
+                                                                         bool isRegexSearch,
+                                                                         bool isUsingEscapeCharacters,
+                                                                         bool isCaseSensitive)
         {
-            var textMatchResultsDictionary = new ConcurrentDictionary<string, TextMatcherResult>();
+            var textMatchResultsDictionary = new ConcurrentDictionary<string, MatchPreviewExtractionResult>();
             Parallel.ForEach(fileContentDictionary, async fileContentKvp =>
             {
                 var filePath = fileContentKvp.Key;
                 var content = fileContentKvp.Value;
 
-                var textMatchResult = await FindTextInFileAsync(filePath, content, isRegexSearch, isUsingEscapeCharacters, isCaseSensitive);
-                textMatchResultsDictionary.AddOrUpdate(filePath, textMatchResult, (fp, oldResult) => textMatchResult);
+                var matchPreviewExtractionResult = await FindTextInFileAsync(filePath, content, isRegexSearch, isUsingEscapeCharacters, isCaseSensitive);
+                textMatchResultsDictionary.AddOrUpdate(filePath, matchPreviewExtractionResult, (fp, oldResult) => matchPreviewExtractionResult);
             });
 
             var textMatchResultsCollection = textMatchResultsDictionary.Values.ToList();

@@ -176,15 +176,22 @@
                                 <Popup IsOpen="{Binding ElementName=addExcludeDirectoryButton, Path=IsChecked}"
                                        PlacementTarget="{Binding ElementName=addExcludeDirectoryButton}">
                                     <Border Style="{StaticResource PopupBorderStyle}">
-                                        <StackPanel Orientation="Horizontal">
-                                            <TextBox Style="{StaticResource IncludeExcludeTextBoxStyle}"
-                                                     Name="addExcludeDirectoryTextBox"
-                                                     KeyDown="OnKeyDown_AddTextBox"/>
-                                            <Button Content="Add"
-                                                    Name="excludeDirectorySaveButton"
-                                                    Click="OnSaveButtonClicked"
-                                                    Command="{Binding AddExcludeDirectoryCommand}"
-                                                    CommandParameter="{Binding ElementName=addExcludeDirectoryTextBox, Path=Text}"/>
+                                        <StackPanel Orientation="Vertical">
+                                            <TextBlock>
+                                                <Run Text="Separate multiple items with a comma."/>
+                                                <LineBreak/>
+                                                <Run Text="Press enter to add the item(s)."/>
+                                            </TextBlock>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBox Style="{StaticResource IncludeExcludeTextBoxStyle}"
+                                                         Name="addExcludeDirectoryTextBox"
+                                                         KeyDown="OnKeyDown_AddTextBox"/>
+                                                <Button Content="Add"
+                                                        Name="excludeDirectorySaveButton"
+                                                        Click="OnSaveButtonClicked"
+                                                        Command="{Binding AddExcludeDirectoryCommand}"
+                                                        CommandParameter="{Binding ElementName=addExcludeDirectoryTextBox, Path=Text}"/>
+                                            </StackPanel>
                                         </StackPanel>
                                     </Border>
                                 </Popup>
@@ -265,15 +272,22 @@
                                 <Popup IsOpen="{Binding ElementName=addExcludeFileButton, Path=IsChecked}"
                                        PlacementTarget="{Binding ElementName=addExcludeFileButton}">
                                     <Border Style="{StaticResource PopupBorderStyle}">
-                                        <StackPanel Orientation="Horizontal">
-                                            <TextBox Style="{StaticResource IncludeExcludeTextBoxStyle}"
-                                                     Name="addExcludeFileTextBox"
-                                                     KeyDown="OnKeyDown_AddTextBox"/>
-                                            <Button Content="Add"
-                                                    Name="excludedFileSaveButton"
-                                                    Click="OnSaveButtonClicked"
-                                                    Command="{Binding AddExcludeFileCommand}"
-                                                    CommandParameter="{Binding ElementName=addExcludeFileTextBox, Path=Text}"/>
+                                        <StackPanel Orientation="Vertical">
+                                            <TextBlock>
+                                                <Run Text="Separate multiple items with a comma."/>
+                                                <LineBreak/>
+                                                <Run Text="Press enter to add the item(s)."/>
+                                            </TextBlock>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBox Style="{StaticResource IncludeExcludeTextBoxStyle}"
+                                                         Name="addExcludeFileTextBox"
+                                                         KeyDown="OnKeyDown_AddTextBox"/>
+                                                <Button Content="Add"
+                                                        Name="excludedFileSaveButton"
+                                                        Click="OnSaveButtonClicked"
+                                                        Command="{Binding AddExcludeFileCommand}"
+                                                        CommandParameter="{Binding ElementName=addExcludeFileTextBox, Path=Text}"/>
+                                            </StackPanel>
                                         </StackPanel>
                                     </Border>
                                 </Popup>
@@ -353,15 +367,22 @@
                                 <Popup IsOpen="{Binding ElementName=addIncludeFileButton, Path=IsChecked}"
                                        PlacementTarget="{Binding ElementName=addIncludeFileButton}">
                                     <Border Style="{StaticResource PopupBorderStyle}">
-                                        <StackPanel Orientation="Horizontal">
-                                            <TextBox Style="{StaticResource IncludeExcludeTextBoxStyle}"
-                                                     Name="addIncludeFileTextBox"
-                                                     KeyDown="OnKeyDown_AddTextBox"/>
-                                            <Button Content="Add"
-                                                    Name="includeFileSaveButton"
-                                                    Click="OnSaveButtonClicked"
-                                                    Command="{Binding AddIncludeFileCommand}"
-                                                    CommandParameter="{Binding ElementName=addIncludeFileTextBox, Path=Text}"/>
+                                        <StackPanel Orientation="Vertical">
+                                            <TextBlock>
+                                                <Run Text="Separate multiple items with a comma."/>
+                                                <LineBreak/>
+                                                <Run Text="Press enter to add the item(s)."/>
+                                            </TextBlock>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBox Style="{StaticResource IncludeExcludeTextBoxStyle}"
+                                                         Name="addIncludeFileTextBox"
+                                                         KeyDown="OnKeyDown_AddTextBox"/>
+                                                <Button Content="Add"
+                                                        Name="includeFileSaveButton"
+                                                        Click="OnSaveButtonClicked"
+                                                        Command="{Binding AddIncludeFileCommand}"
+                                                        CommandParameter="{Binding ElementName=addIncludeFileTextBox, Path=Text}"/>
+                                            </StackPanel>
                                         </StackPanel>
                                     </Border>
                                 </Popup>

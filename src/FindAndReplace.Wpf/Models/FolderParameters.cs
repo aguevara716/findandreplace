@@ -1,13 +1,13 @@
 ﻿using System;
-using System.Collections.ObjectModel;
+using FindAndReplace.Wpf.Backend.Collections;
 using GalaSoft.MvvmLight;
 
 namespace FindAndReplace.Wpf.Models
 {
     public class FolderParameters : ObservableObject
     {
-        private ObservableCollection<String> excludeDirectories;
-        public ObservableCollection<String> ExcludeDirectories
+        private ObservableHashSet<String> excludeDirectories;
+        public ObservableHashSet<String> ExcludeDirectories
         {
             get { return excludeDirectories; }
             set { Set(nameof(ExcludeDirectories), ref excludeDirectories, value); }
@@ -18,8 +18,8 @@ namespace FindAndReplace.Wpf.Models
             get { return String.Join(",", ExcludeDirectories); }
         }
 
-        private ObservableCollection<String> excludeFiles;
-        public ObservableCollection<String> ExcludeFiles
+        private ObservableHashSet<String> excludeFiles;
+        public ObservableHashSet<String> ExcludeFiles
         {
             get { return excludeFiles; }
             set { Set(nameof(ExcludeFiles), ref excludeFiles, value); }
@@ -30,8 +30,8 @@ namespace FindAndReplace.Wpf.Models
             get { return String.Join(",", ExcludeFiles); }
         }
 
-        private ObservableCollection<String> includeFiles;
-        public ObservableCollection<String> IncludeFiles
+        private ObservableHashSet<String> includeFiles;
+        public ObservableHashSet<String> IncludeFiles
         {
             get { return includeFiles; }
             set { Set(nameof(IncludeFiles), ref includeFiles, value); }

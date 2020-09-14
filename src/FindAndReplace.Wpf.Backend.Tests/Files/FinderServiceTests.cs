@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using FindAndReplace.Wpf.Backend.Files;
 using FindAndReplace.Wpf.Backend.Results;
@@ -180,7 +179,7 @@ namespace FindAndReplace.Wpf.Backend.Tests.Files
             receivedTextMatcherResult.IsSuccessful.Should().Be(actualTextMatcherResult.IsSuccessful);
             receivedTextMatcherResult.ErrorMessage.Should().Be(actualTextMatcherResult.ErrorMessage);
             receivedTextMatcherResult.Exception.Should().Be(actualTextMatcherResult.Exception);
-            receivedTextMatcherResult.TextMatches.Should().BeEquivalentTo(actualTextMatcherResult.TextMatches);
+            receivedTextMatcherResult.Previews.Should().BeEquivalentTo(actualTextMatcherResult.TextMatches);
             _fileReader.Received().GetFileSampleData(filePath);
             _binaryFileDetector.Received().CheckIsBinaryFile(filePath, Arg.Any<byte[]>());
             _ = _fileReader.Received().GetFileContentAsync(filePath);

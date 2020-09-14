@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace FindAndReplace.Wpf.Backend.Extensions
@@ -25,10 +26,25 @@ namespace FindAndReplace.Wpf.Backend.Extensions
             return normalizedString;
         }
 
+        public static string[] SplitAndTrim(this string @string, string separator)
+        {
+            if (string.IsNullOrEmpty(separator))
+                return new[] { @string.Trim() };
+
+            var stringArray = @string.Split(separator).TrimItemsInArray();
+            return stringArray;
+        }
+
         public static string[] SplitOnNewline(this string @string)
         {
             var lines = @string.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
             return lines;
+        }
+
+        public static string[] TrimItemsInArray(this string[] stringArray)
+        {
+            var trimmedArray = stringArray.Select(s => s.Trim()).ToArray();
+            return trimmedArray;
         }
 
     }

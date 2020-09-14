@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using FindAndReplace.Wpf.Backend.Extensions;
 using FluentAssertions;
 using NUnit.Framework;
@@ -134,6 +133,64 @@ namespace FindAndReplace.Wpf.Backend.Tests.Extensions
             }
         }
 
+        // string[] SplitAndTrim(this string @string, string delimiter)
+        [Test]
+        public void SplitAndTrim_Should_ThrowExceptionIfInputStringIsNull()
+        {
+            string inputString = null;
+            var separator = "|";
+
+            var splitAndTrimAction = new Action(() => inputString.SplitAndTrim(separator));
+
+            splitAndTrimAction.Should().Throw<Exception>();
+        }
+
+        [Test]
+        [TestCase(true)]
+        [TestCase(false)]
+        public void SplitAndTrim_Should_ReturnOriginalStringIfSeparatorIsNullOrEmpty(bool isNull)
+        {
+            var inputString = "abc|def";
+            var separator = isNull
+                ? null
+                : string.Empty;
+
+            var splitString = inputString.SplitAndTrim(separator);
+
+            splitString.Should().HaveCount(1);
+            splitString[0].Should().Be(inputString);
+        }
+
+        [Test]
+        public void SplitAndTrim_Should_SplitInputStringViaSeparator()
+        {
+            var firstString = "asdf";
+            var secondString = "jkl;";
+            var separator = ",";
+            var inputString = $"{firstString}{separator}{secondString}";
+
+            var splitString = inputString.SplitAndTrim(separator);
+
+            splitString.Should().HaveCount(2);
+            splitString[0].Should().Be(firstString);
+            splitString[1].Should().Be(secondString);
+        }
+
+        [Test]
+        public void SplitAndTrim_Should_TrimEachSubstring()
+        {
+            var firstString = "asdf";
+            var secondString = "jkl;";
+            var separator = ",";
+            var inputString = $"   {firstString}    {separator} {secondString}   ";
+
+            var splitString = inputString.SplitAndTrim(separator);
+
+            splitString.Should().HaveCount(2);
+            splitString[0].Should().Be(firstString);
+            splitString[1].Should().Be(secondString);
+        }
+
         // string[] SplitOnNewline(this string @string)
         [Test]
         public void SplitOnNewline_Should_ThrowExceptionForNullStrings()
@@ -185,6 +242,61 @@ namespace FindAndReplace.Wpf.Backend.Tests.Extensions
             lines[2].Should().Be(thirdLine);
             lines[3].Should().Be(fourthLine);
             lines[4].Should().Be(fifthLine);
+        }
+
+        // string[] TrimItemsInArray(this string[] stringArray)
+        [Test]
+        public void TrimItemsInArray_Should_ThrowExceptionIfInputArrayIsNull()
+        {
+            string[] inputArray = null;
+
+            var trimItemsInArrayAction = new Action(() => inputArray.TrimItemsInArray());
+
+            trimItemsInArrayAction.Should().Throw<ArgumentNullException>();
+        }
+
+        [Test]
+        public void TrimItemsInArray_Should_HandleEmptyInputArray()
+        {
+            var inputArray = Enumerable.Empty<string>().ToArray();
+
+            var trimmedArray = inputArray.TrimItemsInArray();
+
+            trimmedArray.Should().BeEmpty();
+        }
+
+        [Test]
+        public void TrimItemsInArray_Should_ReturnOriginalArrayIfTrimNotNecessary()
+        {
+            var inputArray = new[]
+            {
+                Guid.NewGuid().ToString(),
+                Guid.NewGuid().ToString(),
+                Guid.NewGuid().ToString(),
+                Guid.NewGuid().ToString()
+            };
+
+            var trimmedArray = inputArray.TrimItemsInArray();
+
+            trimmedArray.Should().BeEquivalentTo(inputArray);
+        }
+
+        [Test]
+        public void TrimItemsInArray_Should_TrimItemsInInputArray()
+        {
+            var firstItem = "asdf";
+            var secondItem = "jkl;";
+            var inputArray = new[]
+            {
+                $" {firstItem}      ",
+                $"   {secondItem} "
+            };
+
+            var trimmedArray = inputArray.TrimItemsInArray();
+
+            trimmedArray.Should().HaveSameCount(inputArray);
+            trimmedArray[0].Should().Be(firstItem);
+            trimmedArray[1].Should().Be(secondItem);
         }
 
     }

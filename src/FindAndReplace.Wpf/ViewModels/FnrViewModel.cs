@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using FindAndReplace.Wpf.Backend.Collections;
+using FindAndReplace.Wpf.Backend.Extensions;
 using FindAndReplace.Wpf.Backend.Files;
 using FindAndReplace.Wpf.Backend.Filesystem;
 using FindAndReplace.Wpf.Backend.Results;
@@ -308,7 +309,7 @@ namespace FindAndReplace.Wpf.ViewModels
             if (String.IsNullOrEmpty(newExcludeDirectory))
                 return;
 
-            var newExcludeDirectories = newExcludeDirectory.Split(",").Select(s => s.Trim());
+            var newExcludeDirectories = newExcludeDirectory.SplitAndTrim(",");
             FolderParameters.ExcludeDirectories.AddRange(newExcludeDirectories);
             FolderParameters.ExcludeDirectories = new ObservableHashSet<String>(FolderParameters.ExcludeDirectories.OrderBy(s => s));
         }
@@ -323,7 +324,7 @@ namespace FindAndReplace.Wpf.ViewModels
             if (String.IsNullOrEmpty(newExcludeFile))
                 return;
 
-            var newExcludeFiles = newExcludeFile.Split(",").Select(s => s.Trim());
+            var newExcludeFiles = newExcludeFile.SplitAndTrim(",");
             FolderParameters.ExcludeFiles.AddRange(newExcludeFiles);
             FolderParameters.ExcludeFiles = new ObservableHashSet<String>(FolderParameters.ExcludeFiles.OrderBy(s => s));
         }
@@ -338,7 +339,7 @@ namespace FindAndReplace.Wpf.ViewModels
             if (String.IsNullOrEmpty(newIncludeFile))
                 return;
 
-            var newIncludeFiles = newIncludeFile.Split(",").Select(s => s.Trim());
+            var newIncludeFiles = newIncludeFile.SplitAndTrim(",");
             FolderParameters.IncludeFiles.AddRange(newIncludeFiles);
             FolderParameters.IncludeFiles = new ObservableHashSet<String>(FolderParameters.IncludeFiles.OrderBy(s => s));
         }

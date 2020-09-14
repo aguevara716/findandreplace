@@ -308,7 +308,8 @@ namespace FindAndReplace.Wpf.ViewModels
             if (String.IsNullOrEmpty(newExcludeDirectory))
                 return;
 
-            FolderParameters.ExcludeDirectories.Add(newExcludeDirectory);
+            var newExcludeDirectories = newExcludeDirectory.Split(",").Select(s => s.Trim());
+            FolderParameters.ExcludeDirectories.AddRange(newExcludeDirectories);
             FolderParameters.ExcludeDirectories = new ObservableHashSet<String>(FolderParameters.ExcludeDirectories.OrderBy(s => s));
         }
 
@@ -321,8 +322,9 @@ namespace FindAndReplace.Wpf.ViewModels
         {
             if (String.IsNullOrEmpty(newExcludeFile))
                 return;
-            
-            FolderParameters.ExcludeFiles.Add(newExcludeFile);
+
+            var newExcludeFiles = newExcludeFile.Split(",").Select(s => s.Trim());
+            FolderParameters.ExcludeFiles.AddRange(newExcludeFiles);
             FolderParameters.ExcludeFiles = new ObservableHashSet<String>(FolderParameters.ExcludeFiles.OrderBy(s => s));
         }
 
@@ -335,8 +337,9 @@ namespace FindAndReplace.Wpf.ViewModels
         {
             if (String.IsNullOrEmpty(newIncludeFile))
                 return;
-            
-            FolderParameters.IncludeFiles.Add(newIncludeFile);
+
+            var newIncludeFiles = newIncludeFile.Split(",").Select(s => s.Trim());
+            FolderParameters.IncludeFiles.AddRange(newIncludeFiles);
             FolderParameters.IncludeFiles = new ObservableHashSet<String>(FolderParameters.IncludeFiles.OrderBy(s => s));
         }
 

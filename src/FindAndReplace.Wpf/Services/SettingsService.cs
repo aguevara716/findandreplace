@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using FindAndReplace.Wpf.Backend.Collections;
 using FindAndReplace.Wpf.Models;
 using FindAndReplace.Wpf.Properties;
 
@@ -37,9 +38,9 @@ namespace FindAndReplace.Wpf.Services
 
             var folderParameters = new FolderParameters
             {
-                ExcludeDirectories = new ObservableCollection<String>(excludeDirectoriesCollection),
-                ExcludeFiles = new ObservableCollection<String>(excludeFilesCollection),
-                IncludeFiles = new ObservableCollection<string>(includeFilesCollection),
+                ExcludeDirectories = new ObservableHashSet<string>(excludeDirectoriesCollection),
+                ExcludeFiles = new ObservableHashSet<string>(excludeFilesCollection),
+                IncludeFiles = new ObservableHashSet<string>(includeFilesCollection),
                 IsRecursive = Settings.Default.IsRecursive,
                 RootDirectory = Settings.Default.RootDirectory,
             };

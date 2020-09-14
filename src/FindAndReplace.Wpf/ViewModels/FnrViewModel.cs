@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using FindAndReplace.Wpf.Backend.Collections;
 using FindAndReplace.Wpf.Backend.Files;
 using FindAndReplace.Wpf.Backend.Filesystem;
 using FindAndReplace.Wpf.Backend.Results;
@@ -207,9 +208,9 @@ namespace FindAndReplace.Wpf.ViewModels
 
             var startTime = DateTime.Now;
             var fileDiscoveryResult = await _fileDiscoverer.DiscoverFilesAsync(FolderParameters.RootDirectory,
-                                                                               FolderParameters.IncludeFiles,
-                                                                               FolderParameters.ExcludeDirectories,
-                                                                               FolderParameters.ExcludeFiles,
+                                                                               FolderParameters.IncludeFiles.ToList(),
+                                                                               FolderParameters.ExcludeDirectories.ToList(),
+                                                                               FolderParameters.ExcludeFiles.ToList(),
                                                                                FolderParameters.IsRecursive);
             ProcessStatus.EllapsedTime = DateTime.Now - startTime;
             Status = $"Found {fileDiscoveryResult.Files?.Count ?? 0:N0} files in {ProcessStatus.EllapsedTime.TotalMilliseconds:N0} ms";
@@ -306,11 +307,9 @@ namespace FindAndReplace.Wpf.ViewModels
         {
             if (String.IsNullOrEmpty(newExcludeDirectory))
                 return;
-            if (FolderParameters.ExcludeDirectories.Contains(newExcludeDirectory))
-                return;
 
             FolderParameters.ExcludeDirectories.Add(newExcludeDirectory);
-            FolderParameters.ExcludeDirectories = new ObservableCollection<String>(FolderParameters.ExcludeDirectories.OrderBy(s => s));
+            FolderParameters.ExcludeDirectories = new ObservableHashSet<String>(FolderParameters.ExcludeDirectories.OrderBy(s => s));
         }
 
         private void RemoveExcludeDirectoryExecuted(string excludedDirectory)
@@ -322,11 +321,9 @@ namespace FindAndReplace.Wpf.ViewModels
         {
             if (String.IsNullOrEmpty(newExcludeFile))
                 return;
-            if (FolderParameters.ExcludeFiles.Contains(newExcludeFile))
-                return;
-
+            
             FolderParameters.ExcludeFiles.Add(newExcludeFile);
-            FolderParameters.ExcludeFiles = new ObservableCollection<String>(FolderParameters.ExcludeFiles.OrderBy(s => s));
+            FolderParameters.ExcludeFiles = new ObservableHashSet<String>(FolderParameters.ExcludeFiles.OrderBy(s => s));
         }
 
         private void RemoveExcludeFileExecuted(string excludedFile)
@@ -338,11 +335,9 @@ namespace FindAndReplace.Wpf.ViewModels
         {
             if (String.IsNullOrEmpty(newIncludeFile))
                 return;
-            if (FolderParameters.IncludeFiles.Contains(newIncludeFile))
-                return;
-
+            
             FolderParameters.IncludeFiles.Add(newIncludeFile);
-            FolderParameters.IncludeFiles = new ObservableCollection<String>(FolderParameters.IncludeFiles.OrderBy(s => s));
+            FolderParameters.IncludeFiles = new ObservableHashSet<String>(FolderParameters.IncludeFiles.OrderBy(s => s));
         }
 
         private void RemoveIncludeFileExecuted(string includeFile)

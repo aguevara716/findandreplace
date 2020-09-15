@@ -20,5 +20,6 @@ namespace FindAndReplace.Wpf.ModelFactories
             for (var index = 0; index < count; index++)
                 yield return GetReplaceParameters(index + 1);
         }
+
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using FindAndReplace.Wpf.Backend.Collections;
 using FindAndReplace.Wpf.Models;

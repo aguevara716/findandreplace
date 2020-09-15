@@ -32,13 +32,6 @@ namespace FindAndReplace.Wpf.Models
             set { Set(nameof(IsRegex), ref isRegex, value); }
         }
 
-        private bool isRetainingModifiedDate;
-        public bool IsRetainingModifiedDate
-        {
-            get { return isRetainingModifiedDate; }
-            set { Set(nameof(IsRetainingModifiedDate), ref isRetainingModifiedDate, value); }
-        }
-
         private bool isSearchingFilenameOnly;
         public bool IsSearchingFilenameOnly 
         {

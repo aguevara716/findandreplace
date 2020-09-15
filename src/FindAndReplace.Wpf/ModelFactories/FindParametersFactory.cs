@@ -13,7 +13,6 @@ namespace FindAndReplace.Wpf.ModelFactories
                 IsCaseSensitive = seed % 2 == 0,
                 IsOnlyShowingFilesWithoutMatches = seed % 2 == 0,
                 IsRegex = seed % 2 == 0,
-                IsRetainingModifiedDate = seed % 2 == 0,
                 IsSearchingFilenameOnly = seed % 2 == 0,
                 IsUsingEscapeCharacters = seed % 2 == 0
             };

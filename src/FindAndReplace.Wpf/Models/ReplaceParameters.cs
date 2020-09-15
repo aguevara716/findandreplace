@@ -4,6 +4,13 @@ namespace FindAndReplace.Wpf.Models
 {
     public class ReplaceParameters : ObservableObject
     {
+        private bool isRetainingModifiedDate;
+        public bool IsRetainingModifiedDate
+        {
+            get { return isRetainingModifiedDate; }
+            set { Set(nameof(IsRetainingModifiedDate), ref isRetainingModifiedDate, value); }
+        }
+
         private string replaceString;
         public string ReplaceString
         {

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using FindAndReplace.Wpf.Backend.Collections;
 using FindAndReplace.Wpf.Models;
@@ -50,12 +49,12 @@ namespace FindAndReplace.Wpf.Services
                 IsCaseSensitive = Settings.Default.IsCaseSensitive,
                 IsOnlyShowingFilesWithoutMatches = Settings.Default.IsOnlyShowingFilesWithoutMatches,
                 IsRegex = Settings.Default.IsRegex,
-                IsRetainingModifiedDate = Settings.Default.IsRetainingModifiedDate,
                 IsSearchingFilenameOnly = Settings.Default.IsSearchingFilenameOnly,
                 IsUsingEscapeCharacters = Settings.Default.IsUsingEscapeCharacters
             };
             var replaceParameters = new ReplaceParameters
             {
+                IsRetainingModifiedDate = Settings.Default.IsRetainingModifiedDate,
                 ReplaceString = Settings.Default.ReplaceString
             };
 
@@ -77,11 +76,11 @@ namespace FindAndReplace.Wpf.Services
             Settings.Default.IsCaseSensitive = findParameters.IsCaseSensitive;
             Settings.Default.IsOnlyShowingFilesWithoutMatches = findParameters.IsOnlyShowingFilesWithoutMatches;
             Settings.Default.IsRegex = findParameters.IsRegex;
-            Settings.Default.IsRetainingModifiedDate = findParameters.IsRetainingModifiedDate;
             Settings.Default.IsSearchingFilenameOnly = findParameters.IsSearchingFilenameOnly;
             Settings.Default.IsUsingEscapeCharacters = findParameters.IsUsingEscapeCharacters;
 
             // Replace Parameters
+            Settings.Default.IsRetainingModifiedDate = replaceParameters.IsRetainingModifiedDate;
             Settings.Default.ReplaceString = replaceParameters.ReplaceString;
 
             Settings.Default.Save();

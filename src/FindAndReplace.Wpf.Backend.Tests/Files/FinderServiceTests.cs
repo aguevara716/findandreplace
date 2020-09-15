@@ -146,9 +146,7 @@ namespace FindAndReplace.Wpf.Backend.Tests.Files
         }
 
         [Test]
-        [TestCase(true)]
-        [TestCase(false)]
-        public async Task FindTextInFile_Should_ReturnResultValueFromTextMatcher(bool isSuccessful)
+        public async Task FindTextInFile_Should_ReturnFailureIfTextMatcherFails()
         {
             var filePath = Guid.NewGuid().ToString();
             var findText = Guid.NewGuid().ToString();
@@ -159,19 +157,7 @@ namespace FindAndReplace.Wpf.Backend.Tests.Files
             _binaryFileDetector.CheckIsBinaryFile(filePath, Arg.Any<byte[]>()).ReturnsForAnyArgs(BinaryFileDetectionResult.CreateSuccess<BinaryFileDetectionResult>(filePath, false));
             var fileContent = Guid.NewGuid().ToString();
             _fileReader.GetFileContentAsync(filePath).Returns(FileContentResult.CreateSuccess<FileContentResult>(filePath, fileContent));
-            TextMatcherResult actualTextMatcherResult;
-            if (isSuccessful)
-            {
-                var textMatches = new List<TextMatch>
-                {
-                    new TextMatch{StartIndex = 123, Length = 100 }
-                };
-                actualTextMatcherResult = TextMatcherResult.CreateSuccess<TextMatcherResult>(filePath, textMatches);
-            }
-            else
-            {
-                actualTextMatcherResult = TextMatcherResult.CreateFailure<TextMatcherResult>(filePath, Guid.NewGuid().ToString(), new Exception(Guid.NewGuid().ToString()));
-            }
+            var actualTextMatcherResult = TextMatcherResult.CreateFailure<TextMatcherResult>(filePath, Guid.NewGuid().ToString(), new Exception(Guid.NewGuid().ToString()));
             _textMatcher.FindTextInFile(filePath, findText, fileContent, isRegexSearch, isUsingEscapeCharacters, isCaseSensitive).Returns(actualTextMatcherResult);
 
             var receivedTextMatcherResult = await _finderService.FindTextInFileAsync(filePath, findText, isRegexSearch, isUsingEscapeCharacters, isCaseSensitive);
@@ -184,6 +170,50 @@ namespace FindAndReplace.Wpf.Backend.Tests.Files
             _binaryFileDetector.Received().CheckIsBinaryFile(filePath, Arg.Any<byte[]>());
             _ = _fileReader.Received().GetFileContentAsync(filePath);
             _textMatcher.Received().FindTextInFile(filePath, findText, fileContent, isRegexSearch, isUsingEscapeCharacters, isCaseSensitive);
+        }
+
+        [Test]
+        public async Task FindTextInFile_Should_ReturnFailureIfMatchPreviewExtractorFails()
+        {
+            var filePath = Guid.NewGuid().ToString();
+            var findText = Guid.NewGuid().ToString();
+            var isRegexSearch = true;
+            var isUsingEscapeCharacters = true;
+            var isCaseSensitive = true;
+            _fileReader.GetFileSampleData(filePath).ReturnsForAnyArgs(FileSampleResult.CreateSuccess<FileSampleResult>(filePath, null));
+            _binaryFileDetector.CheckIsBinaryFile(filePath, Arg.Any<byte[]>()).ReturnsForAnyArgs(BinaryFileDetectionResult.CreateSuccess<BinaryFileDetectionResult>(filePath, false));
+            var fileContent = Guid.NewGuid().ToString();
+            _fileReader.GetFileContentAsync(filePath).Returns(FileContentResult.CreateSuccess<FileContentResult>(filePath, fileContent));
+            _textMatcher.FindTextInFile(filePath, findText, fileContent, isRegexSearch, isUsingEscapeCharacters, isCaseSensitive).Returns(TextMatcherResult.CreateSuccess<TextMatcherResult>(filePath, new List<TextMatch>()));
+            _matchPreviewExtractor.ExtractMatchPreviews(filePath, fileContent, Arg.Any<IList<TextMatch>>()).Returns(MatchPreviewExtractionResult.CreateFailure<MatchPreviewExtractionResult>(filePath, Guid.NewGuid().ToString(), new Exception(Guid.NewGuid().ToString())));
+
+            var receivedMatchPreviewExtractionResult = await _finderService.FindTextInFileAsync(filePath, findText, isRegexSearch, isUsingEscapeCharacters, isCaseSensitive);
+
+            receivedMatchPreviewExtractionResult.IsSuccessful.Should().BeFalse();
+            receivedMatchPreviewExtractionResult.ErrorMessage.Should().NotBeNullOrEmpty();
+            receivedMatchPreviewExtractionResult.Exception.Should().NotBeNull();
+            receivedMatchPreviewExtractionResult.Previews.Should().BeNullOrEmpty();
+        }
+
+        [Test]
+        public async Task FindTextInFile_Should_ReturnMatchPreviewExtractionResultIfSuccessful()
+        {
+            var filePath = Guid.NewGuid().ToString();
+            var findText = Guid.NewGuid().ToString();
+            var isRegexSearch = true;
+            var isUsingEscapeCharacters = true;
+            var isCaseSensitive = true;
+            _fileReader.GetFileSampleData(filePath).ReturnsForAnyArgs(FileSampleResult.CreateSuccess<FileSampleResult>(filePath, null));
+            _binaryFileDetector.CheckIsBinaryFile(filePath, Arg.Any<byte[]>()).ReturnsForAnyArgs(BinaryFileDetectionResult.CreateSuccess<BinaryFileDetectionResult>(filePath, false));
+            var fileContent = Guid.NewGuid().ToString();
+            _fileReader.GetFileContentAsync(filePath).Returns(FileContentResult.CreateSuccess<FileContentResult>(filePath, fileContent));
+            _textMatcher.FindTextInFile(filePath, findText, fileContent, isRegexSearch, isUsingEscapeCharacters, isCaseSensitive).Returns(TextMatcherResult.CreateSuccess<TextMatcherResult>(filePath, new List<TextMatch>()));
+            var matchPreviewExtractionResult = MatchPreviewExtractionResult.CreateSuccess<MatchPreviewExtractionResult>(filePath, new List<string>() { Guid.NewGuid().ToString() });
+            _matchPreviewExtractor.ExtractMatchPreviews(filePath, fileContent, Arg.Any<IList<TextMatch>>()).Returns(matchPreviewExtractionResult);
+
+            var receivedMatchPreviewExtractionResult = await _finderService.FindTextInFileAsync(filePath, findText, isRegexSearch, isUsingEscapeCharacters, isCaseSensitive);
+
+            receivedMatchPreviewExtractionResult.Should().Be(matchPreviewExtractionResult);
         }
 
         // IEnumerable<TextMatcherResult> FindTextInFiles(IDictionary<string, string> fileContentDictionary, bool isRegexSearch, bool isUsingEscapeCharacters, bool isCaseSensitive);

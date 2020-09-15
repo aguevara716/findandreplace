@@ -93,7 +93,7 @@ namespace FindAndReplace.Wpf.Backend.Tests.Files
         }
 
         [Test]
-        public void ExtractMatchPreviews_Should_Thing()
+        public void ExtractMatchPreviews_Should_ReturnSnippetWithLineNumbers()
         {
             // Data is from a real execution of fnr.exe
             var filePath = "asdf";
@@ -106,7 +106,7 @@ namespace FindAndReplace.Wpf.Backend.Tests.Files
                     StartIndex = 473
                 }
             };
-            var expectedPreviewText = "14 namespace EnergyPi.Web\r\n15 {\r\n16     public class Startup\r\n17     {\r\n18         public Startup(IConfiguration configuration)\r\n";
+            var expectedPreviewText = "14|namespace EnergyPi.Web\r\n15|{\r\n16|    public class Startup\r\n17|    {\r\n18|        public Startup(IConfiguration configuration)\r\n";
 
             var actualPreviewResult = _matchPreviewExtractor.ExtractMatchPreviews(filePath, fileContent, textMatches);
 

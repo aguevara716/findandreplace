@@ -421,8 +421,6 @@
                                                       IsChecked="{Binding FindParameters.IsCaseSensitive}"/>
                                             <CheckBox Content="Use regular expressions" 
                                                       IsChecked="{Binding FindParameters.IsRegex}"/>
-                                            <CheckBox Content="Keep modified date" 
-                                                      IsChecked="{Binding FindParameters.IsRetainingModifiedDate}"/>
                                             <CheckBox Content="Use escape chars" 
                                                       IsChecked="{Binding FindParameters.IsUsingEscapeCharacters}"/>
                                             <Button Content="Swap &quot;Find&quot; and &quot;Replace&quot; Text" 

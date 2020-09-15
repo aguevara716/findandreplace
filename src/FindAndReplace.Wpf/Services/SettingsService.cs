@@ -50,7 +50,6 @@ namespace FindAndReplace.Wpf.Services
                 IsCaseSensitive = Settings.Default.IsCaseSensitive,
                 IsOnlyShowingFilesWithoutMatches = Settings.Default.IsOnlyShowingFilesWithoutMatches,
                 IsRegex = Settings.Default.IsRegex,
-                IsRetainingModifiedDate = Settings.Default.IsRetainingModifiedDate,
                 IsSearchingFilenameOnly = Settings.Default.IsSearchingFilenameOnly,
                 IsUsingEscapeCharacters = Settings.Default.IsUsingEscapeCharacters
             };
@@ -77,7 +76,6 @@ namespace FindAndReplace.Wpf.Services
             Settings.Default.IsCaseSensitive = findParameters.IsCaseSensitive;
             Settings.Default.IsOnlyShowingFilesWithoutMatches = findParameters.IsOnlyShowingFilesWithoutMatches;
             Settings.Default.IsRegex = findParameters.IsRegex;
-            Settings.Default.IsRetainingModifiedDate = findParameters.IsRetainingModifiedDate;
             Settings.Default.IsSearchingFilenameOnly = findParameters.IsSearchingFilenameOnly;
             Settings.Default.IsUsingEscapeCharacters = findParameters.IsUsingEscapeCharacters;
 

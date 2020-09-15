@@ -55,6 +55,7 @@ namespace FindAndReplace.Wpf.Services
             };
             var replaceParameters = new ReplaceParameters
             {
+                IsRetainingModifiedDate = Settings.Default.IsRetainingModifiedDate,
                 ReplaceString = Settings.Default.ReplaceString
             };
 
@@ -80,6 +81,7 @@ namespace FindAndReplace.Wpf.Services
             Settings.Default.IsUsingEscapeCharacters = findParameters.IsUsingEscapeCharacters;
 
             // Replace Parameters
+            Settings.Default.IsRetainingModifiedDate = replaceParameters.IsRetainingModifiedDate;
             Settings.Default.ReplaceString = replaceParameters.ReplaceString;
 
             Settings.Default.Save();

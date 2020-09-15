@@ -451,6 +451,9 @@
 
                         <DockPanel Grid.Column="1" LastChildFill="True">
                             <Grid DockPanel.Dock="Bottom" Margin="0 -5 0 5">
+                                <CheckBox HorizontalAlignment="Left" 
+                                          Content="Keep modified date" 
+                                          IsChecked="{Binding ReplaceParameters.IsRetainingModifiedDate}"/>
                                 <Button HorizontalAlignment="Right"
                                         Content="Replace"
                                         Command="{Binding ReplaceCommand}"/>

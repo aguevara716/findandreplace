@@ -28,7 +28,7 @@
                                Text="{Binding Results.Count, StringFormat='Records: {0:N0}'}"/>
                     <Button DockPanel.Dock="Right" 
                             Content="Cancel" 
-                    Command="{Binding CancelCommand}"/>
+                            Command="{Binding CancelCommand}"/>
                     <ProgressBar DockPanel.Dock="Left" 
                             Margin="5" 
                             Maximum="{Binding ProcessStatus.TotalFilesCount}" 

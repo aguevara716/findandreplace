@@ -30,6 +30,7 @@ namespace FindAndReplace.Wpf.ViewModels
 
         // Variables
         private bool isRunning;
+        private bool isCancelRequested;
 
         // Binding Variables
         private FolderParameters folderParameters;
@@ -143,6 +144,7 @@ namespace FindAndReplace.Wpf.ViewModels
             Status = String.Empty;
 
             isRunning = false;
+            isCancelRequested = false;
         }
 
         private void UpdateIsRunning(bool isRunning)
@@ -151,6 +153,7 @@ namespace FindAndReplace.Wpf.ViewModels
                 Status = "Getting file list...";
 
             this.isRunning = isRunning;
+            isCancelRequested = false;
             FindCommand.RaiseCanExecuteChanged();
             ReplaceCommand.RaiseCanExecuteChanged();
             CancelCommand.RaiseCanExecuteChanged();
@@ -228,6 +231,11 @@ namespace FindAndReplace.Wpf.ViewModels
             Results = new ObservableCollection<FileResult>();
             foreach (var filePath in fileDiscoveryResult.Files)
             {
+                if (isCancelRequested)
+                {
+                    Status = "Cancelled";
+                    break;
+                }
                 Status = $"Scanning file \"{filePath}\"";
 
                 MatchPreviewExtractionResult matchPreviewExtractionResult;
@@ -255,7 +263,8 @@ namespace FindAndReplace.Wpf.ViewModels
                 ProcessStatus.EllapsedTime = DateTime.Now - startTime;
             }
 
-            Status = "Finished";
+            if (!isCancelRequested)
+                Status = "Finished";
             UpdateIsRunning(false);
         }
 
@@ -267,7 +276,7 @@ namespace FindAndReplace.Wpf.ViewModels
 
         private void CancelExecuted()
         {
-
+            isCancelRequested = true;
         }
 
         private void SwapExecuted()

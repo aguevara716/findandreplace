@@ -14,6 +14,7 @@ namespace FindAndReplace.Wpf.ModelFactories
                 IsOnlyShowingFilesWithoutMatches = seed % 2 == 0,
                 IsRegex = seed % 2 == 0,
                 IsSearchingFilenameOnly = seed % 2 == 0,
+                IsShowingErrors = seed % 2 == 0,
                 IsUsingEscapeCharacters = seed % 2 == 0
             };
             return fp;

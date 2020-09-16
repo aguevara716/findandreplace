@@ -417,6 +417,8 @@
                                                       IsChecked="{Binding FindParameters.IsSearchingFilenameOnly}"/>
                                             <CheckBox Content="Only show files without matches"
                                                       IsChecked="{Binding FindParameters.IsOnlyShowingFilesWithoutMatches}"/>
+                                            <CheckBox Content="Include files with errors"
+                                                      IsChecked="{Binding FindParameters.IsShowingErrors}"/>
                                             <CheckBox Content="Case sensitive" 
                                                       IsChecked="{Binding FindParameters.IsCaseSensitive}"/>
                                             <CheckBox Content="Use regular expressions" 

@@ -257,8 +257,9 @@ namespace FindAndReplace.Wpf.ViewModels
                     Results.Add(fileResult);
                 
                 ProcessStatus.FilesProcessedCount++;
+                ProcessStatus.FilesFailedToOpenCount += !matchPreviewExtractionResult.IsSuccessful ? 1 : 0;
                 ProcessStatus.FilesWithMatchesCount += matchPreviewExtractionResult.IsSuccessful && matchPreviewExtractionResult.Previews.Any() ? 1 : 0;
-                ProcessStatus.FilesWithoutMatchesCount += !matchPreviewExtractionResult.IsSuccessful || !matchPreviewExtractionResult.Previews.Any() ? 1 : 0;
+                ProcessStatus.FilesWithoutMatchesCount += (!matchPreviewExtractionResult.Previews?.Any() ?? false) ? 1 : 0;
                 ProcessStatus.MatchesCount += matchPreviewExtractionResult.Previews?.Count ?? 0;
                 ProcessStatus.EllapsedTime = DateTime.Now - startTime;
             }

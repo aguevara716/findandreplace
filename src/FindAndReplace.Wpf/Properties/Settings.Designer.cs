@@ -178,5 +178,17 @@ namespace FindAndReplace.Wpf.Properties {
                 this["IsSearchingFilenameOnly"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool IsShowingErrors {
+            get {
+                return ((bool)(this["IsShowingErrors"]));
+            }
+            set {
+                this["IsShowingErrors"] = value;
+            }
+        }
     }
 }

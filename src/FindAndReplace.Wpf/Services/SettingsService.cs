@@ -50,6 +50,7 @@ namespace FindAndReplace.Wpf.Services
                 IsOnlyShowingFilesWithoutMatches = Settings.Default.IsOnlyShowingFilesWithoutMatches,
                 IsRegex = Settings.Default.IsRegex,
                 IsSearchingFilenameOnly = Settings.Default.IsSearchingFilenameOnly,
+                IsShowingErrors = Settings.Default.IsShowingErrors,
                 IsUsingEscapeCharacters = Settings.Default.IsUsingEscapeCharacters
             };
             var replaceParameters = new ReplaceParameters
@@ -77,6 +78,7 @@ namespace FindAndReplace.Wpf.Services
             Settings.Default.IsOnlyShowingFilesWithoutMatches = findParameters.IsOnlyShowingFilesWithoutMatches;
             Settings.Default.IsRegex = findParameters.IsRegex;
             Settings.Default.IsSearchingFilenameOnly = findParameters.IsSearchingFilenameOnly;
+            Settings.Default.IsShowingErrors = findParameters.IsShowingErrors;
             Settings.Default.IsUsingEscapeCharacters = findParameters.IsUsingEscapeCharacters;
 
             // Replace Parameters

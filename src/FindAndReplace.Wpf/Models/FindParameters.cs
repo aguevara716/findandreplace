@@ -39,6 +39,13 @@ namespace FindAndReplace.Wpf.Models
             set { Set(nameof(IsSearchingFilenameOnly), ref isSearchingFilenameOnly, value); }
         }
 
+        private bool isShowingErrors;
+        public bool IsShowingErrors
+        {
+            get { return isShowingErrors; }
+            set { Set(nameof(IsShowingErrors), ref isShowingErrors, value); }
+        }
+
         private bool isUsingEscapeCharacters;
         public bool IsUsingEscapeCharacters
         {

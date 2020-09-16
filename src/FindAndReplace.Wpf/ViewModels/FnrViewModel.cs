@@ -249,7 +249,7 @@ namespace FindAndReplace.Wpf.ViewModels
                 fileResult.HasError = !String.IsNullOrEmpty(fileResult.ErrorMessage);
                 fileResult.Previews = matchPreviewExtractionResult.Previews?.ToList();
 
-                var shouldAddResult = fileResult.HasError ||
+                var shouldAddResult = (FindParameters.IsShowingErrors && fileResult.HasError) ||
                                       FindParameters.IsSearchingFilenameOnly ||
                                       (!FindParameters.IsOnlyShowingFilesWithoutMatches && (fileResult.Previews?.Any() ?? false)) ||
                                       (FindParameters.IsOnlyShowingFilesWithoutMatches && (!fileResult.Previews?.Any() ?? true));

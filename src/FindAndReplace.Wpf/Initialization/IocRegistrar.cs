@@ -33,6 +33,7 @@ namespace FindAndReplace.Wpf.Initialization
             IocWrapper.Register<IFinderService, FinderService>();
             IocWrapper.Register<IMatchPreviewExtractor, MatchPreviewExtractor>();
             IocWrapper.Register<ITextMatcher, TextMatcher>();
+            IocWrapper.Register<ITextReplacer, TextReplacer>();
         }
 
         public static void RegisterFilesystemServices()

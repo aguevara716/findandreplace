@@ -16,8 +16,10 @@ namespace FindAndReplace.Wpf.Backend.Tests.Files
         // Dependencies
         private IBinaryFileDetector _binaryFileDetector;
         private IFileReader _fileReader;
+        private IFileWriter _fileWriter;
         private IMatchPreviewExtractor _matchPreviewExtractor;
         private ITextMatcher _textMatcher;
+        private ITextReplacer _textReplacer;
         private IFinderService _finderService;
 
         // Initialization
@@ -26,13 +28,17 @@ namespace FindAndReplace.Wpf.Backend.Tests.Files
         {
             _binaryFileDetector = Substitute.For<IBinaryFileDetector>();
             _fileReader = Substitute.For<IFileReader>();
+            _fileWriter = Substitute.For<IFileWriter>();
             _matchPreviewExtractor = Substitute.For<IMatchPreviewExtractor>();
             _textMatcher = Substitute.For<ITextMatcher>();
+            _textReplacer = Substitute.For<ITextReplacer>();
 
             _finderService = new FinderService(_binaryFileDetector,
                                                _fileReader,
+                                               _fileWriter,
                                                _matchPreviewExtractor,
-                                               _textMatcher);
+                                               _textMatcher,
+                                               _textReplacer);
         }
 
         // Task<TextMatcherResult> FindTextInFileAsync(string filePath, string findText, bool isRegexSearch, bool isUsingEscapeCharacters, bool isCaseSensitive);

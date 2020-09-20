@@ -10,6 +10,7 @@ namespace FindAndReplace.Wpf.Backend.Files
     public interface IMatchPreviewExtractor
     {
         MatchPreviewExtractionResult ExtractMatchPreviews(string filePath, string fileContent, IList<TextMatch> textMatches);
+        MatchPreviewExtractionResult ExtractMatchPreviews(string filePath, string fileContent, int replacementTextLength, IList<TextMatch> textMatches);
     }
 
     public class MatchPreviewExtractor : IMatchPreviewExtractor
@@ -17,6 +18,11 @@ namespace FindAndReplace.Wpf.Backend.Files
         private const int PREVIEW_LINE_COUNT = 2;
 
         public MatchPreviewExtractionResult ExtractMatchPreviews(string filePath, string fileContent, IList<TextMatch> textMatches)
+        {
+            return ExtractMatchPreviews(filePath, fileContent, 0, textMatches);
+        }
+
+        public MatchPreviewExtractionResult ExtractMatchPreviews(string filePath, string fileContent, int replacementTextLength, IList<TextMatch> textMatches)
         {
             if (string.IsNullOrEmpty(filePath))
                 return MatchPreviewExtractionResult.CreateFailure<MatchPreviewExtractionResult>(filePath, "File path must be provided");
@@ -38,7 +44,11 @@ namespace FindAndReplace.Wpf.Backend.Files
                 foreach (var textMatch in textMatches)
                 {
                     var startingLineIndex = FindMatchLineNumber(fileContentLines, textMatch.StartIndex);
-                    var endingLineIndex = FindMatchLineNumber(fileContentLines, textMatch.StartIndex + textMatch.Length);
+
+                    var endingCharacterIndex = replacementTextLength == 0
+                        ? textMatch.StartIndex + textMatch.Length
+                        : textMatch.StartIndex + replacementTextLength;
+                    var endingLineIndex = FindMatchLineNumber(fileContentLines, endingCharacterIndex);
 
                     // these 2 lines will avoid an index out of bounds exception
                     var startingPreviewLineIndex = Math.Max(startingLineIndex - PREVIEW_LINE_COUNT, 0);

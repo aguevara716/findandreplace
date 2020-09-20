@@ -201,7 +201,7 @@ namespace FindAndReplace.Wpf.ViewModels
             FolderParameters.RootDirectory = selectedPath;
         }
 
-        private async void FindExecuted()
+        private async void ExecuteFindAndOrReplace(bool isReplacing)
         {
             UpdateSettings();
             UpdateIsRunning(true);
@@ -240,7 +240,22 @@ namespace FindAndReplace.Wpf.ViewModels
 
                 MatchPreviewExtractionResult matchPreviewExtractionResult;
                 if (!FindParameters.IsSearchingFilenameOnly)
-                    matchPreviewExtractionResult = await _finderService.FindTextInFileAsync(filePath, FindParameters.FindString, FindParameters.IsRegex, FindParameters.IsUsingEscapeCharacters, FindParameters.IsCaseSensitive);
+                {
+                    if (!isReplacing)
+                        matchPreviewExtractionResult = await _finderService.FindTextInFileAsync(filePath,
+                                                                                                FindParameters.FindString,
+                                                                                                FindParameters.IsRegex,
+                                                                                                FindParameters.IsUsingEscapeCharacters,
+                                                                                                FindParameters.IsCaseSensitive);
+                    else
+                        matchPreviewExtractionResult = await _finderService.FindAndReplaceTextInFileAsync(filePath,
+                                                                                                          FindParameters.FindString,
+                                                                                                          FindParameters.IsRegex,
+                                                                                                          FindParameters.IsUsingEscapeCharacters,
+                                                                                                          FindParameters.IsCaseSensitive,
+                                                                                                          ReplaceParameters.ReplaceString,
+                                                                                                          ReplaceParameters.IsRetainingModifiedDate);
+                }
                 else
                     matchPreviewExtractionResult = MatchPreviewExtractionResult.CreateSuccess<MatchPreviewExtractionResult>(filePath, new List<string>());
 
@@ -269,10 +284,14 @@ namespace FindAndReplace.Wpf.ViewModels
             UpdateIsRunning(false);
         }
 
+        private void FindExecuted()
+        {
+            ExecuteFindAndOrReplace(false);
+        }
+
         private void ReplaceExecuted()
         {
-            UpdateSettings();
-            _dialogService.ShowMessage("This doesn't actually do anything yet", "Not Implemented");
+            ExecuteFindAndOrReplace(true);
         }
 
         private void CancelExecuted()

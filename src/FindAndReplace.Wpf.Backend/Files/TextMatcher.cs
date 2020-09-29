@@ -59,7 +59,11 @@ namespace FindAndReplace.Wpf.Backend.Files
                     textMatchesDictionary.AddOrUpdate(textMatch, true, (t, b) => true);
                 });
 
-                var textMatchesList = textMatchesDictionary.Keys.ToList();
+                var textMatchesList = textMatchesDictionary.Keys
+                                                           .AsParallel()
+                                                           .OrderBy(tm => tm.StartIndex)
+                                                           .ThenBy(tm => tm.StartIndex + tm.Length)
+                                                           .ToList();
                 return TextMatcherResult.CreateSuccess<TextMatcherResult>(filePath, textMatchesList);
             }
             catch (Exception ex)

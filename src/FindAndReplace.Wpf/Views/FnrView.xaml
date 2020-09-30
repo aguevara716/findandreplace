@@ -507,6 +507,10 @@
                         <MenuItem Header="Copy Path"
                                   Command="{Binding CopyPathCommand}"
                                   CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"/>
+                        <Separator/>
+                        <MenuItem Header="Remove Result"
+                                  Command="{Binding RemoveFileResultCommand}"
+                                  CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"/>
                     </ContextMenu>
                 </DataGrid.ContextMenu>
                 <DataGrid.Columns>

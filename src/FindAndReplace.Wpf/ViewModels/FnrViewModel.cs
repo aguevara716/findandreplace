@@ -86,6 +86,7 @@ namespace FindAndReplace.Wpf.ViewModels
         public RelayCommand<FileResult> OpenFileCommand { get; private set; }
         public RelayCommand<FileResult> OpenFolderCommand { get; private set; }
         public RelayCommand<FileResult> CopyPathCommand { get; private set; }
+        public RelayCommand<FileResult> RemoveFileResultCommand { get; private set; }
         public RelayCommand<String> AddExcludeDirectoryCommand { get; private set; }
         public RelayCommand<String> RemoveExcludeDirectoryCommand { get; private set; }
         public RelayCommand<String> AddExcludeFileCommand { get; private set; }
@@ -124,6 +125,7 @@ namespace FindAndReplace.Wpf.ViewModels
             OpenFileCommand = new RelayCommand<FileResult>(OpenFileExecuted);
             OpenFolderCommand = new RelayCommand<FileResult>(OpenFolderExecuted);
             CopyPathCommand = new RelayCommand<FileResult>(CopyPathExecuted);
+            RemoveFileResultCommand = new RelayCommand<FileResult>(RemoveFileResultExecuted);
             AddExcludeDirectoryCommand = new RelayCommand<String>(AddExcludeDirectoryExecuted);
             RemoveExcludeDirectoryCommand = new RelayCommand<String>(RemoveExcludeDirectoryExecuted);
             AddExcludeFileCommand = new RelayCommand<String>(AddExcludeFileExecuted);
@@ -331,6 +333,19 @@ namespace FindAndReplace.Wpf.ViewModels
         private void CopyPathExecuted(FileResult fileResult)
         {
             _clipboardDataService.SetText(fileResult.FullPath);
+        }
+
+        private void RemoveFileResultExecuted(FileResult fileResult)
+        {
+            var response = _dialogService.ShowYesNo(fileResult.FullPath, "Are you sure you want to remove this result?");
+            if (!response)
+                return;
+
+            var isRemoved = Results.Remove(fileResult);
+            if (isRemoved)
+                return;
+
+            _dialogService.ShowMessage($"Failed to remove the result \"{fileResult.FullPath}\".", "Remove Failed");
         }
 
         private void AddExcludeDirectoryExecuted(string newExcludeDirectory)

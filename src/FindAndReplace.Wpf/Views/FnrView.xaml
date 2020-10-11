@@ -535,7 +535,9 @@
                 </Grid.RowDefinitions>
                 <TextBlock Grid.Row="0" 
                            Text="{Binding ElementName=resultsDataGrid, Path=SelectedItem.FullPath, StringFormat='Showing previews for file: {0}'}"/>
-                <ScrollViewer Grid.Row="1">
+                <ScrollViewer Grid.Row="1"
+                              HorizontalScrollBarVisibility="Auto"
+                              VerticalScrollBarVisibility="Auto">
                     <ItemsControl ItemsSource="{Binding ElementName=resultsDataGrid, Path=SelectedItem.Previews}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>

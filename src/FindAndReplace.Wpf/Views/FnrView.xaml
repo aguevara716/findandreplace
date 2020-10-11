@@ -572,7 +572,9 @@
                                                 VerticalAlignment="Top"
                                                 Margin="0"
                                                 Opacity="0.1"
-                                                Name="CopyButton"/>
+                                                Name="CopyButton"
+                                                Command="{Binding RelativeSource={RelativeSource AncestorType=Page}, Path=DataContext.CopyPreviewCommand}"
+                                                CommandParameter="{Binding}"/>
                                     </Grid>
                                 </Border>
                             </DataTemplate>
